@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  profile          Profile?
+  astrologyProfile AstrologyProfile?
+  swipesGiven      Swipe[]   @relation("SwipeFrom")
+  swipesReceived   Swipe[]   @relation("SwipeTo")
+  matchesA         Match[]   @relation("MatchUserA")
+  matchesB         Match[]   @relation("MatchUserB")
+}
+
+model Profile {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name         String
+  birthDate    DateTime
+  birthTime    String?
+  birthCity    String
+  birthCountry String
+  gender       String?
+  prefGenders  String[]
+  prefAgeMin   Int      @default(18)
+  prefAgeMax   Int      @default(45)
+  avatarUrl    String?
+  bio          String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model AstrologyProfile {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sunSign       String
+  moonSign      String
+  risingSign    String
+  elementScores Json
+  modalScores   Json
+  traits        Json
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Swipe {
+  id         String    @id @default(cuid())
+  fromUserId String
+  toUserId   String
+  direction  Direction
+  createdAt  DateTime  @default(now())
+
+  fromUser User @relation("SwipeFrom", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toUser   User @relation("SwipeTo", fields: [toUserId], references: [id], onDelete: Cascade)
+
+  @@unique([fromUserId, toUserId])
+}
+
+model Match {
+  id         String   @id @default(cuid())
+  userAId    String
+  userBId    String
+  matchScore Float
+  breakdown  Json
+  createdAt  DateTime @default(now())
+
+  userA User @relation("MatchUserA", fields: [userAId], references: [id], onDelete: Cascade)
+  userB User @relation("MatchUserB", fields: [userBId], references: [id], onDelete: Cascade)
+
+  @@unique([userAId, userBId])
+}
+
+enum Direction {
+  like
+  pass
+}
