@@ -1,6 +1,5 @@
 import { defineConfig } from "prisma/config";
 import { PrismaLibSql } from "@prisma/adapter-libsql";
-import { createClient } from "@libsql/client";
 
 export default defineConfig({
   datasource: {
@@ -8,10 +7,9 @@ export default defineConfig({
   },
   migrate: {
     adapter: async () => {
-      const client = createClient({
+      return new PrismaLibSql({
         url: process.env.DATABASE_URL ?? "file:./dev.db",
       });
-      return new PrismaLibSql(client);
     },
   },
 });

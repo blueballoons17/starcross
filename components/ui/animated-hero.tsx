@@ -21,7 +21,7 @@ export function AnimatedHero({ words, prefix = "Find someone", suffix = "" }: An
   return (
     <span className="inline-flex items-baseline gap-2 flex-wrap justify-center">
       {prefix && <span>{prefix}</span>}
-      <span className="relative inline-block overflow-hidden h-[1.15em] min-w-[200px] text-center">
+      <span className="relative inline-block h-[1.3em] min-w-[280px] sm:min-w-[380px] text-center">
         <AnimatePresence mode="wait">
           <motion.span
             key={index}
