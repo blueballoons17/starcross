@@ -10,105 +10,195 @@ export interface AstrologyResult {
   };
 }
 
-const SIGNS = [
+export const SIGNS = [
   "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
-  "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"
+  "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces",
 ];
 
-const SIGN_ELEMENTS: Record<string, "fire" | "earth" | "air" | "water"> = {
+
+export const SIGN_ELEMENTS: Record<string, "fire" | "earth" | "air" | "water"> = {
   Aries: "fire", Leo: "fire", Sagittarius: "fire",
   Taurus: "earth", Virgo: "earth", Capricorn: "earth",
   Gemini: "air", Libra: "air", Aquarius: "air",
   Cancer: "water", Scorpio: "water", Pisces: "water",
 };
 
-const SIGN_MODALS: Record<string, "cardinal" | "fixed" | "mutable"> = {
+export const SIGN_MODALS: Record<string, "cardinal" | "fixed" | "mutable"> = {
   Aries: "cardinal", Cancer: "cardinal", Libra: "cardinal", Capricorn: "cardinal",
   Taurus: "fixed", Leo: "fixed", Scorpio: "fixed", Aquarius: "fixed",
   Gemini: "mutable", Virgo: "mutable", Sagittarius: "mutable", Pisces: "mutable",
 };
 
+// ─── Astronomical helpers ──────────────────────────────────────────────────
+
+function toRad(deg: number): number {
+  return (deg * Math.PI) / 180;
+}
+
+/** Julian Day Number for a given UTC date. */
+function getJulianDay(date: Date): number {
+  let Y = date.getUTCFullYear();
+  let M = date.getUTCMonth() + 1;
+  const D = date.getUTCDate();
+  if (M <= 2) { Y -= 1; M += 12; }
+  const A = Math.floor(Y / 100);
+  const B = 2 - A + Math.floor(A / 4);
+  return Math.floor(365.25 * (Y + 4716)) + Math.floor(30.6001 * (M + 1)) + D + B - 1524.5;
+}
+
+/** Normalize a value to [0, 360). */
+function norm360(x: number): number {
+  return ((x % 360) + 360) % 360;
+}
+
+// ─── Sun sign ──────────────────────────────────────────────────────────────
+
+/**
+ * Compute ecliptic longitude of the Sun (low-precision, ±1°).
+ * Uses UTC date so the timezone of the viewer doesn't shift the birthday.
+ */
 function getSunSign(date: Date): string {
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) return "Aries";
-  if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) return "Taurus";
-  if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) return "Gemini";
-  if ((month === 6 && day >= 21) || (month === 7 && day <= 22)) return "Cancer";
-  if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return "Leo";
-  if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return "Virgo";
-  if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) return "Libra";
-  if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) return "Scorpio";
-  if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) return "Sagittarius";
-  if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) return "Capricorn";
-  if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) return "Aquarius";
-  return "Pisces";
+  const jd = getJulianDay(date);
+  const T = (jd - 2451545.0) / 36525;
+  // Sun's mean longitude (Meeus Ch.25 low-precision)
+  const L0 = norm360(280.46646 + 36000.76983 * T);
+  const M  = toRad(norm360(357.52911 + 35999.05029 * T - 0.0001537 * T * T));
+  // Equation of centre
+  const C = (1.914602 - 0.004817 * T - 0.000014 * T * T) * Math.sin(M)
+           + (0.019993 - 0.000101 * T) * Math.sin(2 * M)
+           + 0.000289 * Math.sin(3 * M);
+  const sunLon = norm360(L0 + C);
+
+  // Tropical zodiac starts at Aries 0° = vernal equinox
+  const idx = Math.floor(sunLon / 30);
+  return SIGNS[idx];
 }
 
+// ─── Moon sign ─────────────────────────────────────────────────────────────
+
+/**
+ * Moon's apparent ecliptic longitude (Meeus Ch.47, accurate to ~0.3°).
+ * Much more accurate than any day-of-year approximation.
+ */
 function getMoonSign(date: Date): string {
-  const dayOfYear = Math.floor(
-    (date.getTime() - new Date(date.getFullYear(), 0, 0).getTime()) / 86400000
-  );
-  // Moon moves through all 12 signs roughly every 27.3 days
-  // Offset by year to avoid same sign for same birthday different years
-  const yearOffset = (date.getFullYear() * 7) % 12;
-  const index = (Math.floor(dayOfYear / 2.275) + yearOffset) % 12;
-  return SIGNS[Math.abs(index)];
+  const jd = getJulianDay(date);
+  const T  = (jd - 2451545.0) / 36525;
+
+  // Fundamental arguments (degrees)
+  const Lm = norm360(218.3164477 + 481267.88123421 * T - 0.0015786 * T * T);
+  const Mm  = norm360(134.9633964 + 477198.8676313  * T + 0.0089970 * T * T);
+  const Ms  = norm360(357.5291092 +  35999.0502909  * T - 0.0001536 * T * T);
+  const F   = norm360( 93.2720950 + 483202.0175233  * T - 0.0036539 * T * T);
+  const D   = norm360(297.8501921 + 445267.1114034  * T - 0.0018819 * T * T);
+
+  // Perturbations in longitude (degrees) — first 15 terms of Meeus Table 47.A
+  const dL =
+      6.2888 * Math.sin(toRad(Mm))
+    + 1.2740 * Math.sin(toRad(2 * D - Mm))
+    + 0.6583 * Math.sin(toRad(2 * D))
+    + 0.2136 * Math.sin(toRad(2 * Mm))
+    - 0.1851 * Math.sin(toRad(Ms))
+    - 0.1143 * Math.sin(toRad(2 * F))
+    + 0.0588 * Math.sin(toRad(2 * D - 2 * Mm))
+    + 0.0572 * Math.sin(toRad(2 * D - Ms - Mm))
+    + 0.0533 * Math.sin(toRad(2 * D + Mm))
+    + 0.0459 * Math.sin(toRad(2 * D - Ms))
+    + 0.0410 * Math.sin(toRad(Mm - Ms))
+    - 0.0348 * Math.sin(toRad(D))
+    - 0.0306 * Math.sin(toRad(Mm + Ms))
+    - 0.0153 * Math.sin(toRad(2 * F - 2 * D))
+    + 0.0108 * Math.sin(toRad(2 * D - 2 * F));
+
+  const moonLon = norm360(Lm + dL);
+  return SIGNS[Math.floor(moonLon / 30)];
 }
 
+// ─── Rising sign ───────────────────────────────────────────────────────────
+
+/**
+ * Ascendant (rising sign) computed from Greenwich Mean Sidereal Time +
+ * birth time.  Without geocoded coordinates we use a default latitude of
+ * 40 °N and longitude 0 °.  Result is approximate (±1-2 signs) unless the
+ * user's actual location is near those coordinates.
+ */
 function getRisingSign(date: Date, birthTime?: string): string {
-  if (birthTime) {
-    const parts = birthTime.split(":");
-    const hour = parseInt(parts[0], 10);
-    if (!isNaN(hour)) {
-      // Rising changes every ~2 hours, 12 signs per day
-      const index = Math.floor(hour / 2) % 12;
-      // Offset by day of year for variance
-      const dayOfYear = Math.floor(
-        (date.getTime() - new Date(date.getFullYear(), 0, 0).getTime()) / 86400000
-      );
-      return SIGNS[(index + Math.floor(dayOfYear / 30)) % 12];
-    }
+  if (!birthTime) {
+    // No birth time — return a deterministic-but-arbitrary fallback based on
+    // the moon sign index + day offset so it at least varies meaningfully.
+    const jd = getJulianDay(date);
+    return SIGNS[Math.floor(norm360(jd * 0.369) / 30)];
   }
-  // No birth time: use day of month to determine rising
-  const dayOffset = (date.getDate() * 3) % 12;
-  const monthOffset = date.getMonth();
-  return SIGNS[(dayOffset + monthOffset) % 12];
+
+  const parts  = birthTime.split(":");
+  const hour   = parseInt(parts[0], 10);
+  const minute = parseInt(parts[1] ?? "0", 10);
+  if (isNaN(hour)) return SIGNS[0];
+
+  // Julian day at birth (approximate UT)
+  const jd = getJulianDay(date) + (hour - 12) / 24 + minute / 1440;
+  const d  = jd - 2451545.0;
+
+  // Greenwich Mean Sidereal Time in degrees
+  const GMST = norm360(280.46061837 + 360.98564736629 * d);
+
+  // Local Sidereal Time — assuming longitude 0 ° (best default without geocoding)
+  const LST = GMST; // add birthplace longitude (°E) here if available
+
+  // Ascendant for latitude φ = 40 °N (mid-latitude default)
+  const e   = toRad(23.4393); // mean obliquity of the ecliptic
+  const lat = toRad(40.0);
+  const R   = toRad(LST);
+
+  // Standard formula for the Ecliptic Ascendant
+  let asc = Math.atan2(
+    -Math.cos(R),
+    Math.sin(R) * Math.cos(e) + Math.tan(lat) * Math.sin(e)
+  ) * (180 / Math.PI);
+
+  asc = norm360(asc);
+
+  // Quadrant correction: the Ascendant must be in the eastern hemisphere
+  // (between IC and MC, i.e. +180° from RAMC when MC is in the upper meridian)
+  const MC = norm360(Math.atan2(Math.sin(R) / Math.cos(e), Math.cos(R)) * (180 / Math.PI));
+  if (((asc - MC + 360) % 360) < 180) asc = norm360(asc + 180);
+
+  return SIGNS[Math.floor(asc / 30)];
 }
 
-function calculateElements(sun: string, moon: string, rising: string): { fire: number; earth: number; air: number; water: number } {
-  const counts: { fire: number; earth: number; air: number; water: number } = { fire: 0, earth: 0, air: 0, water: 0 };
-  const sunEl = SIGN_ELEMENTS[sun];
-  const moonEl = SIGN_ELEMENTS[moon];
-  const risingEl = SIGN_ELEMENTS[rising];
-  // Sun counts double
-  counts[sunEl] += 2;
-  counts[moonEl] += 1;
-  counts[risingEl] += 1;
-  // Normalize to percentages
-  const total = 4;
+// ─── Elements & Modality ───────────────────────────────────────────────────
+
+function calculateElements(
+  sun: string, moon: string, rising: string
+): AstrologyResult["elements"] {
+  const c: Record<string, number> = { fire: 0, earth: 0, air: 0, water: 0 };
+  c[SIGN_ELEMENTS[sun]]    += 2; // Sun weighted double
+  c[SIGN_ELEMENTS[moon]]   += 1;
+  c[SIGN_ELEMENTS[rising]] += 1;
   return {
-    fire: Math.round((counts.fire / total) * 100),
-    earth: Math.round((counts.earth / total) * 100),
-    air: Math.round((counts.air / total) * 100),
-    water: Math.round((counts.water / total) * 100),
+    fire:  Math.round((c.fire  / 4) * 100),
+    earth: Math.round((c.earth / 4) * 100),
+    air:   Math.round((c.air   / 4) * 100),
+    water: Math.round((c.water / 4) * 100),
   };
 }
 
-function calculateModals(sun: string, moon: string, rising: string): { cardinal: number; fixed: number; mutable: number } {
-  const counts: { cardinal: number; fixed: number; mutable: number } = { cardinal: 0, fixed: 0, mutable: 0 };
-  counts[SIGN_MODALS[sun]] += 2;
-  counts[SIGN_MODALS[moon]] += 1;
-  counts[SIGN_MODALS[rising]] += 1;
-  const total = 4;
+function calculateModals(
+  sun: string, moon: string, rising: string
+): AstrologyResult["modals"] {
+  const c: Record<string, number> = { cardinal: 0, fixed: 0, mutable: 0 };
+  c[SIGN_MODALS[sun]]    += 2;
+  c[SIGN_MODALS[moon]]   += 1;
+  c[SIGN_MODALS[rising]] += 1;
   return {
-    cardinal: Math.round((counts.cardinal / total) * 100),
-    fixed: Math.round((counts.fixed / total) * 100),
-    mutable: Math.round((counts.mutable / total) * 100),
+    cardinal: Math.round((c.cardinal / 4) * 100),
+    fixed:    Math.round((c.fixed    / 4) * 100),
+    mutable:  Math.round((c.mutable  / 4) * 100),
   };
 }
 
-const TRAIT_PROFILES: Record<string, { emotionalStyle: string; communicationStyle: string; relationshipNeeds: string; conflictStyle: string }> = {
+// ─── Trait & description profiles ─────────────────────────────────────────
+
+const TRAIT_PROFILES: Record<string, AstrologyResult["traits"]> = {
   Aries: {
     emotionalStyle: "You experience emotions with startling immediacy — joy arrives like a flash of lightning, and frustration burns just as bright before fading just as fast. Your emotional life is vivid and unfiltered, never lingering in ambiguity when action seems possible. You feel things fully in the moment, then move on with characteristic speed, rarely carrying grudges because life is simply too interesting to stay in one feeling for long.",
     communicationStyle: "You speak with the confidence of someone who has already made up their mind, which can be magnetic and occasionally alarming in equal measure. Directness is your native tongue — you find diplomatic hedging exhausting and would rather say the difficult thing plainly than dance around it for hours. You're energized by spirited debate and often think out loud, letting your ideas sharpen through collision with others.",
@@ -183,25 +273,104 @@ const TRAIT_PROFILES: Record<string, { emotionalStyle: string; communicationStyl
   },
 };
 
+// ─── Moon sign descriptions ────────────────────────────────────────────────
+
+export const MOON_DESCRIPTIONS: Record<string, string> = {
+  Aries: "Emotions arrive fast and leave just as fast. You're quick to feel hurt or inspired but rarely hold grudges — the moment passes and you're already looking forward. You need emotional honesty and space to express feelings without preamble or apology.",
+  Taurus: "Emotionally, you need stability above almost everything else. Your feelings are deep and slow-forming, but once rooted they hold with extraordinary tenacity. Security isn't just nice to have — it's the ground you stand on, the thing you return to after every storm.",
+  Gemini: "You process emotion through words — yours and other people's. Talking through how you feel is often how you figure out what you feel. You can seem emotionally inconsistent, but you're really just responsive: quick to absorb the room, quick to shift with new information.",
+  Cancer: "You are one of the most emotionally attuned placements in the chart. Your intuition about people's inner states borders on psychic, and you absorb the emotional atmosphere wherever you go. Home — as a feeling, not just a place — is the thing you're always quietly seeking.",
+  Leo: "You need to feel special to the people you love — not flattered, but genuinely seen and treasured. Your emotional expression is warm, generous, sometimes theatrical, always sincere. When you feel loved, you radiate; when you feel overlooked, the withdrawal is unmistakable.",
+  Virgo: "Your emotional processing tends to run through your mind before it reaches your heart. You show love through careful attention to detail — noticing what someone needs, doing the thing before being asked. But you carry a quiet anxiety that benefits enormously from having somewhere safe to set it down.",
+  Libra: "You feel most yourself when things are in balance — in relationships, in your environment, in your internal world. Conflict unsettles you in a visceral way. You may defer your own emotional needs to keep the harmony, which eventually tips the very balance you were trying to protect.",
+  Scorpio: "Emotional depth is non-negotiable. You feel everything intensely and rarely share the full weight of it — you wait to see if someone is worthy of that trust. When they prove they are, your loyalty is absolute and your care runs to a depth few people can match or even perceive.",
+  Sagittarius: "You process emotion by moving — philosophically, physically, forward. You resist staying in a difficult feeling longer than necessary, which is both a resilience and occasionally an avoidance. Your optimism is a genuine quality that people are drawn to, not a performance you put on.",
+  Capricorn: "Emotionally, you tend to manage before you express. You're more comfortable offering support than asking for it, and genuine vulnerability requires real trust that you build slowly. The warmth inside you is real — it just takes time, and the right person, to coax it out.",
+  Aquarius: "You understand your feelings analytically before you fully inhabit them, which gives you unusual emotional perspective — and occasional emotional distance. You care deeply about people, just sometimes more in the abstract than in the intimate, particular ways that relationships require most.",
+  Pisces: "Your emotional world has no clear borders — you feel other people's feelings almost as readily as your own, and your empathy is one of your most profound gifts. You need regular time away from the noise of the world to find your own center and hear yourself clearly again.",
+};
+
+// ─── Rising sign descriptions ──────────────────────────────────────────────
+
+export const RISING_DESCRIPTIONS: Record<string, string> = {
+  Aries: "You enter a room and something shifts. There's a directness about you — you make eye contact, you take up space, you give the impression of someone who knows where they're going. People notice you without always being able to say why.",
+  Taurus: "You project calm and groundedness in a way people find immediately reassuring. Your physical presence is deliberate — you don't rush. People tend to feel safer and more settled in your company than in most, often without knowing why.",
+  Gemini: "You come across as quick-minded and curious, someone who's interested in whatever's happening. You're easy to talk to — you have a way of making the other person feel like the most interesting thing in the room, at least in that moment.",
+  Cancer: "You have a quality that makes people want to both take care of you and feel cared for by you. There's a softness and emotional attunement to your manner that puts people at ease almost immediately. Your first impression is warmth.",
+  Leo: "You have natural magnetism — the kind that's difficult to explain and impossible to fake. Your warmth and confidence make people feel welcome, and you often become the social anchor of whatever room you're in, drawing others into your orbit.",
+  Virgo: "Your first impression is thoughtful, measured, and a little quiet — someone who pays close attention and forms careful opinions. People trust you because you seem to actually see things rather than filtering everything through what you want to see.",
+  Libra: "You're effortlessly pleasant and socially graceful in a way people notice immediately. Your manners are instinctive, your presence balanced, and you give off the impression of someone who genuinely enjoys other people — because, on balance, you do.",
+  Scorpio: "You project an intensity that precedes you. There's a quiet power to your manner that people find either compelling or unsettling, often both. You don't reveal much in early encounters, which tends to make people want to know more.",
+  Sagittarius: "You read as open, warm, and confident — someone who has a lot of world in them. There's an easiness to you, an impression of freedom and expansiveness, that makes people feel invited into a conversation that might go anywhere.",
+  Capricorn: "You project composure and quiet authority before you've said a word. People treat you as someone worth listening to even before you've earned it, which gives you a head start in almost every room you walk into.",
+  Aquarius: "You have an energy that's distinctly your own — something a little different, a little ahead. People aren't always sure what to make of you at first, which is partly the point. You don't need to be immediately understood.",
+  Pisces: "Your first impression is soft, dreamlike, and somehow deeply intuitive. People feel understood by you before you've said much. There's a quality of genuine attention about you — like you're really present, not just performing presence.",
+};
+
+// ─── Sun sign summary (one-liner for Big Three slide) ──────────────────────
+
+export const SUN_SUMMARIES: Record<string, string> = {
+  Aries:       "Bold, direct, and first to move. You lead with instinct and recover from setbacks faster than anyone.",
+  Taurus:      "Grounded, sensual, and deeply loyal. You build things meant to last and love with your whole body.",
+  Gemini:      "Quick-minded, curious, and endlessly adaptable. You think in connections and light up every room.",
+  Cancer:      "Deeply intuitive, fiercely protective, and quietly powerful. You feel everything and remember it all.",
+  Leo:         "Radiant, generous, and impossible to ignore. You were made to be seen — and to make others feel seen.",
+  Virgo:       "Precise, caring, and quietly indispensable. Your love shows in the details others walk past without noticing.",
+  Libra:       "Elegant, fair-minded, and socially gifted. You see all sides and bring harmony wherever you go.",
+  Scorpio:     "Intense, perceptive, and magnetically private. You see through surfaces and never forget what you find.",
+  Sagittarius: "Expansive, honest, and always reaching. You chase meaning and bring others along for the journey.",
+  Capricorn:   "Disciplined, ambitious, and quietly devoted. You build slowly and make things built to last.",
+  Aquarius:    "Original, independent, and genuinely ahead of your time. You think differently and mean it.",
+  Pisces:      "Dreamy, empathic, and boundlessly imaginative. You feel the world more deeply than most dare to.",
+};
+
+// ─── Compatibility ─────────────────────────────────────────────────────────
+
+export const COMPATIBILITY: Record<string, { bestWith: string[]; insight: string }> = {
+  Aries:       { bestWith: ["Leo", "Sagittarius", "Gemini", "Aquarius"],     insight: "Fire and air feed your need for momentum, freedom, and a partner who matches your pace without needing you to slow down." },
+  Taurus:      { bestWith: ["Virgo", "Capricorn", "Cancer", "Pisces"],       insight: "Earth and water ground your need for security, sensory richness, and a love that grows deeper with time." },
+  Gemini:      { bestWith: ["Libra", "Aquarius", "Aries", "Leo"],            insight: "Air and fire keep your mind alive — you need someone who brings ideas, wit, and the willingness to be surprised." },
+  Cancer:      { bestWith: ["Scorpio", "Pisces", "Taurus", "Virgo"],         insight: "Water and earth meet your need for emotional depth, loyalty, and the quiet safety of being truly known." },
+  Leo:         { bestWith: ["Aries", "Sagittarius", "Gemini", "Libra"],      insight: "Fire and air fan your flame — you thrive with someone who celebrates you and brings enough sparkle of their own." },
+  Virgo:       { bestWith: ["Taurus", "Capricorn", "Cancer", "Scorpio"],     insight: "Earth and water complement your careful nature — you need someone who appreciates depth over flash and shows love through consistency." },
+  Libra:       { bestWith: ["Gemini", "Aquarius", "Leo", "Sagittarius"],     insight: "Air and fire engage your mind and sense of beauty — you need a partner who values fairness, elegance, and the art of conversation." },
+  Scorpio:     { bestWith: ["Cancer", "Pisces", "Virgo", "Capricorn"],       insight: "Water and earth can hold your depth — you need someone who doesn't flinch at intensity and offers total emotional honesty in return." },
+  Sagittarius: { bestWith: ["Aries", "Leo", "Libra", "Aquarius"],            insight: "Fire and air match your horizons — you need someone who wants to grow, explore, and never make the relationship feel like a cage." },
+  Capricorn:   { bestWith: ["Taurus", "Virgo", "Scorpio", "Pisces"],         insight: "Earth and water build with you — you need someone equally serious about creating something real, who values action over words." },
+  Aquarius:    { bestWith: ["Gemini", "Libra", "Aries", "Sagittarius"],      insight: "Air and fire challenge you intellectually and honor your independence — you need someone who is interesting before they are comfortable." },
+  Pisces:      { bestWith: ["Cancer", "Scorpio", "Taurus", "Capricorn"],     insight: "Water and earth cradle your sensitivity — you need someone grounded enough to anchor you and gentle enough to not break what's beautiful about you." },
+};
+
+// ─── Element descriptions ──────────────────────────────────────────────────
+
+export const ELEMENT_DESCRIPTIONS: Record<string, string> = {
+  fire:  "Energy, initiative, and passion. Fire in your chart means you lead with enthusiasm and carry an inner warmth that others feel drawn to. You act from instinct, thrive on inspiration, and have a natural ability to ignite things — projects, rooms, relationships.",
+  earth: "Stability, resourcefulness, and embodied intelligence. Earth in your chart means you build things designed to last. You trust what you can touch, hold, or measure, and you express care through practical devotion rather than grand declarations.",
+  air:   "Thought, connection, and communication. Air in your chart means you live largely in ideas — making connections, asking questions, finding patterns others miss. Your mind is one of your most defining features, and you need mental stimulation the way others need warmth.",
+  water: "Emotion, intuition, and depth. Water in your chart means you navigate life by feeling. Your emotional intelligence is extraordinary — you sense what's unsaid, remember the texture of every experience, and love with a depth that is difficult to adequately describe.",
+};
+
+export const MODAL_DESCRIPTIONS: Record<string, string> = {
+  cardinal: "You initiate. Cardinal energy means you are drawn to beginnings — you see what could be, take the first step, and bring others along with your momentum. You have a native restlessness that keeps things moving forward.",
+  fixed:    "You sustain. Fixed energy means you have extraordinary staying power — you commit deeply, resist change that feels arbitrary, and build your life on loyalty and consistency. Your strength lies in your refusal to let go of what matters.",
+  mutable:  "You adapt. Mutable energy means you are responsive to change in a way that others find either enviable or baffling. You see the full picture, hold multiple perspectives at once, and move through transitions with unusual flexibility.",
+};
+
+// ─── Main export ───────────────────────────────────────────────────────────
+
 export function calculateAstrologyProfile(
   birthDate: Date,
   birthTime?: string,
   _birthCity?: string
 ): AstrologyResult {
-  const sun = getSunSign(birthDate);
-  const moon = getMoonSign(birthDate);
+  const sun    = getSunSign(birthDate);
+  const moon   = getMoonSign(birthDate);
   const rising = getRisingSign(birthDate, birthTime);
 
-  const elements = calculateElements(sun, moon, rising);
-  const modals = calculateModals(sun, moon, rising);
-  const traits = TRAIT_PROFILES[sun];
-
   return {
-    signs: { sun, moon, rising },
-    elements,
-    modals,
-    traits,
+    signs:  { sun, moon, rising },
+    elements: calculateElements(sun, moon, rising),
+    modals:   calculateModals(sun, moon, rising),
+    traits:   TRAIT_PROFILES[sun],
   };
 }
-
-export { SIGN_ELEMENTS, SIGN_MODALS, SIGNS };
