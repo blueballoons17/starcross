@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
 import { calculateCompatibility } from "@/lib/matching";
 import type { AstrologyResult } from "@/lib/astrology";
@@ -18,7 +19,7 @@ function getAge(birthDate: Date): number {
 }
 
 export async function GET() {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
   const userId = (session?.user as SessionUser)?.id;
 
   if (!userId) {

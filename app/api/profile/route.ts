@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
 import { calculateAstrologyProfile } from "@/lib/astrology";
 
@@ -10,7 +11,7 @@ interface SessionUser {
 }
 
 async function getCurrentUserId(): Promise<string | null> {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
   if (!session?.user) return null;
   return (session.user as SessionUser).id ?? null;
 }
