@@ -6,22 +6,22 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
         default:
-          "bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-900/30 hover:from-violet-500 hover:to-indigo-500 hover:shadow-violet-800/40",
+          "bg-stone-900 text-white hover:bg-stone-800 shadow-sm",
         outline:
-          "border border-white/20 bg-white/5 text-white backdrop-blur-sm hover:bg-white/10 hover:border-white/30",
+          "border border-stone-200 bg-white text-stone-700 hover:bg-stone-50 hover:border-stone-300",
         ghost:
-          "text-slate-300 hover:bg-white/10 hover:text-white",
+          "text-stone-600 hover:bg-stone-100 hover:text-stone-900",
         destructive:
-          "bg-red-600/80 text-white hover:bg-red-500/80 border border-red-500/30",
+          "bg-red-600 text-white hover:bg-red-700",
         secondary:
-          "bg-white/10 text-white hover:bg-white/15 border border-white/10",
+          "bg-stone-100 text-stone-700 hover:bg-stone-200 border border-stone-200",
         link:
-          "text-violet-400 underline-offset-4 hover:underline hover:text-violet-300",
+          "text-stone-700 underline-offset-4 hover:underline",
       },
       size: {
         sm: "h-8 px-3 text-xs",
