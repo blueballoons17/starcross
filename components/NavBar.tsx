@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
-import { Star, Compass, Heart, User, LogOut } from "lucide-react";
+import { Compass, Heart, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ShootingStarLogo } from "@/components/ui/shooting-star-logo";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
@@ -23,7 +24,7 @@ export function NavBar() {
     <header className="fixed top-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-xl border-b border-stone-100">
       <nav className="mx-auto max-w-5xl flex h-16 items-center justify-between px-4 sm:px-6">
         <Link href="/discover" className="flex items-center gap-2 group">
-          <Star className="h-4 w-4 text-stone-700 fill-stone-700/30" />
+          <ShootingStarLogo size={18} className="text-stone-700" />
           <span className="font-serif text-lg font-semibold text-stone-900 tracking-tight">StarCross</span>
         </Link>
 

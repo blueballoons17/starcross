@@ -68,6 +68,9 @@ export async function POST(request: NextRequest) {
     prefAgeMin?: number;
     prefAgeMax?: number;
     bio?: string;
+    avatarUrl?: string;
+    interests?: string;
+    photos?: string;
   };
 
   try {
@@ -87,6 +90,9 @@ export async function POST(request: NextRequest) {
     prefAgeMin,
     prefAgeMax,
     bio,
+    avatarUrl,
+    interests,
+    photos,
   } = body;
 
   if (!name?.trim()) {
@@ -139,6 +145,9 @@ export async function POST(request: NextRequest) {
       prefAgeMin: prefAgeMin ?? 18,
       prefAgeMax: prefAgeMax ?? 45,
       bio: bio || null,
+      avatarUrl: avatarUrl ?? null,
+      interests: interests ?? null,
+      photos: photos ?? null,
     },
     update: {
       name: name.trim(),
@@ -151,6 +160,9 @@ export async function POST(request: NextRequest) {
       prefAgeMin: prefAgeMin ?? 18,
       prefAgeMax: prefAgeMax ?? 45,
       bio: bio || null,
+      ...(avatarUrl !== undefined && { avatarUrl }),
+      ...(interests !== undefined && { interests }),
+      ...(photos !== undefined && { photos }),
     },
   });
 

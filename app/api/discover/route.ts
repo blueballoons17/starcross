@@ -118,6 +118,7 @@ export async function GET() {
           gender: c.profile!.gender,
           birthCity: c.profile!.birthCity,
           birthCountry: c.profile!.birthCountry,
+          interests: c.profile!.interests,
         },
         astrologyProfile: {
           sunSign: rawAstro.sunSign,

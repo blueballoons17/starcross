@@ -36,6 +36,8 @@ model Profile {
   prefAgeMax   Int      @default(45)
   avatarUrl    String?
   bio          String?
+  interests    String?
+  photos       String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }

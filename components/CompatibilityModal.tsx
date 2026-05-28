@@ -8,7 +8,8 @@ import {
 } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { getZodiacColor, ZODIAC_SYMBOLS } from "@/lib/zodiac-colors";
+import { getZodiacColor } from "@/lib/zodiac-colors";
+import { ZodiacIcon } from "@/components/ui/zodiac-icon";
 import { cn } from "@/lib/utils";
 import { Star, Sparkles, AlertTriangle, MessageCircle } from "lucide-react";
 
@@ -84,12 +85,12 @@ function SignPair({
     <div className="text-center space-y-1">
       <p className="text-xs text-stone-400 uppercase tracking-wider">{label}</p>
       <div className="flex items-center gap-2 justify-center">
-        <span className={cn("px-2 py-0.5 rounded-full text-xs border", colA.bg, colA.text, colA.border)}>
-          {ZODIAC_SYMBOLS[signA]} {signA}
+        <span className={cn("inline-flex items-center gap-1 pl-1 pr-2.5 py-0.5 rounded-full text-xs border", colA.bg, colA.text, colA.border)}>
+          <ZodiacIcon sign={signA} size={16} className="bg-transparent border-0" /> {signA}
         </span>
         <span className="text-stone-400">×</span>
-        <span className={cn("px-2 py-0.5 rounded-full text-xs border", colB.bg, colB.text, colB.border)}>
-          {ZODIAC_SYMBOLS[signB]} {signB}
+        <span className={cn("inline-flex items-center gap-1 pl-1 pr-2.5 py-0.5 rounded-full text-xs border", colB.bg, colB.text, colB.border)}>
+          <ZodiacIcon sign={signB} size={16} className="bg-transparent border-0" /> {signB}
         </span>
       </div>
     </div>

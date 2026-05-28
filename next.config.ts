@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [],
   },
   experimental: {},
+  // Allow serving uploaded images from /public/uploads
 };
 
 export default nextConfig;

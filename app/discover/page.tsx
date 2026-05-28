@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { NavBar } from "@/components/NavBar";
 import { SwipeDeck } from "@/components/SwipeDeck";
-import { toast } from "@/components/ui/use-toast";
+import { MatchCelebration } from "@/components/MatchCelebration";
 
 interface Candidate {
   id: string;
@@ -17,6 +17,7 @@ interface Candidate {
     gender?: string | null;
     birthCity: string;
     birthCountry: string;
+    interests?: string | null;
   };
   astrologyProfile: {
     sunSign: string;
@@ -31,26 +32,44 @@ interface Candidate {
   matchScore: number;
 }
 
+interface PendingMatch {
+  name: string;
+  sunSign: string;
+  moonSign: string;
+  risingSign: string;
+  matchScore: number;
+  birthCity: string;
+  birthCountry: string;
+}
+
+interface CurrentUser {
+  sunSign: string;
+}
+
 export default function DiscoverPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [loading, setLoading] = useState(true);
+  const [pendingMatch, setPendingMatch] = useState<PendingMatch | null>(null);
+  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
 
   useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/login");
-    }
+    if (status === "unauthenticated") router.push("/login");
   }, [status, router]);
 
   useEffect(() => {
     if (status !== "authenticated") return;
 
-    fetch("/api/discover")
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.candidates) {
-          setCandidates(data.candidates);
+    // Load candidates + current user's sun sign in parallel
+    Promise.all([
+      fetch("/api/discover").then((r) => r.json()),
+      fetch("/api/profile").then((r) => r.json()),
+    ])
+      .then(([discoverData, profileData]) => {
+        if (discoverData.candidates) setCandidates(discoverData.candidates);
+        if (profileData?.astrologyProfile?.sunSign) {
+          setCurrentUser({ sunSign: profileData.astrologyProfile.sunSign });
         }
       })
       .catch(console.error)
@@ -58,6 +77,7 @@ export default function DiscoverPage() {
   }, [status]);
 
   async function handleLike(userId: string) {
+    const candidate = candidates.find((c) => c.id === userId);
     try {
       const res = await fetch("/api/swipe", {
         method: "POST",
@@ -65,15 +85,19 @@ export default function DiscoverPage() {
         body: JSON.stringify({ toUserId: userId, direction: "like" }),
       });
       const data = await res.json();
-      if (data.matched) {
-        toast({
-          title: "It's a cosmic match!",
-          description: "You and this person liked each other. Check your matches.",
-          variant: "default",
+      if (data.matched && candidate) {
+        setPendingMatch({
+          name: candidate.profile.name,
+          sunSign: candidate.astrologyProfile.sunSign,
+          moonSign: candidate.astrologyProfile.moonSign,
+          risingSign: candidate.astrologyProfile.risingSign,
+          matchScore: candidate.matchScore,
+          birthCity: candidate.profile.birthCity,
+          birthCountry: candidate.profile.birthCountry,
         });
       }
     } catch {
-      // silent fail — swipe still removes card
+      // silent fail — card still removed
     }
   }
 
@@ -108,7 +132,7 @@ export default function DiscoverPage() {
           <div className="text-center mb-8">
             <h1 className="font-serif text-2xl font-semibold text-stone-900 mb-1">Discover</h1>
             <p className="text-stone-400 text-sm">
-              Swipe right to like, left to pass
+              Swipe right to like · left to pass
             </p>
           </div>
 
@@ -119,6 +143,16 @@ export default function DiscoverPage() {
           />
         </div>
       </main>
+
+      {/* Full-screen match celebration */}
+      {pendingMatch && (
+        <MatchCelebration
+          open={!!pendingMatch}
+          onClose={() => setPendingMatch(null)}
+          match={pendingMatch}
+          mySunSign={currentUser?.sunSign ?? "Aries"}
+        />
+      )}
     </div>
   );
 }

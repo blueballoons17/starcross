@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { Star } from "lucide-react";
 import { CompatibilityModal } from "@/components/CompatibilityModal";
-import { getZodiacColor, ZODIAC_SYMBOLS } from "@/lib/zodiac-colors";
+import { getZodiacColor } from "@/lib/zodiac-colors";
+import { ZodiacIcon } from "@/components/ui/zodiac-icon";
 import { cn } from "@/lib/utils";
 
 interface MatchCardProps {
@@ -146,10 +147,12 @@ export function MatchCard({ match }: MatchCardProps) {
                     sunColor.bg, sunColor.text, sunColor.border
                   )}
                 >
-                  {ZODIAC_SYMBOLS[match.otherAstro.sunSign]} {match.otherAstro.sunSign}
+                  <ZodiacIcon sign={match.otherAstro.sunSign} size={14} className="bg-transparent border-0" />
+                  {match.otherAstro.sunSign}
                 </span>
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs border border-stone-200 bg-stone-50 text-stone-500">
-                  {ZODIAC_SYMBOLS[match.otherAstro.moonSign]} {match.otherAstro.moonSign} Moon
+                  <ZodiacIcon sign={match.otherAstro.moonSign} size={14} className="bg-transparent border-0" />
+                  {match.otherAstro.moonSign} Moon
                 </span>
               </div>
 

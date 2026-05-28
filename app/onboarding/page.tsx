@@ -18,7 +18,8 @@ import {
   SIGN_ELEMENTS,
   SIGN_MODALS,
 } from "@/lib/astrology";
-import { getZodiacColor, ZODIAC_SYMBOLS } from "@/lib/zodiac-colors";
+import { getZodiacColor } from "@/lib/zodiac-colors";
+import { ZodiacIcon } from "@/components/ui/zodiac-icon";
 import { cn } from "@/lib/utils";
 
 const GENDER_OPTIONS = ["Woman", "Man", "Non-binary", "Other", "Prefer not to say"];
@@ -92,7 +93,7 @@ function SignBadge({ sign, size = "md" }: { sign: string; size?: "sm" | "md" | "
         size === "lg"  && "px-4 py-2 text-base",
       )}
     >
-      <span className={cn(size === "lg" ? "text-xl" : "text-base")}>{ZODIAC_SYMBOLS[sign]}</span>
+      <ZodiacIcon sign={sign} size={size === "lg" ? 22 : size === "sm" ? 17 : 19} />
       {sign}
     </div>
   );
@@ -339,7 +340,7 @@ function ChartCarousel({
       <div className="flex flex-wrap gap-2 justify-center">
         {compat.bestWith.map((s) => (
           <div key={s} className="flex flex-col items-center gap-1">
-            <span className="text-2xl">{ZODIAC_SYMBOLS[s]}</span>
+            <ZodiacIcon sign={s} size={34} />
             <SignBadge sign={s} size="sm" />
           </div>
         ))}
@@ -356,7 +357,7 @@ function ChartCarousel({
             <div key={k} className="bg-stone-50 rounded-xl border border-stone-100 p-2.5">
               <p className="text-xs text-stone-400 capitalize mb-1">{k}</p>
               <p className="text-xs font-medium text-stone-700">{astro.signs[k]}</p>
-              <p className="text-sm">{ZODIAC_SYMBOLS[astro.signs[k]]}</p>
+              <ZodiacIcon sign={astro.signs[k]} size={22} className="mx-auto mt-0.5" />
             </div>
           ))}
         </div>

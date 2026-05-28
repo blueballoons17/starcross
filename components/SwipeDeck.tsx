@@ -3,7 +3,8 @@
 import React, { useState } from "react";
 import { motion, useMotionValue, useTransform, AnimatePresence } from "framer-motion";
 import { Heart, X, Star } from "lucide-react";
-import { getZodiacColor, ZODIAC_SYMBOLS } from "@/lib/zodiac-colors";
+import { getZodiacColor } from "@/lib/zodiac-colors";
+import { ZodiacIcon } from "@/components/ui/zodiac-icon";
 import { cn } from "@/lib/utils";
 
 interface Candidate {
@@ -16,6 +17,7 @@ interface Candidate {
     gender?: string | null;
     birthCity: string;
     birthCountry: string;
+    interests?: string | null;
   };
   astrologyProfile: {
     sunSign: string;
@@ -79,10 +81,11 @@ function ProfileCard({
 
   const age = getAge(candidate.profile.birthDate);
   const astro = candidate.astrologyProfile;
+  const sunColor = getZodiacColor(astro.sunSign);
 
-  // Truncate bio/trait to short blurb
+  // Truncate bio/trait to a readable blurb
   const blurb = candidate.profile.bio
-    ? candidate.profile.bio.slice(0, 100) + (candidate.profile.bio.length > 100 ? "…" : "")
+    ? candidate.profile.bio.slice(0, 160) + (candidate.profile.bio.length > 160 ? "…" : "")
     : astro.traits.emotionalStyle.split(".")[0] + ".";
 
   function handleDragEnd(_: unknown, info: { offset: { x: number } }) {
@@ -109,8 +112,11 @@ function ProfileCard({
       className="absolute inset-0 cursor-grab active:cursor-grabbing touch-none"
     >
       <div className="relative h-full rounded-3xl overflow-hidden bg-white border border-stone-100 shadow-xl shadow-stone-200/80 select-none">
-        {/* Avatar area */}
-        <div className="relative h-3/5 bg-gradient-to-br from-stone-100 to-stone-200 flex items-center justify-center overflow-hidden">
+        {/* Avatar area — tinted with the person's sun-sign colour */}
+        <div className={cn(
+          "relative h-[55%] flex items-center justify-center overflow-hidden",
+          candidate.profile.avatarUrl ? "" : sunColor.bg
+        )}>
           {candidate.profile.avatarUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -119,24 +125,27 @@ function ProfileCard({
               className="w-full h-full object-cover"
             />
           ) : (
-            <div
-              className={cn(
-                "w-32 h-32 rounded-full flex items-center justify-center text-4xl font-bold text-white shadow-xl",
-                "bg-gradient-to-br from-stone-700 to-stone-900"
-              )}
-            >
-              {getInitials(candidate.profile.name)}
+            <div className="flex flex-col items-center gap-3">
+              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-stone-700 to-stone-900 flex items-center justify-center text-3xl font-bold text-white shadow-xl">
+                {getInitials(candidate.profile.name)}
+              </div>
+              {/* Big zodiac icon as decoration */}
+              <div className={cn(
+                "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border",
+                sunColor.bg, sunColor.text, sunColor.border
+              )}>
+                <ZodiacIcon sign={astro.sunSign} size={14} className="bg-transparent border-0" />
+                {astro.sunSign}
+              </div>
             </div>
           )}
 
           {/* Match score badge */}
           <div className="absolute top-4 right-4">
-            <div
-              className={cn(
-                "flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-bold shadow-sm",
-                getScoreBadgeClass(candidate.matchScore)
-              )}
-            >
+            <div className={cn(
+              "flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-bold shadow-sm",
+              getScoreBadgeClass(candidate.matchScore)
+            )}>
               <Star className="h-3.5 w-3.5 fill-current" />
               {candidate.matchScore}%
             </div>
@@ -163,14 +172,14 @@ function ProfileCard({
           </motion.div>
         </div>
 
-        {/* Info area */}
-        <div className="p-5 space-y-3">
+        {/* Info area — pb-24 leaves room for absolute-positioned action buttons */}
+        <div className="p-5 pb-24 space-y-3">
           <div className="flex items-start justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-stone-900">
+              <h2 className="text-xl font-bold text-stone-900">
                 {candidate.profile.name}, {age}
               </h2>
-              <p className="text-stone-500 text-sm">
+              <p className="text-stone-400 text-sm">
                 {candidate.profile.birthCity}, {candidate.profile.birthCountry}
               </p>
             </div>
@@ -192,7 +201,7 @@ function ProfileCard({
                     colors.bg, colors.text, colors.border
                   )}
                 >
-                  <span>{ZODIAC_SYMBOLS[sign]}</span>
+                  <ZodiacIcon sign={sign} size={15} className="bg-transparent border-0" />
                   <span>{label}: {sign}</span>
                 </span>
               );
@@ -200,11 +209,35 @@ function ProfileCard({
           </div>
 
           {/* Bio blurb */}
-          <p className="text-stone-500 text-sm leading-relaxed line-clamp-2">{blurb}</p>
+          <p className="text-stone-500 text-sm leading-relaxed line-clamp-3">{blurb}</p>
+
+          {/* Interests */}
+          {candidate.profile.interests && (() => {
+            try {
+              const tags: string[] = JSON.parse(candidate.profile.interests);
+              if (tags.length > 0) {
+                return (
+                  <div className="flex flex-wrap gap-1.5">
+                    {tags.slice(0, 6).map((tag) => (
+                      <span key={tag} className="px-2 py-0.5 rounded-full bg-stone-100 text-stone-600 text-xs border border-stone-200">
+                        {tag}
+                      </span>
+                    ))}
+                    {tags.length > 6 && (
+                      <span className="px-2 py-0.5 rounded-full bg-stone-100 text-stone-400 text-xs border border-stone-200">
+                        +{tags.length - 6}
+                      </span>
+                    )}
+                  </div>
+                );
+              }
+            } catch { /* ignore parse errors */ }
+            return null;
+          })()}
         </div>
 
-        {/* Action buttons */}
-        <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-6">
+        {/* Action buttons — floated at card bottom, above the info padding gap */}
+        <div className="absolute bottom-5 left-0 right-0 flex justify-center items-center gap-6">
           <button
             onClick={onPass}
             className="w-14 h-14 rounded-full bg-white border border-stone-200 flex items-center justify-center text-stone-400 hover:border-red-200 hover:text-red-400 transition-all shadow-sm"
@@ -265,31 +298,51 @@ export function SwipeDeck({ candidates, onLike, onPass }: SwipeDeckProps) {
     );
   }
 
+  const totalCards = candidates.length;
+  const seen = currentIndex;
+  const progressPct = totalCards > 0 ? (seen / totalCards) * 100 : 0;
+
   return (
-    <div className="relative w-full max-w-sm mx-auto" style={{ height: "560px" }}>
-      <AnimatePresence mode="popLayout">
-        {remaining.slice(0, 3).map((candidate, stackIndex) => (
-          <motion.div
-            key={candidate.id}
-            className="absolute inset-0"
-            style={{ zIndex: remaining.length - stackIndex }}
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{
-              scale: stackIndex === 0 ? 1 : 0.95 - stackIndex * 0.02,
-              opacity: stackIndex === 0 ? 1 : 0.7 - stackIndex * 0.15,
-              y: stackIndex * 8,
-            }}
-            exit={{ x: 300, opacity: 0, transition: { duration: 0.3 } }}
-          >
-            <ProfileCard
-              candidate={candidate}
-              isTop={stackIndex === 0}
-              onLike={handleLike}
-              onPass={handlePass}
-            />
-          </motion.div>
-        ))}
-      </AnimatePresence>
+    <div className="w-full max-w-sm mx-auto">
+      {/* Progress bar */}
+      <div className="mb-4">
+        <div className="flex justify-between text-xs text-stone-400 mb-1.5">
+          <span>{remaining.length} profile{remaining.length !== 1 ? "s" : ""} left</span>
+          <span>{seen} seen</span>
+        </div>
+        <div className="h-1 bg-stone-200 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-gradient-to-r from-stone-700 to-stone-400 rounded-full transition-all duration-500"
+            style={{ width: `${progressPct}%` }}
+          />
+        </div>
+      </div>
+
+      <div className="relative w-full" style={{ height: "580px" }}>
+        <AnimatePresence mode="popLayout">
+          {remaining.slice(0, 3).map((candidate, stackIndex) => (
+            <motion.div
+              key={candidate.id}
+              className="absolute inset-0"
+              style={{ zIndex: remaining.length - stackIndex }}
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{
+                scale: stackIndex === 0 ? 1 : 0.95 - stackIndex * 0.02,
+                opacity: stackIndex === 0 ? 1 : 0.7 - stackIndex * 0.15,
+                y: stackIndex * 8,
+              }}
+              exit={{ x: 300, opacity: 0, transition: { duration: 0.3 } }}
+            >
+              <ProfileCard
+                candidate={candidate}
+                isTop={stackIndex === 0}
+                onLike={handleLike}
+                onPass={handlePass}
+              />
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
