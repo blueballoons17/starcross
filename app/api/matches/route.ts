@@ -37,15 +37,19 @@ export async function GET() {
     })
     .map((m) => {
       const other = m.userAId === userId ? m.userB : m.userA;
-      const breakdown = m.breakdown as {
-        elemental?: number;
-        emotional?: number;
-        communication?: number;
-        stability?: number;
-        explanation?: string;
-        strengths?: string[];
-        frictionPoints?: string[];
-      };
+
+      // Parse breakdown JSON string stored for SQLite
+      const breakdown = typeof m.breakdown === "string"
+        ? JSON.parse(m.breakdown)
+        : (m.breakdown as {
+            elemental?: number;
+            emotional?: number;
+            communication?: number;
+            stability?: number;
+            explanation?: string;
+            strengths?: string[];
+            frictionPoints?: string[];
+          });
 
       return {
         id: m.id,

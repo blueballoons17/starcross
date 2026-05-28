@@ -20,19 +20,13 @@ export function NavBar() {
   if (!session) return null;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 border-b border-white/10 bg-slate-950/70 backdrop-blur-xl">
-      <nav className="mx-auto max-w-6xl flex h-16 items-center justify-between px-4 sm:px-6">
-        {/* Logo */}
+    <header className="fixed top-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-xl border-b border-stone-100">
+      <nav className="mx-auto max-w-5xl flex h-16 items-center justify-between px-4 sm:px-6">
         <Link href="/discover" className="flex items-center gap-2 group">
-          <div className="relative">
-            <Star className="h-6 w-6 text-violet-400 fill-violet-400/30 group-hover:text-violet-300 transition-colors" />
-          </div>
-          <span className="text-lg font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
-            StarCross
-          </span>
+          <Star className="h-4 w-4 text-stone-700 fill-stone-700/30" />
+          <span className="font-serif text-lg font-semibold text-stone-900 tracking-tight">StarCross</span>
         </Link>
 
-        {/* Nav links */}
         <div className="flex items-center gap-1">
           {NAV_LINKS.map(({ href, label, icon: Icon }) => {
             const isActive = pathname === href;
@@ -43,8 +37,8 @@ export function NavBar() {
                 className={cn(
                   "flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200",
                   isActive
-                    ? "bg-violet-600/20 text-violet-300 border border-violet-500/30"
-                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                    ? "bg-stone-100 text-stone-900 border border-stone-200"
+                    : "text-stone-500 hover:text-stone-900 hover:bg-stone-50"
                 )}
               >
                 <Icon className="h-4 w-4" />
@@ -54,12 +48,11 @@ export function NavBar() {
           })}
         </div>
 
-        {/* Sign out */}
         <Button
           variant="ghost"
           size="sm"
           onClick={() => signOut({ callbackUrl: "/" })}
-          className="text-slate-400 hover:text-white gap-1.5"
+          className="text-stone-500 hover:text-stone-900 hover:bg-stone-50 gap-1.5"
         >
           <LogOut className="h-4 w-4" />
           <span className="hidden sm:inline">Sign out</span>

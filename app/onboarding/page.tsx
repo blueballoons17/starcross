@@ -49,10 +49,10 @@ function StepIndicator({ current, total }: { current: number; total: number }) {
             className={cn(
               "w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all",
               i < current
-                ? "bg-violet-600 text-white"
+                ? "bg-stone-900 text-white"
                 : i === current
-                ? "bg-violet-600/30 border-2 border-violet-500 text-violet-300"
-                : "bg-white/5 border border-white/10 text-slate-500"
+                ? "bg-stone-200 border-2 border-stone-700 text-stone-700"
+                : "bg-stone-100 border border-stone-200 text-stone-400"
             )}
           >
             {i < current ? <Check className="h-4 w-4" /> : i + 1}
@@ -61,7 +61,7 @@ function StepIndicator({ current, total }: { current: number; total: number }) {
             <div
               className={cn(
                 "h-px w-8 transition-all",
-                i < current ? "bg-violet-500" : "bg-white/10"
+                i < current ? "bg-stone-700" : "bg-stone-200"
               )}
             />
           )}
@@ -75,7 +75,7 @@ function SignBadge({ label, sign }: { label: string; sign: string }) {
   const c = getZodiacColor(sign);
   return (
     <div className="text-center">
-      <p className="text-xs text-slate-500 mb-1">{label}</p>
+      <p className="text-xs text-stone-400 mb-1">{label}</p>
       <div
         className={cn(
           "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-sm font-medium",
@@ -145,10 +145,15 @@ export default function OnboardingPage() {
     setSubmitting(true);
     setSubmitError("");
     try {
+      // Convert prefGenders array to comma-separated string for SQLite
+      const payload = {
+        ...form,
+        prefGenders: form.prefGenders.join(","),
+      };
       const res = await fetch("/api/profile", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -174,17 +179,17 @@ export default function OnboardingPage() {
       : null;
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-[#FAF8F4] flex flex-col items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 mb-1">
-            <Star className="h-6 w-6 text-violet-400 fill-violet-400/30" />
-            <span className="text-xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+            <Star className="h-5 w-5 text-stone-700 fill-stone-700/30" />
+            <span className="font-serif text-xl font-semibold text-stone-900">
               StarCross
             </span>
           </div>
-          <p className="text-slate-400 text-sm">
+          <p className="text-stone-400 text-sm">
             {step === 2 ? "Your chart is ready" : "Tell us about yourself"}
           </p>
         </div>
@@ -192,11 +197,11 @@ export default function OnboardingPage() {
         {/* Step indicator */}
         <div className="flex flex-col items-center mb-8 gap-2">
           <StepIndicator current={step} total={STEPS.length} />
-          <p className="text-slate-400 text-sm">{STEPS[step]}</p>
+          <p className="text-stone-500 text-sm">{STEPS[step]}</p>
         </div>
 
         {/* Card */}
-        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8 shadow-2xl overflow-hidden">
+        <div className="bg-white border border-stone-100 rounded-2xl p-8 shadow-sm overflow-hidden">
           <AnimatePresence mode="wait">
             {step === 0 && (
               <motion.div
@@ -208,62 +213,65 @@ export default function OnboardingPage() {
                 className="space-y-4"
               >
                 <div className="space-y-1.5">
-                  <Label htmlFor="name">Full Name</Label>
+                  <Label htmlFor="name" className="text-stone-700 text-sm font-medium">Full Name</Label>
                   <Input
                     id="name"
                     placeholder="Your name"
                     value={form.name}
                     onChange={(e) => update("name", e.target.value)}
+                    className="h-11 bg-stone-50 border-stone-200 focus:border-stone-400 focus:ring-0"
                   />
-                  {errors.name && <p className="text-red-400 text-xs">{errors.name}</p>}
+                  {errors.name && <p className="text-red-500 text-xs">{errors.name}</p>}
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="birthDate">Date of Birth</Label>
+                  <Label htmlFor="birthDate" className="text-stone-700 text-sm font-medium">Date of Birth</Label>
                   <Input
                     id="birthDate"
                     type="date"
                     value={form.birthDate}
                     onChange={(e) => update("birthDate", e.target.value)}
-                    className="[color-scheme:dark]"
+                    className="h-11 bg-stone-50 border-stone-200 focus:border-stone-400 focus:ring-0"
                   />
-                  {errors.birthDate && <p className="text-red-400 text-xs">{errors.birthDate}</p>}
+                  {errors.birthDate && <p className="text-red-500 text-xs">{errors.birthDate}</p>}
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="birthTime">
+                  <Label htmlFor="birthTime" className="text-stone-700 text-sm font-medium">
                     Time of Birth{" "}
-                    <span className="text-slate-500 font-normal">(optional — for rising sign)</span>
+                    <span className="text-stone-400 font-normal">(optional — for rising sign)</span>
                   </Label>
                   <Input
                     id="birthTime"
                     type="time"
                     value={form.birthTime}
                     onChange={(e) => update("birthTime", e.target.value)}
-                    className="[color-scheme:dark]"
+                    className="h-11 bg-stone-50 border-stone-200 focus:border-stone-400 focus:ring-0"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <Label htmlFor="birthCity">Birth City</Label>
+                    <Label htmlFor="birthCity" className="text-stone-700 text-sm font-medium">Birth City</Label>
                     <Input
                       id="birthCity"
                       placeholder="e.g. New York"
                       value={form.birthCity}
                       onChange={(e) => update("birthCity", e.target.value)}
+                      className="h-11 bg-stone-50 border-stone-200 focus:border-stone-400 focus:ring-0"
                     />
-                    {errors.birthCity && <p className="text-red-400 text-xs">{errors.birthCity}</p>}
+                    {errors.birthCity && <p className="text-red-500 text-xs">{errors.birthCity}</p>}
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="birthCountry">Country</Label>
+                    <Label htmlFor="birthCountry" className="text-stone-700 text-sm font-medium">Country</Label>
                     <Input
                       id="birthCountry"
                       placeholder="e.g. USA"
                       value={form.birthCountry}
                       onChange={(e) => update("birthCountry", e.target.value)}
+                      className="h-11 bg-stone-50 border-stone-200 focus:border-stone-400 focus:ring-0"
                     />
-                    {errors.birthCountry && <p className="text-red-400 text-xs">{errors.birthCountry}</p>}
+                    {errors.birthCountry && <p className="text-red-500 text-xs">{errors.birthCountry}</p>}
                   </div>
                 </div>
               </motion.div>
@@ -280,7 +288,9 @@ export default function OnboardingPage() {
               >
                 {/* Gender */}
                 <div className="space-y-2">
-                  <Label>I identify as <span className="text-slate-500 font-normal">(optional)</span></Label>
+                  <Label className="text-stone-700 text-sm font-medium">
+                    I identify as <span className="text-stone-400 font-normal">(optional)</span>
+                  </Label>
                   <div className="flex flex-wrap gap-2">
                     {GENDER_OPTIONS.map((g) => (
                       <button
@@ -290,8 +300,8 @@ export default function OnboardingPage() {
                         className={cn(
                           "px-3 py-1.5 rounded-full text-sm border transition-all",
                           form.gender === g
-                            ? "bg-violet-600/30 border-violet-500 text-violet-300"
-                            : "bg-white/5 border-white/10 text-slate-400 hover:border-white/20"
+                            ? "bg-stone-900 border-stone-900 text-white"
+                            : "bg-white border-stone-200 text-stone-600 hover:border-stone-400"
                         )}
                       >
                         {g}
@@ -302,7 +312,7 @@ export default function OnboardingPage() {
 
                 {/* Pref genders */}
                 <div className="space-y-2">
-                  <Label>Interested in</Label>
+                  <Label className="text-stone-700 text-sm font-medium">Interested in</Label>
                   <div className="flex flex-wrap gap-2">
                     {PREF_GENDER_OPTIONS.map((g) => (
                       <button
@@ -312,23 +322,23 @@ export default function OnboardingPage() {
                         className={cn(
                           "px-3 py-1.5 rounded-full text-sm border transition-all",
                           form.prefGenders.includes(g)
-                            ? "bg-violet-600/30 border-violet-500 text-violet-300"
-                            : "bg-white/5 border-white/10 text-slate-400 hover:border-white/20"
+                            ? "bg-stone-900 border-stone-900 text-white"
+                            : "bg-white border-stone-200 text-stone-600 hover:border-stone-400"
                         )}
                       >
                         {g}
                       </button>
                     ))}
                   </div>
-                  {errors.prefGenders && <p className="text-red-400 text-xs">{errors.prefGenders}</p>}
+                  {errors.prefGenders && <p className="text-red-500 text-xs">{errors.prefGenders}</p>}
                 </div>
 
                 {/* Age range */}
                 <div className="space-y-3">
-                  <Label>Age range</Label>
+                  <Label className="text-stone-700 text-sm font-medium">Age range</Label>
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1.5">
-                      <Label htmlFor="ageMin" className="text-xs text-slate-500">Minimum</Label>
+                      <Label htmlFor="ageMin" className="text-xs text-stone-400">Minimum</Label>
                       <Input
                         id="ageMin"
                         type="number"
@@ -336,11 +346,12 @@ export default function OnboardingPage() {
                         max={79}
                         value={form.prefAgeMin}
                         onChange={(e) => update("prefAgeMin", parseInt(e.target.value) || 18)}
+                        className="h-11 bg-stone-50 border-stone-200 focus:border-stone-400 focus:ring-0"
                       />
-                      {errors.prefAgeMin && <p className="text-red-400 text-xs">{errors.prefAgeMin}</p>}
+                      {errors.prefAgeMin && <p className="text-red-500 text-xs">{errors.prefAgeMin}</p>}
                     </div>
                     <div className="space-y-1.5">
-                      <Label htmlFor="ageMax" className="text-xs text-slate-500">Maximum</Label>
+                      <Label htmlFor="ageMax" className="text-xs text-stone-400">Maximum</Label>
                       <Input
                         id="ageMax"
                         type="number"
@@ -348,8 +359,9 @@ export default function OnboardingPage() {
                         max={80}
                         value={form.prefAgeMax}
                         onChange={(e) => update("prefAgeMax", parseInt(e.target.value) || 45)}
+                        className="h-11 bg-stone-50 border-stone-200 focus:border-stone-400 focus:ring-0"
                       />
-                      {errors.prefAgeMax && <p className="text-red-400 text-xs">{errors.prefAgeMax}</p>}
+                      {errors.prefAgeMax && <p className="text-red-500 text-xs">{errors.prefAgeMax}</p>}
                     </div>
                   </div>
                 </div>
@@ -366,11 +378,11 @@ export default function OnboardingPage() {
                 className="space-y-6"
               >
                 <div className="text-center">
-                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-violet-600/30 to-indigo-600/30 border border-violet-500/30 mb-3">
-                    <Star className="h-7 w-7 text-violet-400 fill-violet-400/30" />
+                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-stone-100 border border-stone-200 mb-3">
+                    <Star className="h-7 w-7 text-stone-600 fill-stone-600/30" />
                   </div>
-                  <h2 className="text-white font-semibold text-lg">{form.name}&apos;s Chart</h2>
-                  <p className="text-slate-400 text-sm">{form.birthCity}, {form.birthCountry}</p>
+                  <h2 className="font-serif text-stone-900 font-semibold text-lg">{form.name}&apos;s Chart</h2>
+                  <p className="text-stone-400 text-sm">{form.birthCity}, {form.birthCountry}</p>
                 </div>
 
                 {/* Sun/Moon/Rising */}
@@ -382,35 +394,30 @@ export default function OnboardingPage() {
 
                 {/* Element distribution */}
                 <div className="space-y-2">
-                  <p className="text-xs text-slate-500 uppercase tracking-wider">Element Balance</p>
+                  <p className="text-xs text-stone-400 uppercase tracking-wider">Element Balance</p>
                   {Object.entries(astrologyPreview.elements).map(([el, pct]) => (
                     <div key={el} className="flex items-center gap-3">
-                      <span className="text-xs text-slate-400 w-10 capitalize">{el}</span>
-                      <div className="flex-1 h-1.5 rounded-full bg-white/5">
+                      <span className="text-xs text-stone-500 w-10 capitalize">{el}</span>
+                      <div className="flex-1 h-1.5 rounded-full bg-stone-100">
                         <div
-                          className={cn(
-                            "h-full rounded-full",
-                            el === "fire" ? "bg-orange-500" :
-                            el === "earth" ? "bg-emerald-500" :
-                            el === "air" ? "bg-sky-500" : "bg-indigo-500"
-                          )}
+                          className="h-full rounded-full bg-gradient-to-r from-stone-700 to-stone-400"
                           style={{ width: `${pct}%` }}
                         />
                       </div>
-                      <span className="text-xs text-slate-500 w-8 text-right">{pct}%</span>
+                      <span className="text-xs text-stone-400 w-8 text-right">{pct}%</span>
                     </div>
                   ))}
                 </div>
 
                 {/* Personality summary */}
-                <div className="bg-violet-500/10 border border-violet-500/20 rounded-xl p-4">
-                  <p className="text-slate-300 text-sm leading-relaxed">
+                <div className="bg-stone-50 border border-stone-100 rounded-xl p-4">
+                  <p className="text-stone-600 text-sm leading-relaxed">
                     {astrologyPreview.traits.emotionalStyle.split(".")[0]}.
                   </p>
                 </div>
 
                 {submitError && (
-                  <div className="px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-sm">
+                  <div className="px-4 py-3 rounded-xl bg-red-50 border border-red-100 text-red-600 text-sm">
                     {submitError}
                   </div>
                 )}
@@ -422,7 +429,7 @@ export default function OnboardingPage() {
         {/* Navigation */}
         <div className="flex items-center justify-between mt-6">
           {step > 0 ? (
-            <Button variant="outline" onClick={handleBack} className="gap-2">
+            <Button variant="outline" onClick={handleBack} className="gap-2 border-stone-200 text-stone-600 hover:bg-stone-50">
               <ChevronLeft className="h-4 w-4" />
               Back
             </Button>
@@ -431,12 +438,12 @@ export default function OnboardingPage() {
           )}
 
           {step < 2 ? (
-            <Button onClick={handleNext} className="gap-2">
+            <Button onClick={handleNext} className="gap-2 bg-stone-900 text-white hover:bg-stone-800">
               Continue
               <ChevronRight className="h-4 w-4" />
             </Button>
           ) : (
-            <Button onClick={handleSubmit} disabled={submitting} className="gap-2">
+            <Button onClick={handleSubmit} disabled={submitting} className="gap-2 bg-stone-900 text-white hover:bg-stone-800">
               {submitting ? "Saving…" : "Complete Setup"}
               <Check className="h-4 w-4" />
             </Button>

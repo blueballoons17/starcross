@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { motion, useMotionValue, useTransform, AnimatePresence } from "framer-motion";
 import { Heart, X, Star } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { getZodiacColor, ZODIAC_SYMBOLS } from "@/lib/zodiac-colors";
 import { cn } from "@/lib/utils";
 
@@ -55,10 +54,10 @@ function getInitials(name: string): string {
     .toUpperCase();
 }
 
-function getScoreColor(score: number) {
-  if (score >= 70) return "from-amber-500 to-yellow-400";
-  if (score >= 50) return "from-violet-600 to-indigo-500";
-  return "from-slate-500 to-slate-400";
+function getScoreBadgeClass(score: number) {
+  if (score >= 70) return "bg-amber-50 text-amber-700 border border-amber-200";
+  if (score >= 50) return "bg-stone-100 text-stone-700 border border-stone-200";
+  return "bg-stone-50 text-stone-500 border border-stone-200";
 }
 
 function ProfileCard({
@@ -80,7 +79,6 @@ function ProfileCard({
 
   const age = getAge(candidate.profile.birthDate);
   const astro = candidate.astrologyProfile;
-  const sunColor = getZodiacColor(astro.sunSign);
 
   // Truncate bio/trait to short blurb
   const blurb = candidate.profile.bio
@@ -97,7 +95,7 @@ function ProfileCard({
 
   if (!isTop) {
     return (
-      <div className="absolute inset-0 rounded-3xl bg-white/5 border border-white/10 scale-95 opacity-60 pointer-events-none" />
+      <div className="absolute inset-0 rounded-3xl bg-stone-50 border border-stone-100 scale-95 opacity-60 pointer-events-none" />
     );
   }
 
@@ -110,9 +108,9 @@ function ProfileCard({
       onDragEnd={handleDragEnd}
       className="absolute inset-0 cursor-grab active:cursor-grabbing touch-none"
     >
-      <div className="relative h-full rounded-3xl overflow-hidden bg-gradient-to-b from-slate-900 to-slate-950 border border-white/10 shadow-2xl select-none">
+      <div className="relative h-full rounded-3xl overflow-hidden bg-white border border-stone-100 shadow-xl shadow-stone-200/80 select-none">
         {/* Avatar area */}
-        <div className="relative h-3/5 bg-gradient-to-br from-violet-950 via-indigo-950 to-slate-950 flex items-center justify-center overflow-hidden">
+        <div className="relative h-3/5 bg-gradient-to-br from-stone-100 to-stone-200 flex items-center justify-center overflow-hidden">
           {candidate.profile.avatarUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -123,8 +121,8 @@ function ProfileCard({
           ) : (
             <div
               className={cn(
-                "w-32 h-32 rounded-full flex items-center justify-center text-4xl font-bold text-white shadow-2xl",
-                "bg-gradient-to-br from-violet-600 to-indigo-700"
+                "w-32 h-32 rounded-full flex items-center justify-center text-4xl font-bold text-white shadow-xl",
+                "bg-gradient-to-br from-stone-700 to-stone-900"
               )}
             >
               {getInitials(candidate.profile.name)}
@@ -135,9 +133,8 @@ function ProfileCard({
           <div className="absolute top-4 right-4">
             <div
               className={cn(
-                "flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-bold text-white shadow-lg",
-                "bg-gradient-to-r",
-                getScoreColor(candidate.matchScore)
+                "flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-bold shadow-sm",
+                getScoreBadgeClass(candidate.matchScore)
               )}
             >
               <Star className="h-3.5 w-3.5 fill-current" />
@@ -145,21 +142,22 @@ function ProfileCard({
             </div>
           </div>
 
-          {/* Like/Pass overlays */}
+          {/* Like overlay */}
           <motion.div
             style={{ opacity: likeOpacity }}
-            className="absolute inset-0 bg-emerald-500/20 flex items-center justify-center pointer-events-none"
+            className="absolute inset-0 bg-emerald-400/10 flex items-center justify-center pointer-events-none"
           >
-            <div className="border-4 border-emerald-400 text-emerald-400 rounded-xl px-4 py-2 rotate-[-15deg] text-3xl font-black tracking-widest">
+            <div className="border-4 border-emerald-500 text-emerald-600 rounded-xl px-4 py-2 rotate-[-15deg] text-3xl font-black tracking-widest">
               LIKE
             </div>
           </motion.div>
 
+          {/* Pass overlay */}
           <motion.div
             style={{ opacity: passOpacity }}
-            className="absolute inset-0 bg-red-500/20 flex items-center justify-center pointer-events-none"
+            className="absolute inset-0 bg-red-400/10 flex items-center justify-center pointer-events-none"
           >
-            <div className="border-4 border-red-400 text-red-400 rounded-xl px-4 py-2 rotate-[15deg] text-3xl font-black tracking-widest">
+            <div className="border-4 border-red-400 text-red-500 rounded-xl px-4 py-2 rotate-[15deg] text-3xl font-black tracking-widest">
               PASS
             </div>
           </motion.div>
@@ -169,10 +167,10 @@ function ProfileCard({
         <div className="p-5 space-y-3">
           <div className="flex items-start justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-white">
+              <h2 className="text-2xl font-bold text-stone-900">
                 {candidate.profile.name}, {age}
               </h2>
-              <p className="text-slate-400 text-sm">
+              <p className="text-stone-500 text-sm">
                 {candidate.profile.birthCity}, {candidate.profile.birthCountry}
               </p>
             </div>
@@ -202,20 +200,20 @@ function ProfileCard({
           </div>
 
           {/* Bio blurb */}
-          <p className="text-slate-300 text-sm leading-relaxed line-clamp-2">{blurb}</p>
+          <p className="text-stone-500 text-sm leading-relaxed line-clamp-2">{blurb}</p>
         </div>
 
         {/* Action buttons */}
         <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-6">
           <button
             onClick={onPass}
-            className="w-14 h-14 rounded-full bg-slate-800/80 border border-white/10 flex items-center justify-center text-red-400 hover:bg-red-500/20 hover:border-red-500/30 transition-all shadow-lg"
+            className="w-14 h-14 rounded-full bg-white border border-stone-200 flex items-center justify-center text-stone-400 hover:border-red-200 hover:text-red-400 transition-all shadow-sm"
           >
             <X className="h-6 w-6" />
           </button>
           <button
             onClick={onLike}
-            className="w-14 h-14 rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center text-white hover:from-violet-500 hover:to-indigo-500 transition-all shadow-lg shadow-violet-900/50"
+            className="w-14 h-14 rounded-full bg-stone-900 flex items-center justify-center text-white hover:bg-stone-800 transition-all shadow-md"
           >
             <Heart className="h-6 w-6 fill-current" />
           </button>
@@ -252,14 +250,14 @@ export function SwipeDeck({ candidates, onLike, onPass }: SwipeDeckProps) {
   if (remaining.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-full text-center gap-4 py-20">
-        <div className="w-20 h-20 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-          <Star className="h-10 w-10 text-violet-400/50" />
+        <div className="w-20 h-20 rounded-full bg-stone-100 border border-stone-200 flex items-center justify-center">
+          <Star className="h-10 w-10 text-stone-300" />
         </div>
         <div>
-          <h3 className="text-xl font-semibold text-white mb-2">
+          <h3 className="text-xl font-semibold text-stone-900 mb-2">
             {"You've seen everyone for now"}
           </h3>
-          <p className="text-slate-400 text-sm max-w-xs">
+          <p className="text-stone-500 text-sm max-w-xs">
             Check back soon as new members join the constellation.
           </p>
         </div>

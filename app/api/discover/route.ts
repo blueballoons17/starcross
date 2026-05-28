@@ -66,30 +66,43 @@ export async function GET() {
     return true;
   });
 
-  // Build current user's astrology result
+  // Parse current user's JSON string fields
   const currentAstro: AstrologyResult = {
     signs: {
       sun: currentUser.astrologyProfile.sunSign,
       moon: currentUser.astrologyProfile.moonSign,
       rising: currentUser.astrologyProfile.risingSign,
     },
-    elements: currentUser.astrologyProfile.elementScores as AstrologyResult["elements"],
-    modals: currentUser.astrologyProfile.modalScores as AstrologyResult["modals"],
-    traits: currentUser.astrologyProfile.traits as AstrologyResult["traits"],
+    elements: (typeof currentUser.astrologyProfile.elementScores === "string"
+      ? JSON.parse(currentUser.astrologyProfile.elementScores)
+      : currentUser.astrologyProfile.elementScores) as AstrologyResult["elements"],
+    modals: (typeof currentUser.astrologyProfile.modalScores === "string"
+      ? JSON.parse(currentUser.astrologyProfile.modalScores)
+      : currentUser.astrologyProfile.modalScores) as AstrologyResult["modals"],
+    traits: (typeof currentUser.astrologyProfile.traits === "string"
+      ? JSON.parse(currentUser.astrologyProfile.traits)
+      : currentUser.astrologyProfile.traits) as AstrologyResult["traits"],
   };
 
   // Score and sort
   const scored = filtered
     .map((c) => {
+      const rawAstro = c.astrologyProfile!;
       const candidateAstro: AstrologyResult = {
         signs: {
-          sun: c.astrologyProfile!.sunSign,
-          moon: c.astrologyProfile!.moonSign,
-          rising: c.astrologyProfile!.risingSign,
+          sun: rawAstro.sunSign,
+          moon: rawAstro.moonSign,
+          rising: rawAstro.risingSign,
         },
-        elements: c.astrologyProfile!.elementScores as AstrologyResult["elements"],
-        modals: c.astrologyProfile!.modalScores as AstrologyResult["modals"],
-        traits: c.astrologyProfile!.traits as AstrologyResult["traits"],
+        elements: (typeof rawAstro.elementScores === "string"
+          ? JSON.parse(rawAstro.elementScores)
+          : rawAstro.elementScores) as AstrologyResult["elements"],
+        modals: (typeof rawAstro.modalScores === "string"
+          ? JSON.parse(rawAstro.modalScores)
+          : rawAstro.modalScores) as AstrologyResult["modals"],
+        traits: (typeof rawAstro.traits === "string"
+          ? JSON.parse(rawAstro.traits)
+          : rawAstro.traits) as AstrologyResult["traits"],
       };
 
       const compat = calculateCompatibility(currentAstro, candidateAstro);
@@ -106,10 +119,10 @@ export async function GET() {
           birthCountry: c.profile!.birthCountry,
         },
         astrologyProfile: {
-          sunSign: c.astrologyProfile!.sunSign,
-          moonSign: c.astrologyProfile!.moonSign,
-          risingSign: c.astrologyProfile!.risingSign,
-          traits: c.astrologyProfile!.traits as AstrologyResult["traits"],
+          sunSign: rawAstro.sunSign,
+          moonSign: rawAstro.moonSign,
+          risingSign: rawAstro.risingSign,
+          traits: candidateAstro.traits,
         },
         matchScore: compat.matchScore,
       };

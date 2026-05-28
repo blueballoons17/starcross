@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { Star } from "lucide-react";
+import { Star, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -74,32 +74,26 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[#FAF8F4] flex flex-col items-center justify-center px-4">
       <div className="w-full max-w-sm">
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 group">
-            <Star className="h-7 w-7 text-violet-400 fill-violet-400/30" />
-            <span className="text-2xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
-              StarCross
-            </span>
-          </Link>
-          <p className="text-slate-400 text-sm mt-2">Create your account</p>
-        </div>
+        <Link href="/" className="flex items-center justify-center gap-2 mb-10">
+          <Star className="h-4 w-4 text-stone-700 fill-stone-700/30" />
+          <span className="font-serif text-xl font-semibold text-stone-900">StarCross</span>
+        </Link>
 
-        {/* Card */}
-        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8 shadow-2xl">
-          <h1 className="text-xl font-semibold text-white mb-6">Join StarCross</h1>
+        <div className="bg-white rounded-2xl shadow-sm border border-stone-100 p-8">
+          <h1 className="font-serif text-2xl font-semibold text-stone-900 mb-1">Create your account</h1>
+          <p className="text-stone-500 text-sm mb-8">Begin your cosmic journey</p>
 
           {error && (
-            <div className="mb-4 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-sm">
+            <div className="mb-5 text-red-600 text-sm bg-red-50 border border-red-100 rounded-xl px-4 py-3">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-1.5">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-stone-700 text-sm font-medium">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -107,25 +101,27 @@ export default function SignupPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 autoComplete="email"
+                className="h-11 bg-stone-50 border-stone-200 focus:border-stone-400 focus:ring-0"
                 required
               />
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="text-stone-700 text-sm font-medium">Password</Label>
               <Input
                 id="password"
                 type="password"
-                placeholder="8+ characters"
+                placeholder="Min. 8 characters"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="new-password"
+                className="h-11 bg-stone-50 border-stone-200 focus:border-stone-400 focus:ring-0"
                 required
               />
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="confirm">Confirm Password</Label>
+              <Label htmlFor="confirm" className="text-stone-700 text-sm font-medium">Confirm Password</Label>
               <Input
                 id="confirm"
                 type="password"
@@ -133,26 +129,28 @@ export default function SignupPage() {
                 value={confirm}
                 onChange={(e) => setConfirm(e.target.value)}
                 autoComplete="new-password"
+                className="h-11 bg-stone-50 border-stone-200 focus:border-stone-400 focus:ring-0"
                 required
               />
             </div>
 
             <Button
               type="submit"
-              className="w-full mt-2"
               disabled={loading}
+              className="w-full h-11 bg-stone-900 text-white hover:bg-stone-800 rounded-xl"
             >
-              {loading ? "Creating account…" : "Create Account"}
+              {loading ? "Creating account…" : "Create account"}
+              {!loading && <ArrowRight className="h-4 w-4 ml-2" />}
             </Button>
           </form>
-
-          <p className="mt-6 text-center text-sm text-slate-400">
-            Already have an account?{" "}
-            <Link href="/login" className="text-violet-400 hover:text-violet-300 font-medium">
-              Sign in
-            </Link>
-          </p>
         </div>
+
+        <p className="text-center text-stone-500 text-sm mt-6">
+          Already have an account?{" "}
+          <Link href="/login" className="text-stone-900 font-medium hover:underline underline-offset-2">
+            Sign in
+          </Link>
+        </p>
       </div>
     </div>
   );

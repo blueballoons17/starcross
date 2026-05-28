@@ -1,14 +1,21 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import { Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "@/components/SessionProvider";
 import { Toaster } from "@/components/ui/toaster";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
+});
 
 export const metadata: Metadata = {
   title: "StarCross — Find Your Cosmic Counterpart",
-  description: "An astrology-based dating platform. Discover deep compatibility through celestial alignment.",
+  description: "An astrology-based compatibility platform. Discover meaningful connections through celestial alignment.",
 };
 
 export const viewport: Viewport = {
@@ -17,16 +24,10 @@ export const viewport: Viewport = {
   maximumScale: 1,
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="dark">
-      <body
-        className={`${inter.className} min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-violet-950 text-white antialiased`}
-      >
+    <html lang="en">
+      <body className={`${inter.variable} ${playfair.variable} font-sans min-h-screen bg-[#FAF8F4] text-stone-900 antialiased`}>
         <SessionProvider>
           {children}
           <Toaster />

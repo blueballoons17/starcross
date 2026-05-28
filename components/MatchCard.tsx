@@ -58,7 +58,8 @@ function ScoreRing({ score }: { score: number }) {
   const offset = circumference - (score / 100) * circumference;
 
   const gradId = `score-grad-${score}`;
-  const color = score >= 70 ? "#f59e0b" : score >= 50 ? "#7c3aed" : "#64748b";
+  const color = score >= 70 ? "#92400e" : score >= 50 ? "#44403c" : "#a8a29e";
+  const colorEnd = score >= 70 ? "#b45309" : score >= 50 ? "#78716c" : "#d6d3d1";
 
   return (
     <div className="relative w-16 h-16 flex items-center justify-center">
@@ -66,13 +67,13 @@ function ScoreRing({ score }: { score: number }) {
         <defs>
           <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor={color} />
-            <stop offset="100%" stopColor={score >= 70 ? "#fbbf24" : score >= 50 ? "#6366f1" : "#94a3b8"} />
+            <stop offset="100%" stopColor={colorEnd} />
           </linearGradient>
         </defs>
         <circle
           cx="32" cy="32" r={radius}
           fill="none"
-          stroke="rgba(255,255,255,0.05)"
+          stroke="rgba(28,25,23,0.06)"
           strokeWidth="4"
         />
         <circle
@@ -86,8 +87,8 @@ function ScoreRing({ score }: { score: number }) {
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-sm font-bold text-white">{score}</span>
-        <span className="text-[9px] text-slate-400 -mt-0.5">%</span>
+        <span className="text-sm font-bold text-stone-900">{score}</span>
+        <span className="text-[9px] text-stone-400 -mt-0.5">%</span>
       </div>
     </div>
   );
@@ -105,7 +106,7 @@ export function MatchCard({ match }: MatchCardProps) {
         onClick={() => setModalOpen(true)}
         className="text-left w-full group"
       >
-        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 hover:bg-white/8 hover:border-white/20 transition-all duration-200 hover:shadow-xl hover:shadow-violet-900/20">
+        <div className="bg-white rounded-2xl p-5 border border-stone-100 shadow-sm hover:shadow-md transition-shadow duration-200">
           <div className="flex items-start gap-3">
             {/* Avatar */}
             <div className="relative shrink-0">
@@ -117,7 +118,7 @@ export function MatchCard({ match }: MatchCardProps) {
                   className="w-14 h-14 rounded-full object-cover"
                 />
               ) : (
-                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-violet-600 to-indigo-700 flex items-center justify-center text-white font-bold">
+                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-stone-700 to-stone-900 flex items-center justify-center text-white font-bold">
                   {getInitials(match.otherUser.name)}
                 </div>
               )}
@@ -127,10 +128,10 @@ export function MatchCard({ match }: MatchCardProps) {
             <div className="flex-1 min-w-0">
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <h3 className="font-semibold text-white truncate">
+                  <h3 className="font-semibold text-stone-900 truncate">
                     {match.otherUser.name}, {age}
                   </h3>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-stone-400">
                     {match.otherUser.birthCity}, {match.otherUser.birthCountry}
                   </p>
                 </div>
@@ -147,15 +148,15 @@ export function MatchCard({ match }: MatchCardProps) {
                 >
                   {ZODIAC_SYMBOLS[match.otherAstro.sunSign]} {match.otherAstro.sunSign}
                 </span>
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs border border-white/10 bg-white/5 text-slate-400">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs border border-stone-200 bg-stone-50 text-stone-500">
                   {ZODIAC_SYMBOLS[match.otherAstro.moonSign]} {match.otherAstro.moonSign} Moon
                 </span>
               </div>
 
               {/* Strength preview */}
               {firstStrength && (
-                <p className="mt-2 text-xs text-slate-400 line-clamp-2 leading-relaxed">
-                  <Star className="h-3 w-3 text-violet-400 inline mr-1" />
+                <p className="mt-2 text-xs text-stone-500 line-clamp-2 leading-relaxed">
+                  <Star className="h-3 w-3 text-stone-400 inline mr-1" />
                   {firstStrength}
                 </p>
               )}

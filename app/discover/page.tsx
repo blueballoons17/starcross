@@ -91,20 +91,23 @@ export default function DiscoverPage() {
 
   if (status === "loading" || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-slate-400 animate-pulse">Reading the stars…</div>
+      <div className="min-h-screen bg-[#FAF8F4] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 rounded-full border-2 border-stone-300 border-t-stone-700 animate-spin" />
+          <p className="text-stone-400 text-sm">Reading the stars…</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#FAF8F4]">
       <NavBar />
       <main className="pt-20 pb-8 px-4">
         <div className="max-w-lg mx-auto">
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-white mb-1">Discover</h1>
-            <p className="text-slate-400 text-sm">
+            <h1 className="font-serif text-2xl font-semibold text-stone-900 mb-1">Discover</h1>
+            <p className="text-stone-400 text-sm">
               Swipe right to like, left to pass
             </p>
           </div>

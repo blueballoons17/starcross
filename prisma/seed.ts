@@ -11,7 +11,7 @@ interface SeedUser {
   birthCity: string;
   birthCountry: string;
   gender: string;
-  prefGenders: string[];
+  prefGenders: string; // comma-separated string for SQLite
 }
 
 const SIGNS = [
@@ -195,7 +195,7 @@ const SEED_USERS: SeedUser[] = [
     birthCity: "San Francisco",
     birthCountry: "USA",
     gender: "Woman",
-    prefGenders: ["Men"],
+    prefGenders: "Men",
   },
   {
     email: "isabelle.martin@example.com",
@@ -205,7 +205,7 @@ const SEED_USERS: SeedUser[] = [
     birthCity: "Paris",
     birthCountry: "France",
     gender: "Woman",
-    prefGenders: ["Men", "Non-binary people"],
+    prefGenders: "Men,Non-binary people",
   },
   {
     email: "priya.sharma@example.com",
@@ -215,7 +215,7 @@ const SEED_USERS: SeedUser[] = [
     birthCity: "Mumbai",
     birthCountry: "India",
     gender: "Woman",
-    prefGenders: ["Men"],
+    prefGenders: "Men",
   },
   {
     email: "sofia.reyes@example.com",
@@ -225,7 +225,7 @@ const SEED_USERS: SeedUser[] = [
     birthCity: "Buenos Aires",
     birthCountry: "Argentina",
     gender: "Woman",
-    prefGenders: ["Men", "Women"],
+    prefGenders: "Men,Women",
   },
   {
     email: "alice.nakamura@example.com",
@@ -235,7 +235,7 @@ const SEED_USERS: SeedUser[] = [
     birthCity: "Tokyo",
     birthCountry: "Japan",
     gender: "Woman",
-    prefGenders: ["Men"],
+    prefGenders: "Men",
   },
   {
     email: "zara.okonkwo@example.com",
@@ -245,7 +245,7 @@ const SEED_USERS: SeedUser[] = [
     birthCity: "Lagos",
     birthCountry: "Nigeria",
     gender: "Woman",
-    prefGenders: ["Men"],
+    prefGenders: "Men",
   },
   {
     email: "james.carter@example.com",
@@ -255,7 +255,7 @@ const SEED_USERS: SeedUser[] = [
     birthCity: "London",
     birthCountry: "UK",
     gender: "Man",
-    prefGenders: ["Women"],
+    prefGenders: "Women",
   },
   {
     email: "lucas.dubois@example.com",
@@ -265,7 +265,7 @@ const SEED_USERS: SeedUser[] = [
     birthCity: "Lyon",
     birthCountry: "France",
     gender: "Man",
-    prefGenders: ["Women", "Non-binary people"],
+    prefGenders: "Women,Non-binary people",
   },
   {
     email: "ethan.walsh@example.com",
@@ -275,7 +275,7 @@ const SEED_USERS: SeedUser[] = [
     birthCity: "Dublin",
     birthCountry: "Ireland",
     gender: "Man",
-    prefGenders: ["Women"],
+    prefGenders: "Women",
   },
   {
     email: "ravi.patel@example.com",
@@ -285,7 +285,7 @@ const SEED_USERS: SeedUser[] = [
     birthCity: "Ahmedabad",
     birthCountry: "India",
     gender: "Man",
-    prefGenders: ["Women"],
+    prefGenders: "Women",
   },
   {
     email: "marco.ferrari@example.com",
@@ -295,7 +295,7 @@ const SEED_USERS: SeedUser[] = [
     birthCity: "Milan",
     birthCountry: "Italy",
     gender: "Man",
-    prefGenders: ["Women"],
+    prefGenders: "Women",
   },
   {
     email: "alex.kim@example.com",
@@ -305,7 +305,7 @@ const SEED_USERS: SeedUser[] = [
     birthCity: "Seoul",
     birthCountry: "South Korea",
     gender: "Non-binary",
-    prefGenders: ["Everyone"],
+    prefGenders: "Everyone",
   },
 ];
 
@@ -340,9 +340,9 @@ async function main() {
             sunSign: astro.sunSign,
             moonSign: astro.moonSign,
             risingSign: astro.risingSign,
-            elementScores: astro.elementScores,
-            modalScores: astro.modalScores,
-            traits: astro.traits,
+            elementScores: JSON.stringify(astro.elementScores),
+            modalScores: JSON.stringify(astro.modalScores),
+            traits: JSON.stringify(astro.traits),
           },
         },
       },

@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
 }
 
 model User {
@@ -31,7 +31,7 @@ model Profile {
   birthCity    String
   birthCountry String
   gender       String?
-  prefGenders  String[]
+  prefGenders  String   @default("any")
   prefAgeMin   Int      @default(18)
   prefAgeMax   Int      @default(45)
   avatarUrl    String?
@@ -47,9 +47,9 @@ model AstrologyProfile {
   sunSign       String
   moonSign      String
   risingSign    String
-  elementScores Json
-  modalScores   Json
-  traits        Json
+  elementScores String
+  modalScores   String
+  traits        String
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
@@ -58,7 +58,7 @@ model Swipe {
   id         String    @id @default(cuid())
   fromUserId String
   toUserId   String
-  direction  Direction
+  direction  String
   createdAt  DateTime  @default(now())
 
   fromUser User @relation("SwipeFrom", fields: [fromUserId], references: [id], onDelete: Cascade)
@@ -72,16 +72,11 @@ model Match {
   userAId    String
   userBId    String
   matchScore Float
-  breakdown  Json
+  breakdown  String
   createdAt  DateTime @default(now())
 
   userA User @relation("MatchUserA", fields: [userAId], references: [id], onDelete: Cascade)
   userB User @relation("MatchUserB", fields: [userBId], references: [id], onDelete: Cascade)
 
   @@unique([userAId, userBId])
-}
-
-enum Direction {
-  like
-  pass
 }

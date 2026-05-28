@@ -35,11 +35,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Cannot swipe on yourself." }, { status: 400 });
   }
 
-  // Upsert swipe
+  // Upsert swipe — direction stored as plain string for SQLite
   await prisma.swipe.upsert({
     where: { fromUserId_toUserId: { fromUserId: userId, toUserId } },
-    create: { fromUserId: userId, toUserId, direction: direction as "like" | "pass" },
-    update: { direction: direction as "like" | "pass" },
+    create: { fromUserId: userId, toUserId, direction },
+    update: { direction },
   });
 
   // Check for mutual like
@@ -68,29 +68,52 @@ export async function POST(request: NextRequest) {
       ]);
 
       if (userA?.astrologyProfile && userB?.astrologyProfile) {
+        const rawA = userA.astrologyProfile;
+        const rawB = userB.astrologyProfile;
+
         const astroA: AstrologyResult = {
           signs: {
-            sun: userA.astrologyProfile.sunSign,
-            moon: userA.astrologyProfile.moonSign,
-            rising: userA.astrologyProfile.risingSign,
+            sun: rawA.sunSign,
+            moon: rawA.moonSign,
+            rising: rawA.risingSign,
           },
-          elements: userA.astrologyProfile.elementScores as AstrologyResult["elements"],
-          modals: userA.astrologyProfile.modalScores as AstrologyResult["modals"],
-          traits: userA.astrologyProfile.traits as AstrologyResult["traits"],
+          elements: (typeof rawA.elementScores === "string"
+            ? JSON.parse(rawA.elementScores)
+            : rawA.elementScores) as AstrologyResult["elements"],
+          modals: (typeof rawA.modalScores === "string"
+            ? JSON.parse(rawA.modalScores)
+            : rawA.modalScores) as AstrologyResult["modals"],
+          traits: (typeof rawA.traits === "string"
+            ? JSON.parse(rawA.traits)
+            : rawA.traits) as AstrologyResult["traits"],
         };
 
         const astroB: AstrologyResult = {
           signs: {
-            sun: userB.astrologyProfile.sunSign,
-            moon: userB.astrologyProfile.moonSign,
-            rising: userB.astrologyProfile.risingSign,
+            sun: rawB.sunSign,
+            moon: rawB.moonSign,
+            rising: rawB.risingSign,
           },
-          elements: userB.astrologyProfile.elementScores as AstrologyResult["elements"],
-          modals: userB.astrologyProfile.modalScores as AstrologyResult["modals"],
-          traits: userB.astrologyProfile.traits as AstrologyResult["traits"],
+          elements: (typeof rawB.elementScores === "string"
+            ? JSON.parse(rawB.elementScores)
+            : rawB.elementScores) as AstrologyResult["elements"],
+          modals: (typeof rawB.modalScores === "string"
+            ? JSON.parse(rawB.modalScores)
+            : rawB.modalScores) as AstrologyResult["modals"],
+          traits: (typeof rawB.traits === "string"
+            ? JSON.parse(rawB.traits)
+            : rawB.traits) as AstrologyResult["traits"],
         };
 
         const compat = calculateCompatibility(astroA, astroB);
+
+        // Serialize breakdown as JSON string for SQLite
+        const breakdownStr = JSON.stringify({
+          ...compat.breakdown,
+          explanation: compat.explanation,
+          strengths: compat.strengths,
+          frictionPoints: compat.frictionPoints,
+        });
 
         const match = await prisma.match.upsert({
           where: { userAId_userBId: { userAId, userBId } },
@@ -98,21 +121,11 @@ export async function POST(request: NextRequest) {
             userAId,
             userBId,
             matchScore: compat.matchScore,
-            breakdown: {
-              ...compat.breakdown,
-              explanation: compat.explanation,
-              strengths: compat.strengths,
-              frictionPoints: compat.frictionPoints,
-            },
+            breakdown: breakdownStr,
           },
           update: {
             matchScore: compat.matchScore,
-            breakdown: {
-              ...compat.breakdown,
-              explanation: compat.explanation,
-              strengths: compat.strengths,
-              frictionPoints: compat.frictionPoints,
-            },
+            breakdown: breakdownStr,
           },
         });
 

@@ -63,24 +63,27 @@ export default function MatchesPage() {
 
   if (status === "loading" || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-slate-400 animate-pulse">Loading matches…</div>
+      <div className="min-h-screen bg-[#FAF8F4] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 rounded-full border-2 border-stone-300 border-t-stone-700 animate-spin" />
+          <p className="text-stone-400 text-sm">Loading matches…</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#FAF8F4]">
       <NavBar />
       <main className="pt-20 pb-12 px-4">
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-xl bg-violet-600/20 border border-violet-500/30 flex items-center justify-center">
-              <Heart className="h-5 w-5 text-violet-400" />
+            <div className="w-10 h-10 rounded-xl bg-stone-100 border border-stone-200 flex items-center justify-center">
+              <Heart className="h-5 w-5 text-stone-600" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white">Your Matches</h1>
-              <p className="text-slate-400 text-sm">
+              <h1 className="font-serif text-2xl font-semibold text-stone-900">Your Matches</h1>
+              <p className="text-stone-400 text-sm">
                 {matches.length} cosmic {matches.length === 1 ? "connection" : "connections"}
               </p>
             </div>
@@ -88,12 +91,12 @@ export default function MatchesPage() {
 
           {matches.length === 0 ? (
             <div className="text-center py-20 space-y-4">
-              <div className="w-16 h-16 mx-auto rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-                <Star className="h-8 w-8 text-slate-500" />
+              <div className="w-16 h-16 mx-auto rounded-full bg-stone-100 border border-stone-200 flex items-center justify-center">
+                <Star className="h-8 w-8 text-stone-300" />
               </div>
               <div>
-                <h3 className="text-white font-semibold mb-1">No matches yet</h3>
-                <p className="text-slate-400 text-sm">Keep swiping — the stars are aligning.</p>
+                <h3 className="font-serif text-stone-900 font-semibold mb-1">No matches yet</h3>
+                <p className="text-stone-400 text-sm">Keep swiping — the stars are aligning.</p>
               </div>
             </div>
           ) : (

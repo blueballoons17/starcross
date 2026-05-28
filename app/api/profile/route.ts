@@ -26,9 +26,25 @@ export async function GET() {
     where: { userId },
   });
 
-  const astrologyProfile = await prisma.astrologyProfile.findUnique({
+  const astrologyProfileRaw = await prisma.astrologyProfile.findUnique({
     where: { userId },
   });
+
+  // Parse JSON strings stored for SQLite
+  const astrologyProfile = astrologyProfileRaw
+    ? {
+        ...astrologyProfileRaw,
+        elementScores: typeof astrologyProfileRaw.elementScores === "string"
+          ? JSON.parse(astrologyProfileRaw.elementScores)
+          : astrologyProfileRaw.elementScores,
+        modalScores: typeof astrologyProfileRaw.modalScores === "string"
+          ? JSON.parse(astrologyProfileRaw.modalScores)
+          : astrologyProfileRaw.modalScores,
+        traits: typeof astrologyProfileRaw.traits === "string"
+          ? JSON.parse(astrologyProfileRaw.traits)
+          : astrologyProfileRaw.traits,
+      }
+    : null;
 
   return NextResponse.json({ profile, astrologyProfile });
 }
@@ -47,7 +63,7 @@ export async function POST(request: NextRequest) {
     birthCity?: string;
     birthCountry?: string;
     gender?: string;
-    prefGenders?: string[];
+    prefGenders?: string | string[];
     prefAgeMin?: number;
     prefAgeMax?: number;
     bio?: string;
@@ -90,6 +106,16 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid birth date." }, { status: 400 });
   }
 
+  // Normalize prefGenders to a comma-separated string for SQLite
+  let prefGendersStr = "any";
+  if (prefGenders) {
+    if (Array.isArray(prefGenders)) {
+      prefGendersStr = prefGenders.join(",") || "any";
+    } else {
+      prefGendersStr = prefGenders || "any";
+    }
+  }
+
   // Calculate astrology profile
   const astroResult = calculateAstrologyProfile(
     birthDateObj,
@@ -108,7 +134,7 @@ export async function POST(request: NextRequest) {
       birthCity: birthCity.trim(),
       birthCountry: birthCountry.trim(),
       gender: gender || null,
-      prefGenders: prefGenders ?? [],
+      prefGenders: prefGendersStr,
       prefAgeMin: prefAgeMin ?? 18,
       prefAgeMax: prefAgeMax ?? 45,
       bio: bio || null,
@@ -120,34 +146,41 @@ export async function POST(request: NextRequest) {
       birthCity: birthCity.trim(),
       birthCountry: birthCountry.trim(),
       gender: gender || null,
-      prefGenders: prefGenders ?? [],
+      prefGenders: prefGendersStr,
       prefAgeMin: prefAgeMin ?? 18,
       prefAgeMax: prefAgeMax ?? 45,
       bio: bio || null,
     },
   });
 
-  // Upsert astrology profile
-  const astrologyProfile = await prisma.astrologyProfile.upsert({
+  // Upsert astrology profile — store JSON as strings for SQLite
+  const astrologyProfileRaw = await prisma.astrologyProfile.upsert({
     where: { userId },
     create: {
       userId,
       sunSign: astroResult.signs.sun,
       moonSign: astroResult.signs.moon,
       risingSign: astroResult.signs.rising,
-      elementScores: astroResult.elements,
-      modalScores: astroResult.modals,
-      traits: astroResult.traits,
+      elementScores: JSON.stringify(astroResult.elements),
+      modalScores: JSON.stringify(astroResult.modals),
+      traits: JSON.stringify(astroResult.traits),
     },
     update: {
       sunSign: astroResult.signs.sun,
       moonSign: astroResult.signs.moon,
       risingSign: astroResult.signs.rising,
-      elementScores: astroResult.elements,
-      modalScores: astroResult.modals,
-      traits: astroResult.traits,
+      elementScores: JSON.stringify(astroResult.elements),
+      modalScores: JSON.stringify(astroResult.modals),
+      traits: JSON.stringify(astroResult.traits),
     },
   });
+
+  const astrologyProfile = {
+    ...astrologyProfileRaw,
+    elementScores: astroResult.elements,
+    modalScores: astroResult.modals,
+    traits: astroResult.traits,
+  };
 
   return NextResponse.json({ profile, astrologyProfile });
 }
