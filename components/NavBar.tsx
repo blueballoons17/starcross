@@ -3,17 +3,18 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
-import { Compass, Heart, MessageCircle, User, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ShootingStarLogo } from "@/components/ui/shooting-star-logo";
 import { NotificationBell } from "@/components/NotificationBell";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
-  { href: "/discover", label: "Discover", icon: Compass },
-  { href: "/matches", label: "Matches", icon: Heart },
-  { href: "/messages", label: "Messages", icon: MessageCircle },
-  { href: "/profile", label: "Profile", icon: User },
+  { href: "/discover",  label: "Discover"  },
+  { href: "/matches",   label: "Matches"   },
+  { href: "/messages",  label: "Messages"  },
+  { href: "/astrology", label: "Cosmos"    },
+  { href: "/profile",   label: "Profile"   },
 ];
 
 export function NavBar() {
@@ -30,24 +31,24 @@ export function NavBar() {
           <span className="font-serif text-lg font-semibold text-white tracking-tight">StarCross</span>
         </Link>
 
-        <div className="flex items-center gap-1">
-          {NAV_LINKS.map(({ href, label, icon: Icon }) => {
+        <div className="flex items-center gap-0.5">
+          {NAV_LINKS.map(({ href, label }) => {
             const isActive =
               pathname === href ||
-              (href === "/messages" && pathname.startsWith("/messages"));
+              (href === "/messages" && pathname.startsWith("/messages")) ||
+              (href === "/astrology" && pathname.startsWith("/astrology"));
             return (
               <Link
                 key={href}
                 href={href}
                 className={cn(
-                  "flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium transition-colors duration-150",
+                  "px-3 py-1.5 text-sm font-bold tracking-wide transition-colors duration-150",
                   isActive
                     ? "text-white"
                     : "text-stone-400 hover:text-stone-100"
                 )}
               >
-                <Icon className="h-4 w-4" />
-                <span className="hidden sm:inline">{label}</span>
+                {label}
               </Link>
             );
           })}
