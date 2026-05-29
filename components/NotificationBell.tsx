@@ -102,8 +102,8 @@ export function NotificationBell() {
       <button
         onClick={handleOpen}
         className={cn(
-          "relative p-2 rounded-xl text-stone-500 hover:text-stone-900 hover:bg-stone-50 transition-all duration-200",
-          open && "bg-stone-100 text-stone-900"
+          "relative p-2 rounded-xl text-stone-400 hover:text-white hover:bg-white/8 transition-all duration-200",
+          open && "bg-white/10 text-white"
         )}
         aria-label="Notifications"
       >
@@ -138,11 +138,11 @@ export function NotificationBell() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.97 }}
             transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute right-0 top-11 w-80 bg-white rounded-2xl shadow-xl border border-stone-100 overflow-hidden z-50"
+            className="absolute right-0 top-11 w-80 bg-stone-950/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/10 overflow-hidden z-50"
           >
             {/* Header */}
-            <div className="px-4 py-3 border-b border-stone-100 flex items-center justify-between">
-              <span className="text-sm font-semibold text-stone-900">Notifications</span>
+            <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
+              <span className="text-sm font-semibold text-white">Notifications</span>
               {notifications.some((n) => !n.read) && (
                 <button
                   onClick={async () => {
@@ -150,7 +150,7 @@ export function NotificationBell() {
                     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
                     await fetch("/api/notifications", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: "{}" });
                   }}
-                  className="text-xs text-stone-400 hover:text-stone-700 transition-colors"
+                  className="text-xs text-stone-500 hover:text-stone-200 transition-colors"
                 >
                   Mark all read
                 </button>
@@ -158,11 +158,11 @@ export function NotificationBell() {
             </div>
 
             {/* List */}
-            <div className="max-h-[360px] overflow-y-auto divide-y divide-stone-50">
+            <div className="max-h-[360px] overflow-y-auto divide-y divide-white/5">
               {notifications.length === 0 ? (
                 <div className="py-10 text-center">
                   <div className="text-2xl mb-2">🔔</div>
-                  <p className="text-sm text-stone-400">No notifications yet</p>
+                  <p className="text-sm text-stone-500">No notifications yet</p>
                 </div>
               ) : (
                 notifications.map((notif) => (
@@ -170,16 +170,16 @@ export function NotificationBell() {
                     key={notif.id}
                     onClick={() => handleClick(notif)}
                     className={cn(
-                      "w-full text-left px-4 py-3 hover:bg-stone-50 transition-colors flex gap-3 items-start",
-                      !notif.read && "bg-amber-50/60"
+                      "w-full text-left px-4 py-3 hover:bg-white/8 transition-colors flex gap-3 items-start",
+                      !notif.read && "bg-indigo-500/8"
                     )}
                   >
                     {/* Icon */}
                     <div className={cn(
                       "w-8 h-8 rounded-full flex items-center justify-center text-sm shrink-0 mt-0.5",
                       notif.type === "new_match"
-                        ? "bg-rose-100 text-rose-600"
-                        : "bg-stone-100 text-stone-600"
+                        ? "bg-rose-500/20"
+                        : "bg-indigo-500/20"
                     )}>
                       {notif.type === "new_match" ? "✨" : "💬"}
                     </div>
@@ -189,18 +189,18 @@ export function NotificationBell() {
                       <div className="flex items-start justify-between gap-2">
                         <p className={cn(
                           "text-sm leading-snug",
-                          notif.read ? "text-stone-600 font-normal" : "text-stone-900 font-semibold"
+                          notif.read ? "text-stone-400 font-normal" : "text-white font-semibold"
                         )}>
                           {notif.title}
                         </p>
                         {!notif.read && (
-                          <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0 mt-1.5" />
+                          <span className="w-2 h-2 rounded-full bg-rose-400 shrink-0 mt-1.5" />
                         )}
                       </div>
-                      <p className="text-xs text-stone-400 mt-0.5 line-clamp-2 leading-relaxed">
+                      <p className="text-xs text-stone-500 mt-0.5 line-clamp-2 leading-relaxed">
                         {notif.body}
                       </p>
-                      <p className="text-[10px] text-stone-300 mt-1">{timeAgo(notif.createdAt)}</p>
+                      <p className="text-[10px] text-stone-600 mt-1">{timeAgo(notif.createdAt)}</p>
                     </div>
                   </button>
                 ))

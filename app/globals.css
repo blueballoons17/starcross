@@ -6,13 +6,13 @@
 }
 
 :root {
-  --background: #FAF8F4;
-  --foreground: #1C1917;
+  --background: #080B18;
+  --foreground: #F1EFE9;
   --card: #FFFFFF;
-  --border: rgba(28, 25, 23, 0.08);
-  --muted: #F5F2EC;
-  --muted-foreground: #78716C;
-  --accent: #44403C;
+  --border: rgba(255, 255, 255, 0.08);
+  --muted: #111827;
+  --muted-foreground: #9CA3AF;
+  --accent: #C4B8A8;
 }
 
 body {

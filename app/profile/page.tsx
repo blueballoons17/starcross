@@ -743,9 +743,9 @@ export default function ProfilePage() {
 
   if (status === "loading" || loading) {
     return (
-      <div className="min-h-screen bg-[#FAF8F4] flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 rounded-full border-2 border-stone-300 border-t-stone-700 animate-spin" />
+          <div className="w-8 h-8 rounded-full border-2 border-stone-600 border-t-stone-200 animate-spin" />
           <p className="text-stone-400 text-sm">Loading profile…</p>
         </div>
       </div>
@@ -754,7 +754,7 @@ export default function ProfilePage() {
 
   if (!data?.profile) {
     return (
-      <div className="min-h-screen bg-[#FAF8F4]">
+      <div className="min-h-screen">
         <NavBar />
         <main className="pt-20 pb-12 px-4 flex items-center justify-center">
           <div className="text-center space-y-4">
@@ -772,7 +772,7 @@ export default function ProfilePage() {
   const age = getAge(profile.birthDate);
 
   return (
-    <div className="min-h-screen bg-[#FAF8F4]">
+    <div className="min-h-screen">
       <NavBar />
       <main className="pt-20 pb-12 px-4">
         <div className="max-w-md mx-auto space-y-5">

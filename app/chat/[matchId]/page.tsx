@@ -192,22 +192,22 @@ export default function ChatPage() {
 
   if (status === "loading" || loadingMeta) {
     return (
-      <div className="min-h-screen bg-[#FAF8F4] flex items-center justify-center">
-        <div className="w-8 h-8 rounded-full border-2 border-stone-300 border-t-stone-700 animate-spin" />
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-8 h-8 rounded-full border-2 border-stone-600 border-t-stone-200 animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF8F4] flex flex-col">
+    <div className="min-h-screen flex flex-col">
       <NavBar />
 
       {/* Chat header */}
-      <div className="fixed top-16 left-0 right-0 z-30 bg-white/90 backdrop-blur-xl border-b border-stone-100">
+      <div className="fixed top-16 left-0 right-0 z-30 bg-stone-950/80 backdrop-blur-xl border-b border-white/10">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
           <Link
             href="/matches"
-            className="p-1.5 rounded-lg hover:bg-stone-100 text-stone-500 hover:text-stone-900 transition-colors"
+            className="p-1.5 rounded-lg hover:bg-white/10 text-stone-400 hover:text-white transition-colors"
           >
             <ArrowLeft className="h-5 w-5" />
           </Link>
@@ -227,7 +227,7 @@ export default function ChatPage() {
           )}
 
           <div className="flex-1 min-w-0">
-            <div className="font-semibold text-stone-900 text-sm truncate">
+            <div className="font-semibold text-white text-sm truncate">
               {meta?.otherName ?? "Chat"}
             </div>
             {sunColor && meta && (
@@ -255,7 +255,7 @@ export default function ChatPage() {
           {messages.length === 0 && (
             <div className="text-center py-16 space-y-3">
               <div className="text-3xl">✨</div>
-              <p className="text-stone-500 text-sm">
+              <p className="text-stone-400 text-sm">
                 You matched! Say hello to {meta?.otherName ?? "your match"}.
               </p>
             </div>
@@ -265,9 +265,9 @@ export default function ChatPage() {
             <div key={day}>
               {/* Day divider */}
               <div className="flex items-center gap-3 mb-4">
-                <div className="flex-1 h-px bg-stone-100" />
-                <span className="text-[11px] text-stone-400 font-medium tracking-wide px-1">{day}</span>
-                <div className="flex-1 h-px bg-stone-100" />
+                <div className="flex-1 h-px bg-white/10" />
+                <span className="text-[11px] text-stone-500 font-medium tracking-wide px-1">{day}</span>
+                <div className="flex-1 h-px bg-white/10" />
               </div>
 
               <div className="space-y-2">
@@ -334,7 +334,7 @@ export default function ChatPage() {
       </main>
 
       {/* Input bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-stone-100">
+      <div className="fixed bottom-0 left-0 right-0 bg-stone-950/80 backdrop-blur-xl border-t border-white/10">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-end gap-2">
           <textarea
             ref={inputRef}
@@ -343,13 +343,13 @@ export default function ChatPage() {
             onKeyDown={handleKeyDown}
             placeholder={`Message ${meta?.otherName ?? "your match"}…`}
             rows={1}
-            className="flex-1 resize-none rounded-2xl border border-stone-200 bg-stone-50 px-4 py-2.5 text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:border-stone-400 focus:bg-white transition-colors min-h-[40px] max-h-[120px]"
+            className="flex-1 resize-none rounded-2xl border border-white/15 bg-white/8 px-4 py-2.5 text-sm text-stone-100 placeholder-stone-500 focus:outline-none focus:border-indigo-400/50 focus:bg-white/12 transition-colors min-h-[40px] max-h-[120px]"
             style={{ fieldSizing: "content" } as React.CSSProperties}
           />
           <button
             onClick={handleSend}
             disabled={!input.trim() || sending}
-            className="w-10 h-10 rounded-full bg-stone-900 flex items-center justify-center text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-stone-700 transition-colors shrink-0"
+            className="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-indigo-400 transition-colors shrink-0"
           >
             <Send className="h-4 w-4" />
           </button>
