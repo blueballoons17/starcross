@@ -132,6 +132,34 @@ export async function POST(request: NextRequest) {
 
         matched = true;
         matchId = match.id;
+
+        // Notify both users of the new match
+        // Fetch profile names for the notification bodies
+        const [profileA, profileB] = await Promise.all([
+          prisma.profile.findUnique({ where: { userId: userAId }, select: { name: true } }),
+          prisma.profile.findUnique({ where: { userId: userBId }, select: { name: true } }),
+        ]);
+        const nameA = profileA?.name ?? "Someone";
+        const nameB = profileB?.name ?? "Someone";
+
+        await prisma.notification.createMany({
+          data: [
+            {
+              userId: userAId,
+              type: "new_match",
+              title: "New cosmic match! ✨",
+              body: `You and ${nameB} liked each other. Start a conversation!`,
+              relatedId: match.id,
+            },
+            {
+              userId: userBId,
+              type: "new_match",
+              title: "New cosmic match! ✨",
+              body: `You and ${nameA} liked each other. Start a conversation!`,
+              relatedId: match.id,
+            },
+          ],
+        });
       }
     }
   }

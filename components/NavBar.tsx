@@ -6,6 +6,7 @@ import { signOut, useSession } from "next-auth/react";
 import { Compass, Heart, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ShootingStarLogo } from "@/components/ui/shooting-star-logo";
+import { NotificationBell } from "@/components/NotificationBell";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
@@ -51,15 +52,18 @@ export function NavBar() {
           })}
         </div>
 
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => signOut({ callbackUrl: "/" })}
-          className="text-stone-500 hover:text-stone-900 hover:bg-stone-50 gap-1.5"
-        >
-          <LogOut className="h-4 w-4" />
-          <span className="hidden sm:inline">Sign out</span>
-        </Button>
+        <div className="flex items-center gap-1">
+          <NotificationBell />
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => signOut({ callbackUrl: "/" })}
+            className="text-stone-500 hover:text-stone-900 hover:bg-stone-50 gap-1.5"
+          >
+            <LogOut className="h-4 w-4" />
+            <span className="hidden sm:inline">Sign out</span>
+          </Button>
+        </div>
       </nav>
     </header>
   );

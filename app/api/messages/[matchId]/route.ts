@@ -80,5 +80,20 @@ export async function POST(
     },
   });
 
+  // Notify the OTHER person in the match
+  const recipientId = match.userAId === userId ? match.userBId : match.userAId;
+  const senderName = message.sender.profile?.name ?? "Someone";
+  const preview = content.length > 60 ? content.slice(0, 57) + "…" : content;
+
+  await prisma.notification.create({
+    data: {
+      userId: recipientId,
+      type: "new_message",
+      title: `New message from ${senderName}`,
+      body: preview,
+      relatedId: matchId,
+    },
+  });
+
   return NextResponse.json({ message });
 }
