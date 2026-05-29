@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { MessageCircle, User } from "lucide-react";
+import { MessageCircle, Network } from "lucide-react";
 import { ProfileDrawer } from "@/components/ProfileDrawer";
 import type { ProfileDrawerMatch } from "@/components/ProfileDrawer";
 import { getZodiacColor } from "@/lib/zodiac-colors";
@@ -178,13 +178,13 @@ export function MatchCard({ match }: MatchCardProps) {
             <MessageCircle className="h-3.5 w-3.5" />
             Message
           </Link>
-          <button
-            onClick={() => setDrawerOpen(true)}
+          <Link
+            href={`/matches/${match.id}`}
             className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-white/12 text-stone-400 hover:text-white hover:border-white/25 hover:bg-white/5 text-xs font-semibold transition-all"
           >
-            <User className="h-3.5 w-3.5" />
-            Full Profile
-          </button>
+            <Network className="h-3.5 w-3.5" />
+            Synastry Chart
+          </Link>
         </div>
       </div>
 
