@@ -2,8 +2,8 @@
 import { cn } from "@/lib/utils";
 
 /**
- * A small animated shooting-star SVG to replace the plain star logo.
- * The tail periodically "flies" — repeating every ~4 s.
+ * StarCross logo — two stars (primary + secondary) connected by a
+ * subtle dashed arc, evoking a crossing of celestial paths.
  */
 export function ShootingStarLogo({
   className,
@@ -14,62 +14,67 @@ export function ShootingStarLogo({
 }) {
   return (
     <svg
-      viewBox="0 0 20 20"
+      viewBox="0 0 22 22"
       width={size}
       height={size}
       className={cn("shrink-0", className)}
       aria-hidden="true"
     >
-      {/* ── Tail / streak (three parallel lines, tapering) ── */}
-      <line
-        x1="2" y1="18" x2="11" y2="9"
-        stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"
-        opacity="0.45"
-      >
-        <animate
-          attributeName="opacity"
-          values="0.45;0.75;0.45"
-          dur="3.5s"
-          repeatCount="indefinite"
-        />
-      </line>
-      <line
-        x1="3" y1="19.5" x2="9" y2="14"
-        stroke="currentColor" strokeWidth="0.8" strokeLinecap="round"
-        opacity="0.22"
-      >
-        <animate
-          attributeName="opacity"
-          values="0.22;0.4;0.22"
-          dur="3.5s"
-          begin="0.1s"
-          repeatCount="indefinite"
-        />
-      </line>
-
-      {/* ── Star body (4-pointed diamond star) ── */}
+      {/* Orbit arc connecting the two stars */}
       <path
-        d="M 14 3 L 15.3 7.5 L 20 8.5 L 15.3 9.5 L 14 14 L 12.7 9.5 L 8 8.5 L 12.7 7.5 Z"
-        fill="currentColor"
+        d="M 6.2 14.8 Q 11.5 7.2 16.8 6.8"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="0.55"
+        strokeLinecap="round"
+        strokeDasharray="1.3 2.1"
+        opacity="0.38"
       >
-        {/* Glint pulse */}
         <animate
           attributeName="opacity"
-          values="1;0.7;1"
-          dur="3.5s"
+          values="0.38;0.65;0.38"
+          dur="4s"
           repeatCount="indefinite"
         />
       </path>
 
-      {/* ── Tiny sparkle at tip of star ── */}
-      <circle cx="14" cy="3.5" r="0.9" fill="currentColor" opacity="0.7">
+      {/* Primary 4-pointed star — upper right */}
+      <path
+        d="M 15.8 2.5 L 17.0 6.8 L 21.2 7.4 L 17.0 8.0 L 15.8 12.3 L 14.6 8.0 L 10.4 7.4 L 14.6 6.8 Z"
+        fill="currentColor"
+      >
+        <animate
+          attributeName="opacity"
+          values="1;0.78;1"
+          dur="4s"
+          repeatCount="indefinite"
+        />
+      </path>
+
+      {/* Sparkle dot at the tip of the primary star */}
+      <circle cx="15.8" cy="2.5" r="0.75" fill="currentColor" opacity="0.85">
         <animate
           attributeName="r"
-          values="0.9;1.4;0.9"
-          dur="3.5s"
+          values="0.75;1.2;0.75"
+          dur="4s"
           repeatCount="indefinite"
         />
       </circle>
+
+      {/* Secondary smaller star — lower left */}
+      <path
+        d="M 4.8 13.8 L 5.6 16.1 L 8.2 16.6 L 5.6 17.1 L 4.8 19.4 L 4.0 17.1 L 1.4 16.6 L 4.0 16.1 Z"
+        fill="currentColor"
+        opacity="0.62"
+      >
+        <animate
+          attributeName="opacity"
+          values="0.62;0.88;0.62"
+          dur="4s"
+          begin="0.6s"
+          repeatCount="indefinite"
+        />
+      </path>
     </svg>
   );
 }
