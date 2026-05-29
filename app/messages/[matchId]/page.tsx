@@ -176,7 +176,7 @@ export default function MessagesChatPage() {
 
         <div className="flex flex-1 overflow-hidden pt-16">
           {/* Sidebar */}
-          <div className="hidden md:flex w-[340px] lg:w-[380px] shrink-0 border-r border-white/8 bg-stone-950/60 backdrop-blur-2xl flex-col overflow-hidden">
+          <div className="hidden md:flex w-[340px] lg:w-[380px] shrink-0 border-r border-white/8 bg-stone-950/30 flex-col overflow-hidden">
             <ConversationSidebar activeMatchId={matchId} />
           </div>
 
@@ -184,7 +184,7 @@ export default function MessagesChatPage() {
           <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
 
             {/* Chat header — click name/avatar to open profile */}
-            <div className="shrink-0 bg-stone-950/80 backdrop-blur-xl border-b border-white/8 px-4 py-3">
+            <div className="shrink-0 bg-stone-950/55 backdrop-blur-md border-b border-white/8 px-4 py-3">
               <div className="max-w-3xl mx-auto flex items-center gap-3">
                 <Link
                   href="/messages"
@@ -267,8 +267,8 @@ export default function MessagesChatPage() {
               </div>
             </div>
 
-            {/* Messages scroll area — explicit dark bg */}
-            <div className="flex-1 overflow-y-auto bg-[#080B18]/50">
+            {/* Messages scroll area — transparent so star field shows through */}
+            <div className="flex-1 overflow-y-auto">
               <div className="max-w-3xl mx-auto px-4 py-6 space-y-5">
                 {messages.length === 0 && (
                   <div className="text-center py-16 space-y-3">
@@ -388,7 +388,7 @@ export default function MessagesChatPage() {
             </div>
 
             {/* Input bar */}
-            <div className="shrink-0 bg-stone-950/85 backdrop-blur-xl border-t border-white/8 px-4 py-3">
+            <div className="shrink-0 bg-stone-950/55 backdrop-blur-md border-t border-white/8 px-4 py-3">
               <div className="max-w-3xl mx-auto flex items-end gap-3">
                 <textarea
                   value={input}

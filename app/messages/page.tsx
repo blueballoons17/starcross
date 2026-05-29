@@ -22,7 +22,7 @@ export default function MessagesPage() {
 
       <div className="flex flex-1 overflow-hidden pt-16">
         {/* Sidebar */}
-        <div className="w-full md:w-[340px] lg:w-[380px] shrink-0 border-r border-white/8 bg-stone-950/60 backdrop-blur-2xl overflow-hidden flex flex-col">
+        <div className="w-full md:w-[340px] lg:w-[380px] shrink-0 border-r border-white/8 bg-stone-950/30 overflow-hidden flex flex-col">
           <ConversationSidebar />
         </div>
 
