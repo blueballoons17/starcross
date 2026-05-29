@@ -10,6 +10,7 @@ import { ConversationSidebar } from "@/components/ConversationSidebar";
 import { ProfileDrawer } from "@/components/ProfileDrawer";
 import type { ProfileDrawerMatch } from "@/components/ProfileDrawer";
 import { VideoCallModal } from "@/components/VideoCallModal";
+import { StarField } from "@/components/ui/star-field";
 import { getZodiacColor } from "@/lib/zodiac-colors";
 import { ZodiacIcon } from "@/components/ui/zodiac-icon";
 import { cn } from "@/lib/utils";
@@ -171,12 +172,16 @@ export default function MessagesChatPage() {
 
   return (
     <>
-      <div className="h-screen flex flex-col">
-        <NavBar />
+      {/* Local star canvas — lives inside this page's stacking context */}
+      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }}>
+        <StarField count={220} />
+      </div>
 
-        <div className="flex flex-1 overflow-hidden pt-16">
-          {/* Sidebar */}
-          <div className="hidden md:flex w-[340px] lg:w-[380px] shrink-0 border-r border-white/8 bg-stone-950/30 flex-col overflow-hidden">
+      <NavBar />
+
+      <div className="fixed inset-x-0 bottom-0 flex overflow-hidden" style={{ top: 64 }}>
+          {/* Sidebar — no bg panel, stars visible through */}
+          <div className="hidden md:flex w-[340px] lg:w-[380px] shrink-0 border-r border-white/8 flex-col overflow-hidden">
             <ConversationSidebar activeMatchId={matchId} />
           </div>
 
@@ -415,7 +420,6 @@ export default function MessagesChatPage() {
             </div>
           </div>
         </div>
-      </div>
 
       {/* Profile drawer */}
       <ProfileDrawer

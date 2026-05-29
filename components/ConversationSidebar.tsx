@@ -72,7 +72,7 @@ export function ConversationSidebar({ activeMatchId, onSelect }: ConversationSid
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="px-5 pt-5 pb-3 shrink-0">
+      <div className="px-5 pt-5 pb-3 shrink-0 bg-stone-950/40 backdrop-blur-sm">
         <h2 className="font-serif text-xl font-semibold text-white mb-4 flex items-center gap-2">
           <MessageCircle className="h-5 w-5 text-indigo-400" />
           Messages
@@ -116,10 +116,10 @@ export function ConversationSidebar({ activeMatchId, onSelect }: ConversationSid
                   href={`/messages/${conv.matchId}`}
                   onClick={() => onSelect?.(conv.matchId)}
                   className={cn(
-                    "flex items-center gap-3 px-5 py-3.5 transition-all duration-150 relative",
+                    "flex items-center gap-3 mx-3 px-4 py-3 rounded-xl transition-all duration-150 mb-1",
                     isActive
-                      ? "bg-indigo-500/12 border-r-2 border-indigo-400/70"
-                      : "hover:bg-white/5 border-r-2 border-transparent"
+                      ? "bg-indigo-500/18 border border-indigo-400/25"
+                      : "bg-stone-950/50 border border-white/6 hover:bg-stone-900/60 hover:border-white/12"
                   )}
                 >
                   {/* Avatar */}
