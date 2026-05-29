@@ -13,7 +13,7 @@ const NAV_LINKS = [
   { href: "/discover",  label: "Discover"  },
   { href: "/matches",   label: "Matches"   },
   { href: "/messages",  label: "Messages"  },
-  { href: "/astrology", label: "Cosmos"    },
+  { href: "/astrology", label: "Astrology" },
   { href: "/profile",   label: "Profile"   },
 ];
 
