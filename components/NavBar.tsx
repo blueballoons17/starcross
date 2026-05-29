@@ -40,10 +40,10 @@ export function NavBar() {
                 key={href}
                 href={href}
                 className={cn(
-                  "flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200",
+                  "flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium transition-colors duration-150",
                   isActive
-                    ? "bg-white/12 text-white border border-white/15"
-                    : "text-stone-400 hover:text-white hover:bg-white/8"
+                    ? "text-white"
+                    : "text-stone-400 hover:text-stone-100"
                 )}
               >
                 <Icon className="h-4 w-4" />
