@@ -5,6 +5,7 @@ import { X, MessageCircle, Sparkles, AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import { getZodiacColor } from "@/lib/zodiac-colors";
 import { ZodiacIcon } from "@/components/ui/zodiac-icon";
+import { AstroGraph } from "@/components/AstroGraph";
 import { cn } from "@/lib/utils";
 
 export interface ProfileDrawerMatch {
@@ -27,6 +28,11 @@ export interface ProfileDrawerMatch {
     avatarUrl?: string | null;
   };
   otherAstro: {
+    sunSign: string;
+    moonSign: string;
+    risingSign: string;
+  };
+  currentAstro?: {
     sunSign: string;
     moonSign: string;
     risingSign: string;
@@ -261,8 +267,20 @@ export function ProfileDrawer({ open, onClose, match }: ProfileDrawerProps) {
                 </div>
               </div>
 
+              {/* Synastry graph */}
+              {match.currentAstro && (
+                <div className="px-6 pb-2">
+                  <AstroGraph
+                    selfName="You"
+                    otherName={match.otherUser.name}
+                    self={match.currentAstro}
+                    other={match.otherAstro}
+                  />
+                </div>
+              )}
+
               {/* Divider */}
-              <div className="h-px bg-white/6 mx-6 mb-5" />
+              <div className="h-px bg-white/6 mx-6 mb-5 mt-4" />
 
               {/* Compatibility */}
               <div className="px-6 pb-5 flex items-start gap-4">
