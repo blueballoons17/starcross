@@ -1,7 +1,10 @@
 import { cn } from "@/lib/utils";
 
-// Minimal SVG glyph paths for each zodiac sign (24×24 viewBox)
-const PATHS: Record<string, React.ReactNode> = {
+/**
+ * Raw SVG path nodes for each zodiac sign (24 × 24 viewBox, stroke="currentColor").
+ * Import this to embed the glyphs directly inside any SVG without the circular wrapper.
+ */
+export const ZODIAC_PATHS: Record<string, React.ReactNode> = {
   Aries: (
     // Two curved horns meeting at a central descending point
     <path
@@ -144,7 +147,7 @@ interface ZodiacIconProps {
  * No emoji, no unicode — just a clean line drawing.
  */
 export function ZodiacIcon({ sign, size = 28, className }: ZodiacIconProps) {
-  const path = PATHS[sign];
+  const path = ZODIAC_PATHS[sign];
   return (
     <span
       className={cn(
@@ -168,7 +171,7 @@ export function ZodiacIcon({ sign, size = 28, className }: ZodiacIconProps) {
 
 /** Dark variant for use on dark backgrounds */
 export function ZodiacIconDark({ sign, size = 28, className }: ZodiacIconProps) {
-  const path = PATHS[sign];
+  const path = ZODIAC_PATHS[sign];
   return (
     <span
       className={cn(

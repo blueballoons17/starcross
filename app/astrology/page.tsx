@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Sun, Moon, ArrowUp } from "lucide-react";
 import { NavBar } from "@/components/NavBar";
 import { PageStars } from "@/components/PageStars";
+import { ZODIAC_PATHS } from "@/components/ui/zodiac-icon";
 import { cn } from "@/lib/utils";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -94,18 +95,18 @@ const SIGN_PLACEMENTS: Record<string, { sun: string; moon: string; rising: strin
 // ─── Zodiac signs ─────────────────────────────────────────────────────────────
 
 const ZODIAC = [
-  { sign: "Aries",       glyph: "♈", element: "fire",  modality: "Cardinal", dates: "Mar 21 – Apr 19", planet: "Mars"    },
-  { sign: "Taurus",      glyph: "♉", element: "earth", modality: "Fixed",    dates: "Apr 20 – May 20", planet: "Venus"   },
-  { sign: "Gemini",      glyph: "♊", element: "air",   modality: "Mutable",  dates: "May 21 – Jun 20", planet: "Mercury" },
-  { sign: "Cancer",      glyph: "♋", element: "water", modality: "Cardinal", dates: "Jun 21 – Jul 22", planet: "Moon"    },
-  { sign: "Leo",         glyph: "♌", element: "fire",  modality: "Fixed",    dates: "Jul 23 – Aug 22", planet: "Sun"     },
-  { sign: "Virgo",       glyph: "♍", element: "earth", modality: "Mutable",  dates: "Aug 23 – Sep 22", planet: "Mercury" },
-  { sign: "Libra",       glyph: "♎", element: "air",   modality: "Cardinal", dates: "Sep 23 – Oct 22", planet: "Venus"   },
-  { sign: "Scorpio",     glyph: "♏", element: "water", modality: "Fixed",    dates: "Oct 23 – Nov 21", planet: "Pluto"   },
-  { sign: "Sagittarius", glyph: "♐", element: "fire",  modality: "Mutable",  dates: "Nov 22 – Dec 21", planet: "Jupiter" },
-  { sign: "Capricorn",   glyph: "♑", element: "earth", modality: "Cardinal", dates: "Dec 22 – Jan 19", planet: "Saturn"  },
-  { sign: "Aquarius",    glyph: "♒", element: "air",   modality: "Fixed",    dates: "Jan 20 – Feb 18", planet: "Uranus"  },
-  { sign: "Pisces",      glyph: "♓", element: "water", modality: "Mutable",  dates: "Feb 19 – Mar 20", planet: "Neptune" },
+  { sign: "Aries",       element: "fire",  modality: "Cardinal", dates: "Mar 21 – Apr 19", planet: "Mars"    },
+  { sign: "Taurus",      element: "earth", modality: "Fixed",    dates: "Apr 20 – May 20", planet: "Venus"   },
+  { sign: "Gemini",      element: "air",   modality: "Mutable",  dates: "May 21 – Jun 20", planet: "Mercury" },
+  { sign: "Cancer",      element: "water", modality: "Cardinal", dates: "Jun 21 – Jul 22", planet: "Moon"    },
+  { sign: "Leo",         element: "fire",  modality: "Fixed",    dates: "Jul 23 – Aug 22", planet: "Sun"     },
+  { sign: "Virgo",       element: "earth", modality: "Mutable",  dates: "Aug 23 – Sep 22", planet: "Mercury" },
+  { sign: "Libra",       element: "air",   modality: "Cardinal", dates: "Sep 23 – Oct 22", planet: "Venus"   },
+  { sign: "Scorpio",     element: "water", modality: "Fixed",    dates: "Oct 23 – Nov 21", planet: "Pluto"   },
+  { sign: "Sagittarius", element: "fire",  modality: "Mutable",  dates: "Nov 22 – Dec 21", planet: "Jupiter" },
+  { sign: "Capricorn",   element: "earth", modality: "Cardinal", dates: "Dec 22 – Jan 19", planet: "Saturn"  },
+  { sign: "Aquarius",    element: "air",   modality: "Fixed",    dates: "Jan 20 – Feb 18", planet: "Uranus"  },
+  { sign: "Pisces",      element: "water", modality: "Mutable",  dates: "Feb 19 – Mar 20", planet: "Neptune" },
 ] as const;
 
 type ZodiacEntry = (typeof ZODIAC)[number];
@@ -184,6 +185,9 @@ function ZodiacWheel({
         const hex = EL[z.element as Element].hex;
         const act = activeIdx === i, usr = userIdx === i;
         const gp = polar(GLYPH_R, mid);
+        // SVG icon: a 24×24 path centred at gp, scaled to ~18px
+        const iconS = 0.78;
+        const iconOff = 12 * iconS;
         return (
           <g key={z.sign} onMouseEnter={() => onHover(i)} onMouseLeave={() => onHover(null)} className="cursor-pointer">
             <path d={sector(INNER, WHEEL, a1, a2)} fill={hex}
@@ -194,12 +198,19 @@ function ZodiacWheel({
               fillOpacity={act ? 0.9 : usr ? 0.75 : 0.48}
               style={{ transition: "fill-opacity 0.15s" }} />
             {usr && <path d={sector(BAND, BAND + 6, a1, a2)} fill="white" fillOpacity="0.3" />}
-            <text x={gp.x} y={gp.y} textAnchor="middle" dominantBaseline="central"
-              fontSize={act ? "19" : "15"} fill="white"
-              fillOpacity={act ? 1 : usr ? 0.9 : 0.6}
-              style={{ transition: "all 0.15s", userSelect: "none", pointerEvents: "none" }}>
-              {z.glyph}
-            </text>
+            {/* Hand-drawn SVG glyph — no emoji, no Unicode */}
+            <g
+              transform={`translate(${(gp.x - iconOff).toFixed(2)}, ${(gp.y - iconOff).toFixed(2)}) scale(${iconS})`}
+              fill="none"
+              stroke="white"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={act ? 2.0 : 1.6}
+              opacity={act ? 1 : usr ? 0.92 : 0.55}
+              style={{ transition: "opacity 0.15s, stroke-width 0.15s", pointerEvents: "none" }}
+            >
+              {ZODIAC_PATHS[z.sign]}
+            </g>
           </g>
         );
       })}
@@ -217,11 +228,18 @@ function ZodiacWheel({
       <circle cx={CX} cy={CY} r={42} fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth="0.5" strokeDasharray="2 5" />
 
       {activeIdx !== null ? (
-        <text x={CX} y={CY} textAnchor="middle" dominantBaseline="central"
-          fontSize="30" fill={EL[ZODIAC[activeIdx].element as Element].hex} fillOpacity="0.5"
-          style={{ userSelect: "none", pointerEvents: "none", transition: "all 0.2s" }}>
-          {ZODIAC[activeIdx].glyph}
-        </text>
+        <g
+          transform={`translate(${CX - 12}, ${CY - 12})`}
+          fill="none"
+          stroke={EL[ZODIAC[activeIdx].element as Element].hex}
+          strokeOpacity="0.6"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          style={{ pointerEvents: "none", transition: "stroke 0.2s" }}
+        >
+          {ZODIAC_PATHS[ZODIAC[activeIdx].sign]}
+        </g>
       ) : (
         <text x={CX} y={CY} textAnchor="middle" dominantBaseline="central"
           fontSize="22" fill="white" fillOpacity="0.1"
@@ -250,8 +268,12 @@ function SignDetail({ activeIdx }: { activeIdx: number | null }) {
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="flex items-baseline gap-3 mb-2">
-              <span className="font-serif text-5xl leading-none" style={{ color: el.hex }}>{z.glyph}</span>
+            <div className="flex items-center gap-3 mb-2">
+              <svg viewBox="0 0 24 24" width={44} height={44} fill="none"
+                stroke={el.hex} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
+                style={{ flexShrink: 0 }}>
+                {ZODIAC_PATHS[z.sign]}
+              </svg>
               <h3 className="font-serif text-3xl font-semibold text-white leading-none">{z.sign}</h3>
             </div>
             <p className="text-stone-500 text-sm mb-1">{z.dates}</p>
@@ -299,8 +321,12 @@ function PersonalChart({ chart }: { chart: UserChart }) {
                 <Icon className="h-3.5 w-3.5 text-stone-500" />
                 <span className="text-xs tracking-[0.15em] uppercase text-stone-500">{label} in {sign.sign}</span>
               </div>
-              <div className="flex items-baseline gap-2 mb-3">
-                <span className="font-serif text-4xl leading-none" style={{ color: elColor }}>{sign.glyph}</span>
+              <div className="flex items-center gap-3 mb-3">
+                <svg viewBox="0 0 24 24" width={40} height={40} fill="none"
+                  stroke={elColor} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
+                  style={{ flexShrink: 0 }}>
+                  {ZODIAC_PATHS[sign.sign]}
+                </svg>
                 <div className="h-px flex-1" style={{ background: elColor, opacity: 0.3 }} />
               </div>
               <p className="text-xs text-stone-500 mb-3">{title}</p>
@@ -605,7 +631,14 @@ export default function AstrologyPage() {
                       <p className="text-stone-500 text-xs mb-5 leading-snug">{quality}</p>
                       <div className="space-y-2">
                         {signs.map((z) => (
-                          <p key={z.sign} className="text-stone-300 text-sm">{z.glyph}&nbsp; {z.sign}</p>
+                          <div key={z.sign} className="flex items-center gap-2">
+                            <svg viewBox="0 0 24 24" width={14} height={14} fill="none"
+                              stroke={hex} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
+                              style={{ flexShrink: 0 }}>
+                              {ZODIAC_PATHS[z.sign]}
+                            </svg>
+                            <span className="text-stone-300 text-sm">{z.sign}</span>
+                          </div>
                         ))}
                       </div>
                     </div>
