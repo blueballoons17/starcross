@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Star } from "lucide-react";
+import Link from "next/link";
+import { Star, MessageCircle } from "lucide-react";
 import { CompatibilityModal } from "@/components/CompatibilityModal";
 import { getZodiacColor } from "@/lib/zodiac-colors";
 import { ZodiacIcon } from "@/components/ui/zodiac-icon";
@@ -103,11 +104,12 @@ export function MatchCard({ match }: MatchCardProps) {
 
   return (
     <>
-      <button
-        onClick={() => setModalOpen(true)}
-        className="text-left w-full group"
-      >
-        <div className="bg-white rounded-2xl p-5 border border-stone-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+      <div className="bg-white rounded-2xl border border-stone-100 shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
+        {/* Top clickable area → compatibility modal */}
+        <button
+          onClick={() => setModalOpen(true)}
+          className="text-left w-full p-5 group"
+        >
           <div className="flex items-start gap-3">
             {/* Avatar */}
             <div className="relative shrink-0">
@@ -165,8 +167,26 @@ export function MatchCard({ match }: MatchCardProps) {
               )}
             </div>
           </div>
+        </button>
+
+        {/* Action row */}
+        <div className="flex items-center gap-2 px-5 pb-4">
+          <Link
+            href={`/chat/${match.id}`}
+            className="flex-1 flex items-center justify-center gap-2 py-2 rounded-xl bg-stone-900 text-white text-sm font-medium hover:bg-stone-700 transition-colors"
+          >
+            <MessageCircle className="h-4 w-4" />
+            Message
+          </Link>
+          <button
+            onClick={() => setModalOpen(true)}
+            className="flex-1 flex items-center justify-center gap-2 py-2 rounded-xl border border-stone-200 text-stone-600 text-sm font-medium hover:bg-stone-50 transition-colors"
+          >
+            <Star className="h-4 w-4" />
+            Compatibility
+          </button>
         </div>
-      </button>
+      </div>
 
       <CompatibilityModal
         open={modalOpen}

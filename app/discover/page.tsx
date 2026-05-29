@@ -33,6 +33,7 @@ interface Candidate {
 }
 
 interface PendingMatch {
+  matchId: string;
   name: string;
   sunSign: string;
   moonSign: string;
@@ -85,8 +86,9 @@ export default function DiscoverPage() {
         body: JSON.stringify({ toUserId: userId, direction: "like" }),
       });
       const data = await res.json();
-      if (data.matched && candidate) {
+      if (data.matched && data.matchId && candidate) {
         setPendingMatch({
+          matchId: data.matchId,
           name: candidate.profile.name,
           sunSign: candidate.astrologyProfile.sunSign,
           moonSign: candidate.astrologyProfile.moonSign,

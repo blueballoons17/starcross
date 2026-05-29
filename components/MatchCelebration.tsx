@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Heart } from "lucide-react";
+import { ArrowRight, Heart, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import { ZodiacIcon } from "@/components/ui/zodiac-icon";
 import { getZodiacColor } from "@/lib/zodiac-colors";
@@ -12,6 +12,7 @@ interface MatchCelebrationProps {
   open: boolean;
   onClose: () => void;
   match: {
+    matchId: string;
     name: string;
     sunSign: string;
     moonSign: string;
@@ -234,9 +235,17 @@ export function MatchCelebration({ open, onClose, match, mySunSign }: MatchCeleb
               className="space-y-3"
             >
               <Link
+                href={`/chat/${match.matchId}`}
+                onClick={onClose}
+                className="flex items-center justify-center gap-2 w-full bg-stone-100 hover:bg-white text-stone-900 font-semibold rounded-full py-3 px-6 transition-colors text-sm"
+              >
+                <MessageCircle className="h-4 w-4" />
+                Send a message
+              </Link>
+              <Link
                 href="/matches"
                 onClick={onClose}
-                className="flex items-center justify-center gap-2 w-full bg-stone-100 hover:bg-white text-stone-900 font-medium rounded-full py-3 px-6 transition-colors text-sm"
+                className="flex items-center justify-center gap-2 w-full border border-stone-700 hover:border-stone-500 text-stone-300 hover:text-stone-100 rounded-full py-2.5 px-6 transition-colors text-sm"
               >
                 See full compatibility
                 <ArrowRight className="h-4 w-4" />

@@ -30,7 +30,9 @@ export function NavBar() {
 
         <div className="flex items-center gap-1">
           {NAV_LINKS.map(({ href, label, icon: Icon }) => {
-            const isActive = pathname === href;
+            const isActive =
+              pathname === href ||
+              (href === "/matches" && pathname.startsWith("/chat"));
             return (
               <Link
                 key={href}
