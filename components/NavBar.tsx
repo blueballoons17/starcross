@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
-import { Compass, Heart, User, LogOut } from "lucide-react";
+import { Compass, Heart, MessageCircle, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ShootingStarLogo } from "@/components/ui/shooting-star-logo";
 import { NotificationBell } from "@/components/NotificationBell";
@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 const NAV_LINKS = [
   { href: "/discover", label: "Discover", icon: Compass },
   { href: "/matches", label: "Matches", icon: Heart },
+  { href: "/messages", label: "Messages", icon: MessageCircle },
   { href: "/profile", label: "Profile", icon: User },
 ];
 
@@ -33,7 +34,7 @@ export function NavBar() {
           {NAV_LINKS.map(({ href, label, icon: Icon }) => {
             const isActive =
               pathname === href ||
-              (href === "/matches" && pathname.startsWith("/chat"));
+              (href === "/messages" && pathname.startsWith("/messages"));
             return (
               <Link
                 key={href}

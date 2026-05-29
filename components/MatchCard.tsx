@@ -172,7 +172,7 @@ export function MatchCard({ match }: MatchCardProps) {
         {/* Action row */}
         <div className="flex items-center gap-2 px-5 pb-4">
           <Link
-            href={`/chat/${match.id}`}
+            href={`/messages/${match.id}`}
             className="flex-1 flex items-center justify-center gap-2 py-2 rounded-xl bg-stone-900 text-white text-sm font-medium hover:bg-stone-700 transition-colors"
           >
             <MessageCircle className="h-4 w-4" />

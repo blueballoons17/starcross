@@ -89,7 +89,7 @@ export function NotificationBell() {
     setOpen(false);
     if (notif.relatedId) {
       if (notif.type === "new_message") {
-        router.push(`/chat/${notif.relatedId}`);
+        router.push(`/messages/${notif.relatedId}`);
       } else {
         router.push("/matches");
       }

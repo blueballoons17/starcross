@@ -235,7 +235,7 @@ export function MatchCelebration({ open, onClose, match, mySunSign }: MatchCeleb
               className="space-y-3"
             >
               <Link
-                href={`/chat/${match.matchId}`}
+                href={`/messages/${match.matchId}`}
                 onClick={onClose}
                 className="flex items-center justify-center gap-2 w-full bg-stone-100 hover:bg-white text-stone-900 font-semibold rounded-full py-3 px-6 transition-colors text-sm"
               >
