@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { NavBar } from "@/components/NavBar";
 import { SwipeDeck } from "@/components/SwipeDeck";
 import { MatchCelebration } from "@/components/MatchCelebration";
+import { PageStars } from "@/components/PageStars";
 
 interface Candidate {
   id: string;
@@ -128,6 +129,7 @@ export default function DiscoverPage() {
 
   return (
     <div className="min-h-screen">
+      <PageStars />
       <NavBar />
       <main className="pt-20 pb-8 px-4">
         <div className="max-w-lg mx-auto">

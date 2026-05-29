@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { NavBar } from "@/components/NavBar";
 import { MatchCard } from "@/components/MatchCard";
 import type { ProfileDrawerMatch } from "@/components/ProfileDrawer";
+import { PageStars } from "@/components/PageStars";
 
 /* ── Constellation header decoration ───────────────────────────── */
 function ConstellationAccent() {
@@ -67,6 +68,7 @@ export default function MatchesPage() {
 
   return (
     <div className="min-h-screen">
+      <PageStars />
       <NavBar />
       <main className="pt-20 pb-16 px-4">
         <div className="max-w-2xl mx-auto">

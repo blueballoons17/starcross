@@ -19,6 +19,7 @@ import {
   X,
 } from "lucide-react";
 import { NavBar } from "@/components/NavBar";
+import { PageStars } from "@/components/PageStars";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -755,6 +756,7 @@ export default function ProfilePage() {
   if (!data?.profile) {
     return (
       <div className="min-h-screen">
+        <PageStars />
         <NavBar />
         <main className="pt-20 pb-12 px-4 flex items-center justify-center">
           <div className="text-center space-y-4">
@@ -773,6 +775,7 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen">
+      <PageStars />
       <NavBar />
       <main className="pt-20 pb-12 px-4">
         <div className="max-w-md mx-auto space-y-5">

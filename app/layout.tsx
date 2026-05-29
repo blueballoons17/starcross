@@ -4,7 +4,6 @@ import { Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "@/components/SessionProvider";
 import { Toaster } from "@/components/ui/toaster";
-import { StarField } from "@/components/ui/star-field";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const playfair = Playfair_Display({
@@ -29,12 +28,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={`${inter.variable} ${playfair.variable} font-sans min-h-screen bg-[#080B18] text-stone-100 antialiased`}>
-        {/* Global reactive star field — fixed behind all pages */}
-        <div className="fixed inset-0 z-0">
-          <StarField count={260} />
-        </div>
         <SessionProvider>
-          <div className="relative z-10">
+          <div className="relative">
             {children}
           </div>
           <Toaster />
