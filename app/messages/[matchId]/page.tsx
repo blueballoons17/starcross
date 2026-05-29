@@ -4,11 +4,12 @@ import { useCallback, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
-import { ChevronLeft, Send, User } from "lucide-react";
+import { ChevronLeft, Send, User, Video } from "lucide-react";
 import { NavBar } from "@/components/NavBar";
 import { ConversationSidebar } from "@/components/ConversationSidebar";
 import { ProfileDrawer } from "@/components/ProfileDrawer";
 import type { ProfileDrawerMatch } from "@/components/ProfileDrawer";
+import { VideoCallModal } from "@/components/VideoCallModal";
 import { getZodiacColor } from "@/lib/zodiac-colors";
 import { ZodiacIcon } from "@/components/ui/zodiac-icon";
 import { cn } from "@/lib/utils";
@@ -52,6 +53,7 @@ export default function MessagesChatPage() {
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [callOpen, setCallOpen] = useState(false);
 
   const bottomRef = useCallback((el: HTMLDivElement | null) => {
     el?.scrollIntoView({ behavior: "smooth" });
@@ -245,6 +247,15 @@ export default function MessagesChatPage() {
                   </div>
                 </button>
 
+                {/* Video call button */}
+                <button
+                  onClick={() => setCallOpen(true)}
+                  className="p-2 rounded-xl hover:bg-white/8 text-stone-500 hover:text-indigo-300 transition-colors shrink-0"
+                  aria-label="Start video call"
+                >
+                  <Video className="h-4 w-4" />
+                </button>
+
                 {/* Profile button */}
                 <button
                   onClick={() => setProfileOpen(true)}
@@ -411,6 +422,17 @@ export default function MessagesChatPage() {
         open={profileOpen}
         onClose={() => setProfileOpen(false)}
         match={matchData}
+      />
+
+      {/* Video call */}
+      <VideoCallModal
+        open={callOpen}
+        onClose={() => setCallOpen(false)}
+        matchId={matchId}
+        matchName={matchData?.otherUser.name ?? "Your Match"}
+        matchSunSign={matchData?.otherAstro.sunSign}
+        matchAvatarUrl={matchData?.otherUser.avatarUrl}
+        matchScore={matchData?.matchScore}
       />
     </>
   );
