@@ -62,7 +62,12 @@ export default function LoginPage() {
         {/* Logo */}
         <Link href="/" className="flex items-center justify-center gap-2 mb-10 group">
           <Star className="h-4 w-4 text-stone-700 fill-stone-700/30" />
-          <span className="font-serif text-xl font-semibold text-stone-900">StarCross</span>
+          <span
+            className="text-base font-medium text-stone-900 uppercase tracking-[0.18em]"
+            style={{ fontFamily: "var(--font-cinzel)" }}
+          >
+            StarCross
+          </span>
         </Link>
 
         <div className="bg-white rounded-2xl shadow-sm border border-stone-100 p-8">

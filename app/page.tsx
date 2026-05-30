@@ -307,7 +307,10 @@ function AppPreview() {
         <div className="flex items-center justify-between px-4 py-2.5 border-b border-stone-100 bg-[#FAF8F4]/90 backdrop-blur-sm shrink-0">
           <div className="flex items-center gap-1.5">
             <ShootingStarLogo size={12} className="text-stone-700" />
-            <span className="font-serif text-stone-900 font-semibold text-xs tracking-tight">StarCross</span>
+            <span
+              className="text-[9px] font-medium text-stone-900 uppercase tracking-[0.15em]"
+              style={{ fontFamily: "var(--font-cinzel)" }}
+            >StarCross</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-[9px] text-stone-400 uppercase tracking-wider">Matches</span>
@@ -363,7 +366,10 @@ export default function HomePage() {
         <div className="max-w-5xl mx-auto flex h-16 items-center justify-between px-6">
           <div className="flex items-center gap-2">
             <ShootingStarLogo size={18} className="text-stone-800" />
-            <span className="font-serif text-lg font-semibold text-stone-900 tracking-tight">
+            <span
+              className="text-[13px] font-medium text-stone-900 uppercase tracking-[0.18em]"
+              style={{ fontFamily: "var(--font-cinzel)" }}
+            >
               StarCross
             </span>
           </div>
@@ -682,7 +688,12 @@ export default function HomePage() {
       <footer className="py-10 px-6 bg-stone-950 text-stone-500 text-center text-sm border-t border-stone-900">
         <div className="flex items-center justify-center gap-2 mb-2">
           <ShootingStarLogo size={16} className="text-stone-400" />
-          <span className="font-serif text-stone-300">StarCross</span>
+          <span
+            className="text-[12px] font-normal text-stone-400 uppercase tracking-[0.18em]"
+            style={{ fontFamily: "var(--font-cinzel)" }}
+          >
+            StarCross
+          </span>
         </div>
         <p>&copy; {new Date().getFullYear()} StarCross. Written in the stars.</p>
       </footer>

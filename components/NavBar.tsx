@@ -28,7 +28,12 @@ export function NavBar() {
       <nav className="mx-auto max-w-5xl flex h-16 items-center justify-between px-4 sm:px-6">
         <Link href="/discover" className="flex items-center gap-2 group">
           <ShootingStarLogo size={18} className="text-indigo-300" />
-          <span className="font-serif text-lg font-semibold text-white tracking-tight">StarCross</span>
+          <span
+            className="text-[13px] font-medium text-white uppercase tracking-[0.18em]"
+            style={{ fontFamily: "var(--font-cinzel)" }}
+          >
+            StarCross
+          </span>
         </Link>
 
         <div className="flex items-center gap-0.5">

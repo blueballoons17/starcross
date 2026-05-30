@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
-import { Playfair_Display } from "next/font/google";
+import { Inter, Playfair_Display, Cinzel } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "@/components/SessionProvider";
 import { Toaster } from "@/components/ui/toaster";
@@ -11,6 +10,11 @@ const playfair = Playfair_Display({
   variable: "--font-playfair",
   weight: ["400", "500", "600", "700"],
   style: ["normal", "italic"],
+});
+const cinzel = Cinzel({
+  subsets: ["latin"],
+  variable: "--font-cinzel",
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -27,7 +31,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${playfair.variable} font-sans min-h-screen bg-[#080B18] text-stone-100 antialiased`}>
+      <body className={`${inter.variable} ${playfair.variable} ${cinzel.variable} font-sans min-h-screen bg-[#080B18] text-stone-100 antialiased`}>
         <SessionProvider>
           <div className="relative">
             {children}
