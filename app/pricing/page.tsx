@@ -41,14 +41,14 @@ export default function PricingPage() {
         router.push("/signup?callbackUrl=/pricing");
         return;
       }
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (data.url) {
         window.location.href = data.url;
       } else {
-        setError("Could not start checkout. Please try again.");
+        setError(data.error ?? `Checkout failed (status ${res.status}). Please try again.`);
       }
-    } catch {
-      setError("Something went wrong. Please try again.");
+    } catch (err) {
+      setError(`Network error: ${err instanceof Error ? err.message : String(err)}`);
     } finally {
       setLoading(false);
     }
