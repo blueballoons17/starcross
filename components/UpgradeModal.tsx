@@ -120,7 +120,7 @@ export function UpgradeModal({ open, onClose, feature }: Props) {
               {/* Price + CTA */}
               <div className="px-6 pb-6 space-y-3">
                 <div className="flex items-baseline gap-1.5">
-                  <span className="text-white text-2xl font-light">$9.99</span>
+                  <span className="text-white text-2xl font-light">$14.99</span>
                   <span className="text-stone-500 text-sm">/ month</span>
                 </div>
 

@@ -123,7 +123,7 @@ export default function PricingPage() {
                   StarCross+
                 </p>
                 <div className="flex items-baseline gap-1.5">
-                  <span className="text-2xl font-light text-white">$9.99</span>
+                  <span className="text-2xl font-light text-white">$14.99</span>
                   <span className="text-stone-400 text-xs">/ month</span>
                 </div>
                 <p className="text-stone-500 text-xs mt-0.5">billed monthly</p>
