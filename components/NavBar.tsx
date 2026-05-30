@@ -26,7 +26,7 @@ export function NavBar() {
   return (
     <header className="fixed top-0 left-0 right-0 z-40 bg-stone-950/70 backdrop-blur-xl border-b border-white/8">
       <nav className="mx-auto max-w-5xl flex h-16 items-center justify-between px-4 sm:px-6">
-        <Link href="/discover" className="flex items-center gap-2 group">
+        <Link href="/" className="flex items-center gap-2 group">
           <ShootingStarLogo size={18} className="text-indigo-300" />
           <span
             className="text-[13px] font-medium text-white uppercase tracking-[0.18em]"

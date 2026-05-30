@@ -195,8 +195,8 @@ export function StarField({
       // ── 3. Click / tap ripples ────────────────────────────────────────────
       ripples = ripples.filter((r) => ts - r.t < 1000);
       for (const rp of ripples) {
-        const age = ts - rp.t;
-        const p = age / 1000;
+        const age = Math.max(0, ts - rp.t);   // guard: rAF ts can be ε < click ts
+        const p = Math.min(1, age / 1000);
 
         // Outer ring
         const r1 = p * 240;
@@ -245,7 +245,7 @@ export function StarField({
         const px = s.x + dx, py = s.y + dy;
 
         // Glow halo for bigger stars
-        if (s.r > 1.1) {
+        if (s.r > 1.1 && isFinite(px) && isFinite(py)) {
           const gr = s.r * 4.5;
           const grd = ctx!.createRadialGradient(px, py, 0, px, py, gr);
           grd.addColorStop(0, `rgba(${s.r_},${s.g_},${s.b_},${a * 0.28})`);
