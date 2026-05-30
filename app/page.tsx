@@ -12,6 +12,7 @@ import { ZodiacIcon } from "@/components/ui/zodiac-icon";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useRef, useEffect } from "react";
+import { useSession } from "next-auth/react";
 
 const SIGNS = [
   "Aries","Taurus","Gemini","Cancer","Leo","Virgo",
@@ -287,6 +288,8 @@ function AppPreview() {
 // ── Page ─────────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
+  const { data: session } = useSession();
+  const isLoggedIn = !!session;
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress: heroScroll } = useScroll({
     target: heroRef,
@@ -311,12 +314,20 @@ export default function HomePage() {
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" asChild className="text-stone-600 hover:text-stone-900">
-              <Link href="/login">Sign in</Link>
-            </Button>
-            <Button size="sm" asChild className="bg-stone-900 text-white hover:bg-stone-800 rounded-full px-5">
-              <Link href="/pricing">Get started</Link>
-            </Button>
+            {isLoggedIn ? (
+              <Button size="sm" asChild className="bg-stone-900 text-white hover:bg-stone-800 rounded-full px-5">
+                <Link href="/discover">Open app →</Link>
+              </Button>
+            ) : (
+              <>
+                <Button variant="ghost" size="sm" asChild className="text-stone-600 hover:text-stone-900">
+                  <Link href="/login">Sign in</Link>
+                </Button>
+                <Button size="sm" asChild className="bg-stone-900 text-white hover:bg-stone-800 rounded-full px-5">
+                  <Link href="/pricing">Get started</Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </header>
@@ -408,14 +419,24 @@ export default function HomePage() {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="flex flex-col sm:flex-row gap-3 justify-center"
           >
-            <Button size="lg" asChild className="bg-white text-stone-900 hover:bg-stone-100 px-10 rounded-full h-12 font-medium">
-              <Link href="/pricing">
-                Begin your journey <ArrowRight className="h-4 w-4 ml-2" />
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" asChild className="border-stone-700 text-stone-300 hover:bg-stone-800/50 rounded-full h-12 px-8">
-              <Link href="/login">Already a member</Link>
-            </Button>
+            {isLoggedIn ? (
+              <Button size="lg" asChild className="bg-white text-stone-900 hover:bg-stone-100 px-10 rounded-full h-12 font-medium">
+                <Link href="/discover">
+                  Go to Discover <ArrowRight className="h-4 w-4 ml-2" />
+                </Link>
+              </Button>
+            ) : (
+              <>
+                <Button size="lg" asChild className="bg-white text-stone-900 hover:bg-stone-100 px-10 rounded-full h-12 font-medium">
+                  <Link href="/pricing">
+                    Begin your journey <ArrowRight className="h-4 w-4 ml-2" />
+                  </Link>
+                </Button>
+                <Button size="lg" variant="outline" asChild className="border-stone-700 text-stone-300 hover:bg-stone-800/50 rounded-full h-12 px-8">
+                  <Link href="/login">Already a member</Link>
+                </Button>
+              </>
+            )}
           </motion.div>
         </motion.div>
 
