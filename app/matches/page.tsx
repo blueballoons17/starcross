@@ -72,8 +72,8 @@ export default function MatchesPage() {
               </p>
             </div>
           ) : (
-            /* Divider list — no card boxes */
-            <div className="divide-y divide-white/[0.06]">
+            /* Unified editorial panel — one glass column, hairline dividers */
+            <div className="bg-stone-900/50 backdrop-blur-md border border-white/[0.07] rounded-[6px] overflow-hidden px-5 divide-y divide-white/[0.06]">
               {matches.map((match) => (
                 <MatchCard key={match.id} match={match} />
               ))}

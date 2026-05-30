@@ -62,7 +62,7 @@ export function MatchCard({ match }: MatchCardProps) {
 
   return (
     <>
-      <div className="group py-6">
+      <div className="group py-5 px-5 -mx-5 hover:bg-white/[0.025] transition-colors duration-300 rounded-[3px]">
         <div className="flex gap-4">
           {/* Avatar */}
           <button
