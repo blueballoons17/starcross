@@ -644,7 +644,7 @@ export default function HomePage() {
 
       {/* ── Footer ───────────────────────────────────────────────────────── */}
       <footer className="py-10 px-6 bg-stone-950 text-stone-500 text-center text-sm border-t border-stone-900">
-        <div className="flex items-center justify-center gap-2 mb-2">
+        <div className="flex items-center justify-center gap-2 mb-4">
           <ShootingStarLogo size={16} className="text-stone-400" />
           <span
             className="text-[12px] font-normal text-stone-400 uppercase tracking-[0.18em]"
@@ -653,7 +653,12 @@ export default function HomePage() {
             StarCross
           </span>
         </div>
-        <p>&copy; {new Date().getFullYear()} StarCross. Written in the stars.</p>
+        <div className="flex justify-center gap-6 text-xs mb-4">
+          <Link href="/privacy" className="text-stone-500 hover:text-stone-300 transition-colors">Privacy Policy</Link>
+          <Link href="/terms" className="text-stone-500 hover:text-stone-300 transition-colors">Terms of Service</Link>
+          <Link href="/cookies" className="text-stone-500 hover:text-stone-300 transition-colors">Cookie Policy</Link>
+        </div>
+        <p className="text-xs">&copy; {new Date().getFullYear()} StarCross. Written in the stars.</p>
       </footer>
 
       <style>{`
