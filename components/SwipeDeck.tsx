@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, useMotionValue, useTransform, AnimatePresence } from "framer-motion";
-import { Heart, X, Star } from "lucide-react";
+import { Heart, X, Star, MapPin, ChevronDown } from "lucide-react";
 import { getZodiacColor } from "@/lib/zodiac-colors";
 import { ZodiacIcon } from "@/components/ui/zodiac-icon";
 import { cn } from "@/lib/utils";
@@ -62,16 +62,205 @@ function getScoreBadgeClass(score: number) {
   return "bg-stone-50 text-stone-500 border border-stone-200";
 }
 
+// Full-screen profile detail modal
+function ProfileDetailModal({
+  candidate,
+  open,
+  onClose,
+  onLike,
+  onPass,
+}: {
+  candidate: Candidate;
+  open: boolean;
+  onClose: () => void;
+  onLike: () => void;
+  onPass: () => void;
+}) {
+  const age = getAge(candidate.profile.birthDate);
+  const astro = candidate.astrologyProfile;
+  const sunColor = getZodiacColor(astro.sunSign);
+
+  let interests: string[] = [];
+  try {
+    if (candidate.profile.interests) interests = JSON.parse(candidate.profile.interests);
+  } catch { /* ignore */ }
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <>
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 z-50"
+            onClick={onClose}
+          />
+          {/* Sheet */}
+          <motion.div
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "100%" }}
+            transition={{ type: "spring", damping: 28, stiffness: 300 }}
+            className="fixed inset-x-0 bottom-0 z-50 bg-white rounded-t-3xl overflow-hidden"
+            style={{ maxHeight: "92dvh" }}
+          >
+            {/* Drag handle */}
+            <div className="flex justify-center pt-3 pb-1">
+              <div className="w-10 h-1 rounded-full bg-stone-200" />
+            </div>
+
+            <div className="overflow-y-auto" style={{ maxHeight: "calc(92dvh - 20px)" }}>
+              {/* Photo */}
+              <div className={cn(
+                "relative w-full flex items-center justify-center overflow-hidden",
+                candidate.profile.avatarUrl ? "" : sunColor.bg
+              )} style={{ height: 300 }}>
+                {candidate.profile.avatarUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={candidate.profile.avatarUrl}
+                    alt={candidate.profile.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-24 h-24 rounded-full bg-gradient-to-br from-stone-700 to-stone-900 flex items-center justify-center text-3xl font-bold text-white shadow-xl">
+                      {getInitials(candidate.profile.name)}
+                    </div>
+                  </div>
+                )}
+                {/* Match score */}
+                <div className="absolute top-4 right-4">
+                  <div className={cn(
+                    "flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-bold shadow-sm",
+                    getScoreBadgeClass(candidate.matchScore)
+                  )}>
+                    <Star className="h-3.5 w-3.5 fill-current" />
+                    {candidate.matchScore}%
+                  </div>
+                </div>
+                {/* Close */}
+                <button
+                  onClick={onClose}
+                  className="absolute top-4 left-4 w-9 h-9 rounded-full bg-white/80 backdrop-blur flex items-center justify-center text-stone-600 shadow"
+                >
+                  <ChevronDown className="h-5 w-5" />
+                </button>
+              </div>
+
+              {/* Content */}
+              <div className="p-5 space-y-5 pb-28">
+                {/* Name / location */}
+                <div>
+                  <h2 className="text-2xl font-bold text-stone-900">
+                    {candidate.profile.name}, {age}
+                  </h2>
+                  <div className="flex items-center gap-1.5 mt-1 text-stone-400 text-sm">
+                    <MapPin className="h-3.5 w-3.5" />
+                    <span>{candidate.profile.birthCity}, {candidate.profile.birthCountry}</span>
+                  </div>
+                </div>
+
+                {/* Zodiac badges */}
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    { sign: astro.sunSign, label: "☀️ Sun" },
+                    { sign: astro.moonSign, label: "🌙 Moon" },
+                    { sign: astro.risingSign, label: "⬆️ Rising" },
+                  ].map(({ sign, label }) => {
+                    const colors = getZodiacColor(sign);
+                    return (
+                      <span
+                        key={label}
+                        className={cn(
+                          "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border",
+                          colors.bg, colors.text, colors.border
+                        )}
+                      >
+                        <ZodiacIcon sign={sign} size={16} className="bg-transparent border-0" />
+                        <span>{label}: {sign}</span>
+                      </span>
+                    );
+                  })}
+                </div>
+
+                {/* Bio */}
+                {candidate.profile.bio && (
+                  <div>
+                    <h3 className="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-2">About</h3>
+                    <p className="text-stone-700 text-sm leading-relaxed">{candidate.profile.bio}</p>
+                  </div>
+                )}
+
+                {/* Interests */}
+                {interests.length > 0 && (
+                  <div>
+                    <h3 className="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-2">Interests</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {interests.map((tag) => (
+                        <span key={tag} className="px-3 py-1 rounded-full bg-stone-100 text-stone-600 text-sm border border-stone-200">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Personality traits */}
+                <div>
+                  <h3 className="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-2">Personality</h3>
+                  <div className="space-y-2">
+                    {[
+                      { label: "Emotionally", value: astro.traits.emotionalStyle },
+                      { label: "Communicates", value: astro.traits.communicationStyle },
+                      { label: "Needs", value: astro.traits.relationshipNeeds },
+                    ].map(({ label, value }) => (
+                      <div key={label} className="flex gap-3 text-sm">
+                        <span className="text-stone-400 flex-shrink-0 w-24">{label}</span>
+                        <span className="text-stone-700">{value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Action buttons fixed at bottom */}
+            <div className="absolute bottom-0 left-0 right-0 p-5 bg-white border-t border-stone-100 flex justify-center gap-6">
+              <button
+                onClick={() => { onPass(); onClose(); }}
+                className="w-14 h-14 rounded-full bg-white border border-stone-200 flex items-center justify-center text-stone-400 hover:border-red-200 hover:text-red-400 transition-all shadow-sm"
+              >
+                <X className="h-6 w-6" />
+              </button>
+              <button
+                onClick={() => { onLike(); onClose(); }}
+                className="w-14 h-14 rounded-full bg-stone-900 flex items-center justify-center text-white hover:bg-stone-800 transition-all shadow-md"
+              >
+                <Heart className="h-6 w-6 fill-current" />
+              </button>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+}
+
 function ProfileCard({
   candidate,
   isTop,
   onLike,
   onPass,
+  onOpenDetail,
 }: {
   candidate: Candidate;
   isTop: boolean;
   onLike: () => void;
   onPass: () => void;
+  onOpenDetail: () => void;
 }) {
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-200, 200], [-20, 20]);
@@ -83,10 +272,10 @@ function ProfileCard({
   const astro = candidate.astrologyProfile;
   const sunColor = getZodiacColor(astro.sunSign);
 
-  // Truncate bio/trait to a readable blurb
-  const blurb = candidate.profile.bio
-    ? candidate.profile.bio.slice(0, 160) + (candidate.profile.bio.length > 160 ? "…" : "")
-    : astro.traits.emotionalStyle.split(".")[0] + ".";
+  let interests: string[] = [];
+  try {
+    if (candidate.profile.interests) interests = JSON.parse(candidate.profile.interests);
+  } catch { /* ignore */ }
 
   function handleDragEnd(_: unknown, info: { offset: { x: number } }) {
     if (info.offset.x > 100) {
@@ -111,12 +300,12 @@ function ProfileCard({
       onDragEnd={handleDragEnd}
       className="absolute inset-0 cursor-grab active:cursor-grabbing touch-none"
     >
-      <div className="relative h-full rounded-3xl overflow-hidden bg-white border border-stone-100 shadow-xl shadow-stone-200/80 select-none">
-        {/* Avatar area — tinted with the person's sun-sign colour */}
+      <div className="relative h-full rounded-3xl overflow-hidden bg-white border border-stone-100 shadow-xl shadow-stone-200/80 select-none flex flex-col">
+        {/* Avatar area — fixed height */}
         <div className={cn(
-          "relative h-[55%] flex items-center justify-center overflow-hidden",
+          "relative flex-shrink-0 flex items-center justify-center overflow-hidden",
           candidate.profile.avatarUrl ? "" : sunColor.bg
-        )}>
+        )} style={{ height: 260 }}>
           {candidate.profile.avatarUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -129,7 +318,6 @@ function ProfileCard({
               <div className="w-24 h-24 rounded-full bg-gradient-to-br from-stone-700 to-stone-900 flex items-center justify-center text-3xl font-bold text-white shadow-xl">
                 {getInitials(candidate.profile.name)}
               </div>
-              {/* Big zodiac icon as decoration */}
               <div className={cn(
                 "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border",
                 sunColor.bg, sunColor.text, sunColor.border
@@ -172,81 +360,98 @@ function ProfileCard({
           </motion.div>
         </div>
 
-        {/* Info area — pb-24 leaves room for absolute-positioned action buttons */}
-        <div className="p-5 pb-24 space-y-3">
-          <div className="flex items-start justify-between">
-            <div>
-              <h2 className="text-xl font-bold text-stone-900">
-                {candidate.profile.name}, {age}
-              </h2>
-              <p className="text-stone-400 text-sm">
-                {candidate.profile.birthCity}, {candidate.profile.birthCountry}
-              </p>
+        {/* Scrollable info area */}
+        <div
+          className="flex-1 overflow-y-auto overscroll-contain"
+          style={{ touchAction: "pan-y" }}
+          onPointerDown={(e) => e.stopPropagation()}
+        >
+          <div className="p-4 pb-20 space-y-3">
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <h2 className="text-xl font-bold text-stone-900">
+                  {candidate.profile.name}, {age}
+                </h2>
+                <div className="flex items-center gap-1 mt-0.5 text-stone-400 text-xs">
+                  <MapPin className="h-3 w-3" />
+                  <span>{candidate.profile.birthCity}, {candidate.profile.birthCountry}</span>
+                </div>
+              </div>
+              {/* "See full profile" hint */}
+              <button
+                className="flex-shrink-0 text-xs text-indigo-400 hover:text-indigo-600 underline underline-offset-2 mt-1"
+                onClick={onOpenDetail}
+              >
+                Full profile
+              </button>
+            </div>
+
+            {/* Zodiac badges */}
+            <div className="flex flex-wrap gap-1.5">
+              {[
+                { sign: astro.sunSign, label: "Sun" },
+                { sign: astro.moonSign, label: "Moon" },
+                { sign: astro.risingSign, label: "Rising" },
+              ].map(({ sign, label }) => {
+                const colors = getZodiacColor(sign);
+                return (
+                  <span
+                    key={label}
+                    className={cn(
+                      "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium border",
+                      colors.bg, colors.text, colors.border
+                    )}
+                  >
+                    <ZodiacIcon sign={sign} size={13} className="bg-transparent border-0" />
+                    <span>{label}: {sign}</span>
+                  </span>
+                );
+              })}
+            </div>
+
+            {/* Bio — full, no truncation */}
+            {candidate.profile.bio && (
+              <p className="text-stone-600 text-sm leading-relaxed">{candidate.profile.bio}</p>
+            )}
+
+            {/* Interests — all shown */}
+            {interests.length > 0 && (
+              <div className="flex flex-wrap gap-1.5">
+                {interests.map((tag) => (
+                  <span key={tag} className="px-2 py-0.5 rounded-full bg-stone-100 text-stone-600 text-xs border border-stone-200">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {/* Traits */}
+            <div className="border-t border-stone-100 pt-3 space-y-1.5">
+              {[
+                { label: "Emotionally", value: astro.traits.emotionalStyle },
+                { label: "Communicates", value: astro.traits.communicationStyle },
+                { label: "Needs", value: astro.traits.relationshipNeeds },
+              ].map(({ label, value }) => (
+                <div key={label} className="flex gap-2 text-xs">
+                  <span className="text-stone-400 flex-shrink-0 w-20">{label}</span>
+                  <span className="text-stone-600 line-clamp-2">{value}</span>
+                </div>
+              ))}
             </div>
           </div>
-
-          {/* Zodiac badges */}
-          <div className="flex flex-wrap gap-1.5">
-            {[
-              { sign: astro.sunSign, label: "Sun" },
-              { sign: astro.moonSign, label: "Moon" },
-              { sign: astro.risingSign, label: "Rising" },
-            ].map(({ sign, label }) => {
-              const colors = getZodiacColor(sign);
-              return (
-                <span
-                  key={label}
-                  className={cn(
-                    "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium border",
-                    colors.bg, colors.text, colors.border
-                  )}
-                >
-                  <ZodiacIcon sign={sign} size={15} className="bg-transparent border-0" />
-                  <span>{label}: {sign}</span>
-                </span>
-              );
-            })}
-          </div>
-
-          {/* Bio blurb */}
-          <p className="text-stone-500 text-sm leading-relaxed line-clamp-3">{blurb}</p>
-
-          {/* Interests */}
-          {candidate.profile.interests && (() => {
-            try {
-              const tags: string[] = JSON.parse(candidate.profile.interests);
-              if (tags.length > 0) {
-                return (
-                  <div className="flex flex-wrap gap-1.5">
-                    {tags.slice(0, 6).map((tag) => (
-                      <span key={tag} className="px-2 py-0.5 rounded-full bg-stone-100 text-stone-600 text-xs border border-stone-200">
-                        {tag}
-                      </span>
-                    ))}
-                    {tags.length > 6 && (
-                      <span className="px-2 py-0.5 rounded-full bg-stone-100 text-stone-400 text-xs border border-stone-200">
-                        +{tags.length - 6}
-                      </span>
-                    )}
-                  </div>
-                );
-              }
-            } catch { /* ignore parse errors */ }
-            return null;
-          })()}
         </div>
 
-        {/* Action buttons — floated at card bottom, above the info padding gap */}
-        <div className="absolute bottom-5 left-0 right-0 flex justify-center items-center gap-6">
+        {/* Action buttons — always visible at card bottom */}
+        <div className="absolute bottom-4 left-0 right-0 flex justify-center items-center gap-6 pointer-events-none">
           <button
             onClick={onPass}
-            className="w-14 h-14 rounded-full bg-white border border-stone-200 flex items-center justify-center text-stone-400 hover:border-red-200 hover:text-red-400 transition-all shadow-sm"
+            className="w-14 h-14 rounded-full bg-white border border-stone-200 flex items-center justify-center text-stone-400 hover:border-red-200 hover:text-red-400 transition-all shadow-md pointer-events-auto"
           >
             <X className="h-6 w-6" />
           </button>
           <button
             onClick={onLike}
-            className="w-14 h-14 rounded-full bg-stone-900 flex items-center justify-center text-white hover:bg-stone-800 transition-all shadow-md"
+            className="w-14 h-14 rounded-full bg-stone-900 flex items-center justify-center text-white hover:bg-stone-800 transition-all shadow-md pointer-events-auto"
           >
             <Heart className="h-6 w-6 fill-current" />
           </button>
@@ -259,6 +464,7 @@ function ProfileCard({
 export function SwipeDeck({ candidates, onLike, onPass }: SwipeDeckProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [swiping, setSwiping] = useState(false);
+  const [detailCandidate, setDetailCandidate] = useState<Candidate | null>(null);
 
   const remaining = candidates.slice(currentIndex);
 
@@ -303,46 +509,60 @@ export function SwipeDeck({ candidates, onLike, onPass }: SwipeDeckProps) {
   const progressPct = totalCards > 0 ? (seen / totalCards) * 100 : 0;
 
   return (
-    <div className="w-full max-w-sm mx-auto">
-      {/* Progress bar */}
-      <div className="mb-4">
-        <div className="flex justify-between text-xs text-stone-400 mb-1.5">
-          <span>{remaining.length} profile{remaining.length !== 1 ? "s" : ""} left</span>
-          <span>{seen} seen</span>
+    <>
+      <div className="w-full max-w-sm mx-auto">
+        {/* Progress bar */}
+        <div className="mb-4">
+          <div className="flex justify-between text-xs text-stone-400 mb-1.5">
+            <span>{remaining.length} profile{remaining.length !== 1 ? "s" : ""} left</span>
+            <span>{seen} seen</span>
+          </div>
+          <div className="h-1 bg-stone-200 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-stone-700 to-stone-400 rounded-full transition-all duration-500"
+              style={{ width: `${progressPct}%` }}
+            />
+          </div>
         </div>
-        <div className="h-1 bg-stone-200 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-gradient-to-r from-stone-700 to-stone-400 rounded-full transition-all duration-500"
-            style={{ width: `${progressPct}%` }}
-          />
+
+        <div className="relative w-full" style={{ height: "min(660px, calc(100dvh - 220px))" }}>
+          <AnimatePresence mode="popLayout">
+            {remaining.slice(0, 3).map((candidate, stackIndex) => (
+              <motion.div
+                key={candidate.id}
+                className="absolute inset-0"
+                style={{ zIndex: remaining.length - stackIndex }}
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{
+                  scale: stackIndex === 0 ? 1 : 0.95 - stackIndex * 0.02,
+                  opacity: stackIndex === 0 ? 1 : 0.7 - stackIndex * 0.15,
+                  y: stackIndex * 8,
+                }}
+                exit={{ x: 300, opacity: 0, transition: { duration: 0.3 } }}
+              >
+                <ProfileCard
+                  candidate={candidate}
+                  isTop={stackIndex === 0}
+                  onLike={handleLike}
+                  onPass={handlePass}
+                  onOpenDetail={() => setDetailCandidate(candidate)}
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       </div>
 
-      <div className="relative w-full" style={{ height: "580px" }}>
-        <AnimatePresence mode="popLayout">
-          {remaining.slice(0, 3).map((candidate, stackIndex) => (
-            <motion.div
-              key={candidate.id}
-              className="absolute inset-0"
-              style={{ zIndex: remaining.length - stackIndex }}
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{
-                scale: stackIndex === 0 ? 1 : 0.95 - stackIndex * 0.02,
-                opacity: stackIndex === 0 ? 1 : 0.7 - stackIndex * 0.15,
-                y: stackIndex * 8,
-              }}
-              exit={{ x: 300, opacity: 0, transition: { duration: 0.3 } }}
-            >
-              <ProfileCard
-                candidate={candidate}
-                isTop={stackIndex === 0}
-                onLike={handleLike}
-                onPass={handlePass}
-              />
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
-    </div>
+      {/* Full profile detail modal */}
+      {detailCandidate && (
+        <ProfileDetailModal
+          candidate={detailCandidate}
+          open={!!detailCandidate}
+          onClose={() => setDetailCandidate(null)}
+          onLike={handleLike}
+          onPass={handlePass}
+        />
+      )}
+    </>
   );
 }
