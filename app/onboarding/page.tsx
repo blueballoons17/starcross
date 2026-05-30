@@ -507,7 +507,7 @@ export default function OnboardingPage() {
         setSubmitError(data.error ?? "Failed to save profile. Please try again.");
         return;
       }
-      router.push("/discover");
+      router.push("/pricing");
     } catch {
       setSubmitError("Something went wrong. Please try again.");
     } finally {

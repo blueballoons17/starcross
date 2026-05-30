@@ -36,9 +36,25 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
       if (user) {
         token.userId = user.id;
+        // Fetch subscription status on first login
+        const dbUser = await prisma.user.findUnique({
+          where: { id: user.id as string },
+          select: { subscriptionStatus: true, subscriptionCurrentPeriodEnd: true },
+        });
+        token.subscriptionStatus = dbUser?.subscriptionStatus ?? null;
+        token.subscriptionCurrentPeriodEnd = dbUser?.subscriptionCurrentPeriodEnd?.toISOString() ?? null;
+      }
+      // Refresh subscription data on explicit update trigger
+      if (trigger === "update" && token.userId) {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: token.userId as string },
+          select: { subscriptionStatus: true, subscriptionCurrentPeriodEnd: true },
+        });
+        token.subscriptionStatus = dbUser?.subscriptionStatus ?? null;
+        token.subscriptionCurrentPeriodEnd = dbUser?.subscriptionCurrentPeriodEnd?.toISOString() ?? null;
       }
       return token;
     },
@@ -46,6 +62,8 @@ export const authOptions: NextAuthOptions = {
       if (token.userId && session.user) {
         (session.user as { id?: string }).id = token.userId as string;
       }
+      (session as Record<string, unknown>).subscriptionStatus = token.subscriptionStatus ?? null;
+      (session as Record<string, unknown>).subscriptionCurrentPeriodEnd = token.subscriptionCurrentPeriodEnd ?? null;
       return session;
     },
   },

@@ -315,7 +315,7 @@ export default function HomePage() {
               <Link href="/login">Sign in</Link>
             </Button>
             <Button size="sm" asChild className="bg-stone-900 text-white hover:bg-stone-800 rounded-full px-5">
-              <Link href="/signup">Get started</Link>
+              <Link href="/pricing">Get started</Link>
             </Button>
           </div>
         </div>
@@ -409,7 +409,7 @@ export default function HomePage() {
             className="flex flex-col sm:flex-row gap-3 justify-center"
           >
             <Button size="lg" asChild className="bg-white text-stone-900 hover:bg-stone-100 px-10 rounded-full h-12 font-medium">
-              <Link href="/signup">
+              <Link href="/pricing">
                 Begin your journey <ArrowRight className="h-4 w-4 ml-2" />
               </Link>
             </Button>
@@ -613,7 +613,7 @@ export default function HomePage() {
           </p>
           <div className="pt-2">
             <Button size="lg" asChild className="bg-white text-stone-900 hover:bg-stone-100 rounded-full px-12 h-12">
-              <Link href="/signup">
+              <Link href="/pricing">
                 Begin your journey <ArrowRight className="h-4 w-4 ml-2" />
               </Link>
             </Button>

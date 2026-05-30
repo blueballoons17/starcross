@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { Star, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,8 @@ import { Label } from "@/components/ui/label";
 
 export default function SignupPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams?.get("callbackUrl") ?? "/onboarding";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -64,7 +66,7 @@ export default function SignupPage() {
         setError("Account created but sign-in failed. Please sign in manually.");
         router.push("/login");
       } else {
-        router.push("/onboarding");
+        router.push(callbackUrl);
       }
     } catch {
       setError("Something went wrong. Please try again.");
