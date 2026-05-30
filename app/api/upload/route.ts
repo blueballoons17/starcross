@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { put } from "@vercel/blob";
 
 interface SessionUser {
   id?: string;
@@ -35,9 +34,22 @@ export async function POST(request: NextRequest) {
   const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
   const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
-  const blob = await put(`uploads/${userId}/${filename}`, file, {
-    access: "public",
-  });
-
-  return NextResponse.json({ url: blob.url });
+  // Use Vercel Blob when token is available (production), fall back to local filesystem for dev
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    const { put } = await import("@vercel/blob");
+    const blob = await put(`uploads/${userId}/${filename}`, file, {
+      access: "public",
+    });
+    return NextResponse.json({ url: blob.url });
+  } else {
+    // Local dev fallback — writes to public/uploads
+    const { writeFile, mkdir } = await import("fs/promises");
+    const { join } = await import("path");
+    const dir = join(process.cwd(), "public", "uploads", userId);
+    await mkdir(dir, { recursive: true });
+    const buffer = Buffer.from(await file.arrayBuffer());
+    await writeFile(join(dir, filename), buffer);
+    const url = `/uploads/${userId}/${filename}`;
+    return NextResponse.json({ url });
+  }
 }

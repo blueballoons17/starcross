@@ -125,51 +125,64 @@ function AvatarUpload({
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   async function handleFile(file: File) {
     setUploading(true);
+    setUploadError(null);
     try {
       const fd = new FormData();
       fd.append("file", file);
       const res = await fetch("/api/upload", { method: "POST", body: fd });
       const data = await res.json();
-      if (data.url) onUploaded(data.url);
+      if (data.url) {
+        onUploaded(data.url);
+      } else {
+        setUploadError(data.error ?? "Upload failed. Please try again.");
+      }
+    } catch {
+      setUploadError("Network error — please try again.");
     } finally {
       setUploading(false);
     }
   }
 
   return (
-    <div className="relative inline-block">
-      <div className="w-20 h-20 rounded-full overflow-hidden bg-gradient-to-br from-stone-700 to-stone-900 shadow-md">
-        {avatarUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={avatarUrl} alt={name} className="w-full h-full object-cover" />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-white text-2xl font-bold">
-            {getInitials(name)}
-          </div>
-        )}
+    <div className="flex flex-col items-center gap-1">
+      <div className="relative inline-block">
+        <div className="w-20 h-20 rounded-full overflow-hidden bg-gradient-to-br from-stone-700 to-stone-900 shadow-md">
+          {avatarUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={avatarUrl} alt={name} className="w-full h-full object-cover" />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-white text-2xl font-bold">
+              {getInitials(name)}
+            </div>
+          )}
+        </div>
+        <button
+          onClick={() => inputRef.current?.click()}
+          disabled={uploading}
+          className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-stone-900 border-2 border-white flex items-center justify-center shadow-sm hover:bg-stone-700 transition-colors"
+          title="Change photo"
+        >
+          {uploading ? (
+            <div className="w-3 h-3 rounded-full border border-white border-t-transparent animate-spin" />
+          ) : (
+            <Camera className="h-3 w-3 text-white" />
+          )}
+        </button>
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }}
+        />
       </div>
-      <button
-        onClick={() => inputRef.current?.click()}
-        disabled={uploading}
-        className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-stone-900 border-2 border-white flex items-center justify-center shadow-sm hover:bg-stone-700 transition-colors"
-        title="Change photo"
-      >
-        {uploading ? (
-          <div className="w-3 h-3 rounded-full border border-white border-t-transparent animate-spin" />
-        ) : (
-          <Camera className="h-3 w-3 text-white" />
-        )}
-      </button>
-      <input
-        ref={inputRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }}
-      />
+      {uploadError && (
+        <p className="text-red-500 text-xs text-center max-w-[120px] leading-tight">{uploadError}</p>
+      )}
     </div>
   );
 }
@@ -187,16 +200,24 @@ function PhotosGrid({
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const MAX_PHOTOS = 6;
 
   async function handleFile(file: File) {
     setUploading(true);
+    setUploadError(null);
     try {
       const fd = new FormData();
       fd.append("file", file);
       const res = await fetch("/api/upload", { method: "POST", body: fd });
       const data = await res.json();
-      if (data.url) onAdd(data.url);
+      if (data.url) {
+        onAdd(data.url);
+      } else {
+        setUploadError(data.error ?? "Upload failed. Please try again.");
+      }
+    } catch {
+      setUploadError("Network error — please try again.");
     } finally {
       setUploading(false);
     }
@@ -258,6 +279,9 @@ function PhotosGrid({
         className="hidden"
         onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }}
       />
+      {uploadError && (
+        <p className="col-span-3 text-red-500 text-xs text-center mt-1">{uploadError}</p>
+      )}
     </div>
   );
 }
