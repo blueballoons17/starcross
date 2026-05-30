@@ -55,19 +55,47 @@ function PricingContent() {
   }
 
   const upgraded = searchParams?.get("upgraded") === "true";
+  const sessionId = searchParams?.get("session_id") ?? null;
+  const [activating, setActivating] = useState(false);
 
-  // After successful payment, refresh the JWT so middleware sees the new subscription,
-  // then send to onboarding (to set up profile) or discover (if already set up)
+  // After Stripe redirects back: activate subscription immediately, then route correctly
   useEffect(() => {
-    if (!upgraded) return;
-    // Give the webhook a moment, then refresh session
-    const t = setTimeout(async () => {
-      await update(); // triggers JWT refresh from DB
+    if (!upgraded || !sessionId) return;
+    setActivating(true);
+    (async () => {
+      try {
+        const res = await fetch("/api/stripe/activate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sessionId }),
+        });
+        const data = await res.json();
+        if (data.ok) {
+          await update();
+          router.push(data.hasProfile ? "/discover" : "/onboarding");
+          return;
+        }
+      } catch { /* fallback below */ }
+      await update();
       router.push("/onboarding");
-    }, 2000);
-    return () => clearTimeout(t);
+    })();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [upgraded]);
+  }, [upgraded, sessionId]);
+
+  // Show a loading screen while activating so there's no flash of the pricing UI
+  if (activating) {
+    return (
+      <div className="min-h-screen bg-stone-950 flex items-center justify-center">
+        <PageStars />
+        <div className="text-center space-y-4 relative z-10">
+          <div className="w-10 h-10 rounded-full border-2 border-indigo-500/40 border-t-indigo-400 animate-spin mx-auto" />
+          <p className="text-stone-300 text-sm" style={{ fontFamily: "var(--font-cinzel)", letterSpacing: "0.12em" }}>
+            Activating your subscription…
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-stone-950 text-white flex flex-col">
