@@ -1,7 +1,10 @@
 import { defineConfig } from "prisma/config";
+import { PrismaLibSql } from "@prisma/adapter-libsql";
+
+const dbUrl = process.env.DATABASE_URL ?? "file:./dev.db";
 
 export default defineConfig({
   datasource: {
-    url: process.env.DATABASE_URL ?? "file:./dev.db",
+    adapter: new PrismaLibSql({ url: dbUrl }),
   },
 });
