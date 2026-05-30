@@ -8,9 +8,8 @@ import RadialOrbitalTimeline from "@/components/ui/radial-orbital-timeline";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import { StarField } from "@/components/ui/star-field";
 import { ShootingStarLogo } from "@/components/ui/shooting-star-logo";
-import { ZodiacIcon, ZodiacIconDark } from "@/components/ui/zodiac-icon";
+import { ZodiacIcon } from "@/components/ui/zodiac-icon";
 import { Button } from "@/components/ui/button";
-import { getZodiacColor } from "@/lib/zodiac-colors";
 import { cn } from "@/lib/utils";
 import { useRef, useEffect } from "react";
 
@@ -154,194 +153,132 @@ function ConstellationCanvas() {
   return <canvas ref={ref} className="absolute inset-0 w-full h-full" />;
 }
 
-// Light score ring (stone palette, matches actual app style)
-function PreviewScoreRing({ score }: { score: number }) {
-  const r = 18;
+// Thin arc score — matches the real app's ScoreMark
+function PreviewScoreMark({ score }: { score: number }) {
+  const r = 13;
   const circ = 2 * Math.PI * r;
   const offset = circ - (score / 100) * circ;
-  const color = score >= 90 ? "#92400e" : score >= 80 ? "#44403c" : "#a8a29e";
-  const colorEnd = score >= 90 ? "#b45309" : score >= 80 ? "#78716c" : "#d6d3d1";
-  const id = `pg-${score}`;
-
+  const col = score >= 90 ? "#c9a86a" : score >= 80 ? "#9d8ec8" : "#4a4a52";
   return (
-    <div className="relative w-11 h-11 flex items-center justify-center shrink-0">
-      <svg width="44" height="44" className="-rotate-90">
-        <defs>
-          <linearGradient id={id} x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor={color} />
-            <stop offset="100%" stopColor={colorEnd} />
-          </linearGradient>
-        </defs>
-        <circle cx="22" cy="22" r={r} fill="none" stroke="rgba(28,25,23,0.07)" strokeWidth="3.5" />
-        <circle cx="22" cy="22" r={r} fill="none" stroke={`url(#${id})`}
-          strokeWidth="3.5" strokeDasharray={circ} strokeDashoffset={offset} strokeLinecap="round" />
+    <div className="relative w-8 h-8 flex items-center justify-center shrink-0">
+      <svg width="30" height="30" className="-rotate-90">
+        <circle cx="15" cy="15" r={r} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+        <circle cx="15" cy="15" r={r} fill="none" stroke={col} strokeWidth="1.5"
+          strokeDasharray={circ} strokeDashoffset={offset} strokeLinecap="round" />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center leading-none">
-        <span className="text-[11px] font-bold text-stone-800">{score}</span>
-        <span className="text-[7px] text-stone-400 mt-px">%</span>
+        <span className="text-[8px] text-stone-300">{score}</span>
+        <span className="text-[5px] text-stone-600 -mt-px">%</span>
       </div>
     </div>
   );
 }
 
-// Light match card — mirrors actual MatchCard style
+// Editorial match row — mirrors the real MatchCard style
 function PreviewMatchCard({ match, delay }: { match: typeof PREVIEW_MATCHES[0]; delay: number }) {
-  const sunColor = getZodiacColor(match.sun);
-  const moonColor = getZodiacColor(match.moon);
-
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, delay, ease: [0.22, 1, 0.36, 1] }}
-      className="flex items-center gap-3 bg-white rounded-2xl p-3 border border-stone-100 shadow-sm"
+      className="flex items-start gap-2.5 py-3"
     >
       {/* Avatar */}
-      <div className="w-11 h-11 rounded-full bg-gradient-to-br from-stone-700 to-stone-900 flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-sm">
+      <div className="w-8 h-8 rounded-full bg-stone-800/70 border border-white/[0.07] flex items-center justify-center text-[9px] font-medium text-stone-500 shrink-0">
         {match.name[0]}
       </div>
-
       {/* Info */}
       <div className="flex-1 min-w-0">
-        <div className="flex items-baseline gap-1 mb-1.5">
-          <span className="text-stone-900 font-semibold text-sm leading-none">{match.name},</span>
-          <span className="text-stone-400 text-xs">{match.age} · {match.city}</span>
-        </div>
-        <div className="flex items-center gap-1 flex-wrap">
-          <span className={cn(
-            "inline-flex items-center gap-1 px-1.5 py-px rounded-full text-[10px] border font-medium",
-            sunColor.bg, sunColor.text, sunColor.border
-          )}>
-            <ZodiacIcon sign={match.sun} size={11} className="bg-transparent border-0" />
-            {match.sun}
-          </span>
-          <span className={cn(
-            "inline-flex items-center gap-1 px-1.5 py-px rounded-full text-[10px] border font-medium",
-            moonColor.bg, moonColor.text, moonColor.border
-          )}>
-            <ZodiacIcon sign={match.moon} size={11} className="bg-transparent border-0" />
-            {match.moon} Moon
-          </span>
-        </div>
+        <p className="font-serif text-stone-100 text-[11px] leading-snug">
+          {match.name}<span className="text-stone-500 font-light">, {match.age}</span>
+        </p>
+        <p className="text-[8px] uppercase tracking-[0.08em] text-stone-600 mt-0.5">{match.city}</p>
+        <p className="text-[9px] text-stone-500 mt-1 tracking-[0.02em]">
+          ☉ {match.sun}
+          <span className="mx-1.5 opacity-25">·</span>
+          ☽ {match.moon}
+        </p>
       </div>
-
-      <PreviewScoreRing score={match.score} />
+      <PreviewScoreMark score={match.score} />
     </motion.div>
   );
 }
 
 function AppPreview() {
   return (
-    <div className="h-full w-full flex flex-col overflow-hidden bg-[#FAF8F4]">
+    <div className="h-full w-full flex flex-col overflow-hidden bg-stone-950">
 
-      {/* ── Dark constellation hero strip ───────────────────────── */}
-      <div className="relative shrink-0 overflow-hidden bg-stone-950" style={{ height: "38%" }}>
+      {/* ── NavBar ───────────────────────────────────────────────── */}
+      <div className="shrink-0 flex items-center justify-between px-4 py-2.5 border-b border-white/[0.07] bg-stone-950/80 backdrop-blur-md">
+        <div className="flex items-center gap-1.5">
+          <ShootingStarLogo size={11} className="text-stone-400" />
+          <span
+            className="text-[8px] font-medium text-stone-300 uppercase tracking-[0.18em]"
+            style={{ fontFamily: "var(--font-cinzel)" }}
+          >StarCross</span>
+        </div>
+        <div className="flex items-center gap-3">
+          {["Discover","Matches","Astrology"].map((l, i) => (
+            <span key={l} className={cn("text-[7px] uppercase tracking-[0.1em]", i === 1 ? "text-stone-200" : "text-stone-600")}>{l}</span>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Constellation strip ──────────────────────────────────── */}
+      <div className="relative shrink-0 overflow-hidden" style={{ height: "30%" }}>
         <ConstellationCanvas />
-
-        {/* Radial glow */}
         <div className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 80% 70% at 50% 50%, rgba(255,252,245,0.045) 0%, transparent 70%)" }}
+          style={{ background: "radial-gradient(ellipse 70% 80% at 50% 50%, rgba(255,252,245,0.04) 0%, transparent 70%)" }}
         />
-
-        {/* Orbital rings */}
-        {[140, 100, 64].map((d, i) => (
+        {[110, 76, 46].map((d, i) => (
           <div key={d} className="absolute rounded-full border border-stone-700/20"
             style={{
-              width: d, height: d,
-              top: "50%", left: "50%",
+              width: d, height: d, top: "50%", left: "50%",
               transform: "translate(-50%, -50%)",
-              opacity: 0.35 - i * 0.08,
+              opacity: 0.3 - i * 0.07,
               animation: `ring-spin ${38 + i * 14}s linear infinite ${i % 2 ? "reverse" : ""}`,
             }}
           />
         ))}
-
-        {/* Center orb */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-stone-700 to-stone-900 flex items-center justify-center shadow-lg">
-            <span className="text-stone-300 text-xs select-none">✦</span>
-          </div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-6 h-6 rounded-full bg-stone-800/80 border border-white/10 flex items-center justify-center">
+          <span className="text-stone-400 text-[9px] select-none">✦</span>
         </div>
-
-        {/* Floating sign icons around orb */}
-        {([
-          { sign: "Leo",      angle: -40, r: 52 },
-          { sign: "Aquarius", angle:  90, r: 50 },
-          { sign: "Pisces",   angle: 200, r: 54 },
-          { sign: "Scorpio",  angle: 310, r: 50 },
-        ] as { sign: string; angle: number; r: number }[]).map(({ sign, angle, r }) => {
-          const rad = (angle * Math.PI) / 180;
-          return (
-            <div key={sign}
-              className="absolute z-10"
-              style={{
-                top: "50%", left: "50%",
-                transform: `translate(calc(-50% + ${r * Math.cos(rad)}px), calc(-50% + ${r * Math.sin(rad)}px))`,
-              }}
-            >
-              <ZodiacIconDark sign={sign} size={20} />
-            </div>
-          );
-        })}
-
-        {/* Caption */}
-        <div className="absolute bottom-0 inset-x-0 px-4 pb-3 z-20">
-          <p className="text-[9px] text-stone-500 uppercase tracking-[0.18em]">Your cosmic fingerprint</p>
-          <div className="flex items-center gap-1.5 mt-1">
-            <ZodiacIconDark sign="Leo"      size={16} />
-            <span className="text-[10px] text-stone-300 font-medium">Leo</span>
-            <span className="text-stone-700 text-[9px] mx-0.5">·</span>
-            <ZodiacIconDark sign="Aquarius" size={16} />
-            <span className="text-[10px] text-stone-300 font-medium">Aquarius</span>
-            <span className="text-stone-700 text-[9px] mx-0.5">·</span>
-            <ZodiacIconDark sign="Gemini"   size={16} />
-            <span className="text-[10px] text-stone-300 font-medium">Gemini</span>
-          </div>
+        <div className="absolute bottom-0 inset-x-0 px-4 pb-2 z-20">
+          <p className="text-[7px] text-stone-600 uppercase tracking-[0.16em]">Your cosmic fingerprint</p>
+          <p className="text-[9px] text-stone-400 mt-0.5">
+            ☉ Leo <span className="opacity-30 mx-1">·</span> ☽ Aquarius <span className="opacity-30 mx-1">·</span> ↑ Gemini
+          </p>
         </div>
       </div>
 
-      {/* ── Light content ────────────────────────────────────────── */}
-      <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
-
-        {/* NavBar strip */}
-        <div className="flex items-center justify-between px-4 py-2.5 border-b border-stone-100 bg-[#FAF8F4]/90 backdrop-blur-sm shrink-0">
-          <div className="flex items-center gap-1.5">
-            <ShootingStarLogo size={12} className="text-stone-700" />
-            <span
-              className="text-[9px] font-medium text-stone-900 uppercase tracking-[0.15em]"
-              style={{ fontFamily: "var(--font-cinzel)" }}
-            >StarCross</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-[9px] text-stone-400 uppercase tracking-wider">Matches</span>
-            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-stone-600 to-stone-900 flex items-center justify-center text-white text-[9px] font-bold">Y</div>
-          </div>
+      {/* ── Matches list ─────────────────────────────────────────── */}
+      <div className="flex-1 min-h-0 overflow-hidden flex flex-col px-4 pt-3">
+        {/* Header */}
+        <div className="shrink-0 mb-1">
+          <p className="font-serif text-stone-200 text-sm font-light tracking-tight">Your Matches</p>
+          <p className="text-[7px] uppercase tracking-[0.14em] text-stone-600 mt-0.5">3 connections found</p>
+          <div className="mt-2 h-px bg-white/[0.06]" />
         </div>
-
-        {/* Match list */}
-        <div className="flex-1 overflow-hidden px-3 pt-3 space-y-2">
-          <div className="flex items-center justify-between mb-0.5">
-            <span className="text-[9px] text-stone-400 uppercase tracking-widest">Cosmic matches</span>
-            <span className="text-[9px] text-stone-400">3 new today</span>
-          </div>
+        {/* Glass panel */}
+        <div className="flex-1 overflow-hidden bg-stone-900/50 border border-white/[0.07] rounded-[4px] divide-y divide-white/[0.05] px-3">
           {PREVIEW_MATCHES.map((m, i) => (
             <PreviewMatchCard key={m.name} match={m} delay={0.1 + i * 0.09} />
           ))}
         </div>
+      </div>
 
-        {/* Bottom nav */}
-        <div className="shrink-0 border-t border-stone-100 bg-white/80 px-4 py-2 flex items-center justify-around">
-          {[
-            { icon: Heart,    label: "Discover", active: false },
-            { icon: Sparkles, label: "Matches",  active: true  },
-            { icon: Moon,     label: "Chart",    active: false },
-          ].map(({ icon: Icon, label, active }) => (
-            <div key={label} className="flex flex-col items-center gap-0.5">
-              <Icon className={cn("h-3.5 w-3.5", active ? "text-stone-900" : "text-stone-300")} />
-              <span className={cn("text-[8px] font-medium", active ? "text-stone-900" : "text-stone-400")}>{label}</span>
-            </div>
-          ))}
-        </div>
+      {/* ── Bottom nav ───────────────────────────────────────────── */}
+      <div className="shrink-0 border-t border-white/[0.07] bg-stone-950/90 px-4 py-2 flex items-center justify-around">
+        {[
+          { icon: Heart,    label: "Discover", active: false },
+          { icon: Sparkles, label: "Matches",  active: true  },
+          { icon: Moon,     label: "Astrology",active: false },
+        ].map(({ icon: Icon, label, active }) => (
+          <div key={label} className="flex flex-col items-center gap-0.5">
+            <Icon className={cn("h-3 w-3", active ? "text-stone-300" : "text-stone-700")} />
+            <span className={cn("text-[7px] tracking-wide", active ? "text-stone-300" : "text-stone-700")}>{label}</span>
+          </div>
+        ))}
       </div>
     </div>
   );
