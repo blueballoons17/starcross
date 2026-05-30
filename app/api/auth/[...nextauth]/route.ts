@@ -62,8 +62,8 @@ export const authOptions: NextAuthOptions = {
       if (token.userId && session.user) {
         (session.user as { id?: string }).id = token.userId as string;
       }
-      (session as Record<string, unknown>).subscriptionStatus = token.subscriptionStatus ?? null;
-      (session as Record<string, unknown>).subscriptionCurrentPeriodEnd = token.subscriptionCurrentPeriodEnd ?? null;
+      (session as unknown as Record<string, unknown>).subscriptionStatus = token.subscriptionStatus ?? null;
+      (session as unknown as Record<string, unknown>).subscriptionCurrentPeriodEnd = token.subscriptionCurrentPeriodEnd ?? null;
       return session;
     },
   },
