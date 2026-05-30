@@ -1,19 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import sharp from "sharp";
 
 interface SessionUser {
   id?: string;
-}
-
-// Compress & convert to WebP before storing.
-// Max dimension 1200px (preserves aspect ratio), quality 82 — typically 50-70% smaller.
-async function compress(buffer: Buffer): Promise<Buffer> {
-  return sharp(buffer)
-    .resize(1200, 1200, { fit: "inside", withoutEnlargement: true })
-    .webp({ quality: 82 })
-    .toBuffer();
 }
 
 export async function POST(request: NextRequest) {
@@ -39,43 +29,40 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // 8 MB max (after client-side compression this is rarely hit)
     if (file.size > 8 * 1024 * 1024) {
       return NextResponse.json({ error: "File too large. Max 8 MB." }, { status: 400 });
     }
 
-    // Compress the image
-    const rawBuffer = Buffer.from(await file.arrayBuffer());
-    const compressed = await compress(rawBuffer);
-
-    const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.webp`;
+    const ext = file.type === "image/webp" ? "webp"
+      : file.type === "image/png" ? "png"
+      : file.type === "image/gif" ? "gif"
+      : "jpg";
+    const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
     if (process.env.BLOB_READ_WRITE_TOKEN) {
-      // Production: Vercel Blob
       const { put } = await import("@vercel/blob");
-      const blob = await put(`uploads/${userId}/${filename}`, compressed, {
+      const blob = await put(`uploads/${userId}/${filename}`, file, {
         access: "public",
-        contentType: "image/webp",
+        contentType: file.type,
       });
       return NextResponse.json({ url: blob.url });
     } else if (process.env.NODE_ENV === "development") {
-      // Local dev only
       const { writeFile, mkdir } = await import("fs/promises");
       const { join } = await import("path");
       const dir = join(process.cwd(), "public", "uploads", userId);
       await mkdir(dir, { recursive: true });
-      await writeFile(join(dir, filename), compressed);
+      const buffer = Buffer.from(await file.arrayBuffer());
+      await writeFile(join(dir, filename), buffer);
       return NextResponse.json({ url: `/uploads/${userId}/${filename}` });
     } else {
       return NextResponse.json(
-        { error: "Photo storage is not configured. Please add BLOB_READ_WRITE_TOKEN to environment variables." },
+        { error: "Photo storage is not configured yet — please set up Vercel Blob." },
         { status: 503 }
       );
     }
   } catch (err) {
     console.error("Upload error:", err);
-    return NextResponse.json(
-      { error: "Upload failed. Please try again." },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Upload failed. Please try again." }, { status: 500 });
   }
 }

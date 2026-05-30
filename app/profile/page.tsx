@@ -112,6 +112,57 @@ function SignBadge({ sign, size = "md" }: { sign: string; size?: "sm" | "md" | "
   );
 }
 
+// ─── Client-side image compression ────────────────────────────────────────
+
+async function compressImage(file: File, maxDimension = 1200, quality = 0.82): Promise<File> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+      let { width, height } = img;
+      // Scale down if larger than maxDimension, never upscale
+      if (width > maxDimension || height > maxDimension) {
+        if (width >= height) {
+          height = Math.round((height * maxDimension) / width);
+          width = maxDimension;
+        } else {
+          width = Math.round((width * maxDimension) / height);
+          height = maxDimension;
+        }
+      }
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) { reject(new Error("Canvas not available")); return; }
+      ctx.drawImage(img, 0, 0, width, height);
+      // Try WebP first (best compression), fall back to JPEG
+      canvas.toBlob(
+        (blob) => {
+          if (blob) {
+            resolve(new File([blob], `photo.webp`, { type: "image/webp" }));
+          } else {
+            // WebP not supported — try JPEG
+            canvas.toBlob(
+              (jpegBlob) => {
+                if (jpegBlob) resolve(new File([jpegBlob], `photo.jpg`, { type: "image/jpeg" }));
+                else reject(new Error("Compression failed"));
+              },
+              "image/jpeg",
+              quality
+            );
+          }
+        },
+        "image/webp",
+        quality
+      );
+    };
+    img.onerror = () => { URL.revokeObjectURL(objectUrl); reject(new Error("Image load failed")); };
+    img.src = objectUrl;
+  });
+}
+
 // ─── Avatar upload ──────────────────────────────────────────────────────────
 
 function AvatarUpload({
@@ -131,8 +182,9 @@ function AvatarUpload({
     setUploading(true);
     setUploadError(null);
     try {
+      const compressed = await compressImage(file, 800); // avatars at 800px max
       const fd = new FormData();
-      fd.append("file", file);
+      fd.append("file", compressed);
       const res = await fetch("/api/upload", { method: "POST", body: fd });
       const data = await res.json();
       if (data.url) {
@@ -207,8 +259,9 @@ function PhotosGrid({
     setUploading(true);
     setUploadError(null);
     try {
+      const compressed = await compressImage(file, 1200); // gallery photos at 1200px max
       const fd = new FormData();
-      fd.append("file", file);
+      fd.append("file", compressed);
       const res = await fetch("/api/upload", { method: "POST", body: fd });
       const data = await res.json();
       if (data.url) {
