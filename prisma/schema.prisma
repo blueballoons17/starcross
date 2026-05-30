@@ -49,6 +49,7 @@ model Profile {
   bio          String?
   interests    String?
   photos       String?
+  answers      String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }

@@ -21,9 +21,18 @@ import {
 import { getZodiacColor } from "@/lib/zodiac-colors";
 import { ZodiacIcon } from "@/components/ui/zodiac-icon";
 import { cn } from "@/lib/utils";
+import { PERSONALITY_QUESTIONS } from "@/lib/personality-questions";
 
 const GENDER_OPTIONS = ["Woman", "Man", "Non-binary", "Other", "Prefer not to say"];
 const PREF_GENDER_OPTIONS = ["Women", "Men", "Non-binary people", "Everyone"];
+
+const PRESET_INTERESTS = [
+  "Astrology", "Meditation", "Yoga", "Reading", "Hiking", "Travel",
+  "Cooking", "Music", "Art", "Film", "Fitness", "Coffee", "Wine",
+  "Brunch", "Photography", "Dancing", "Gaming", "Concerts", "Museums",
+  "Vintage Fashion", "Skincare", "Plants", "Cats", "Dogs", "Tarot",
+  "Crystals", "Journaling", "Podcasts", "Theatre",
+];
 
 interface FormData {
   name: string;
@@ -35,6 +44,8 @@ interface FormData {
   prefGenders: string[];
   prefAgeMin: number;
   prefAgeMax: number;
+  interests: string[];
+  answers: Record<string, string>;
 }
 
 const INITIAL_FORM: FormData = {
@@ -47,9 +58,11 @@ const INITIAL_FORM: FormData = {
   prefGenders: [],
   prefAgeMin: 22,
   prefAgeMax: 40,
+  interests: [],
+  answers: {},
 };
 
-const STEPS = ["About You", "Preferences", "Your Chart"];
+const STEPS = ["About You", "Preferences", "Personality", "Your Chart"];
 
 // ─── Step indicator ────────────────────────────────────────────────────────
 
@@ -463,6 +476,24 @@ export default function OnboardingPage() {
     }));
   }
 
+  function toggleInterest(tag: string) {
+    setForm((f) => ({
+      ...f,
+      interests: f.interests.includes(tag)
+        ? f.interests.filter((t) => t !== tag)
+        : f.interests.length < 12
+        ? [...f.interests, tag]
+        : f.interests,
+    }));
+  }
+
+  function setAnswer(key: string, value: string) {
+    setForm((f) => ({
+      ...f,
+      answers: { ...f.answers, [key]: value },
+    }));
+  }
+
   function validateStep0() {
     const e: Partial<Record<keyof FormData, string>> = {};
     if (!form.name.trim())        e.name        = "Name is required.";
@@ -500,7 +531,12 @@ export default function OnboardingPage() {
       const res = await fetch("/api/profile", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, prefGenders: form.prefGenders.join(",") }),
+        body: JSON.stringify({
+          ...form,
+          prefGenders: form.prefGenders.join(","),
+          interests: JSON.stringify(form.interests),
+          answers: JSON.stringify(form.answers),
+        }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -516,7 +552,7 @@ export default function OnboardingPage() {
   }
 
   const astrologyPreview =
-    step === 2 && form.birthDate
+    step === 3 && form.birthDate
       ? calculateAstrologyProfile(new Date(form.birthDate), form.birthTime || undefined, form.birthCity)
       : null;
 
@@ -530,7 +566,7 @@ export default function OnboardingPage() {
             <span className="font-serif text-xl font-semibold text-stone-900">StarCross</span>
           </div>
           <p className="text-stone-400 text-sm">
-            {step === 2 ? "Your cosmic profile" : "Tell us about yourself"}
+            {step === 3 ? "Your cosmic profile" : "Tell us about yourself"}
           </p>
         </div>
 
@@ -540,8 +576,10 @@ export default function OnboardingPage() {
           <p className="text-stone-500 text-sm">{STEPS[step]}</p>
         </div>
 
-        {/* Steps 0 & 1 — wrapped in a card */}
+        {/* Steps — wrapped in animated cards */}
         <AnimatePresence mode="wait">
+
+          {/* Step 0 — About You */}
           {step === 0 && (
             <motion.div
               key="step0"
@@ -593,6 +631,7 @@ export default function OnboardingPage() {
             </motion.div>
           )}
 
+          {/* Step 1 — Preferences */}
           {step === 1 && (
             <motion.div
               key="step1"
@@ -676,9 +715,102 @@ export default function OnboardingPage() {
             </motion.div>
           )}
 
-          {step === 2 && astrologyPreview && (
+          {/* Step 2 — Personality (interests + questions) */}
+          {step === 2 && (
             <motion.div
               key="step2"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.25 }}
+            >
+              <div className="bg-white border border-stone-100 rounded-2xl p-8 shadow-sm space-y-7">
+
+                {/* Interests */}
+                <div className="space-y-3">
+                  <div>
+                    <Label>Your interests</Label>
+                    <p className="text-xs text-stone-400 mt-0.5">Pick up to 12 that vibe with you</p>
+                  </div>
+                  <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto">
+                    {PRESET_INTERESTS.map((tag) => {
+                      const active = form.interests.includes(tag);
+                      return (
+                        <button
+                          key={tag}
+                          type="button"
+                          onClick={() => toggleInterest(tag)}
+                          className={cn(
+                            "px-3 py-1.5 rounded-full text-sm border transition-all",
+                            active
+                              ? "bg-stone-900 border-stone-900 text-white"
+                              : "bg-white border-stone-200 text-stone-600 hover:border-stone-400"
+                          )}
+                        >
+                          {active && <Check className="h-3 w-3 inline mr-1" />}
+                          {tag}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <p className="text-xs text-stone-400">{form.interests.length}/12 selected</p>
+                </div>
+
+                <div className="border-t border-stone-100" />
+
+                {/* Personality questions */}
+                <div className="space-y-6">
+                  <div>
+                    <Label>A few fun questions</Label>
+                    <p className="text-xs text-stone-400 mt-0.5">All optional — but your matches will love seeing these</p>
+                  </div>
+
+                  {PERSONALITY_QUESTIONS.map((q) => (
+                    <div key={q.key} className="space-y-2.5">
+                      <p className="text-sm font-medium text-stone-700">
+                        <span className="mr-1.5">{q.emoji}</span>{q.question}
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {q.options.map((opt) => {
+                          const selected = form.answers[q.key] === opt;
+                          return (
+                            <button
+                              key={opt}
+                              type="button"
+                              onClick={() => setAnswer(q.key, selected ? "" : opt)}
+                              className={cn(
+                                "px-3 py-1.5 rounded-full text-sm border transition-all",
+                                selected
+                                  ? "bg-indigo-600 border-indigo-600 text-white"
+                                  : "bg-white border-stone-200 text-stone-600 hover:border-stone-400"
+                              )}
+                            >
+                              {selected && <Check className="h-3 w-3 inline mr-1" />}
+                              {opt}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between mt-6">
+                <Button variant="outline" onClick={handleBack} className="gap-2 border-stone-200 text-stone-600">
+                  <ChevronLeft className="h-4 w-4" /> Back
+                </Button>
+                <Button onClick={handleNext} className="gap-2 bg-stone-900 text-white hover:bg-stone-800">
+                  See My Chart <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Step 3 — Your Chart */}
+          {step === 3 && astrologyPreview && (
+            <motion.div
+              key="step3"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
@@ -699,6 +831,7 @@ export default function OnboardingPage() {
               </div>
             </motion.div>
           )}
+
         </AnimatePresence>
       </div>
     </div>

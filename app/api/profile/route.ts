@@ -71,6 +71,7 @@ export async function POST(request: NextRequest) {
     avatarUrl?: string;
     interests?: string;
     photos?: string;
+    answers?: string;
   };
 
   try {
@@ -93,6 +94,7 @@ export async function POST(request: NextRequest) {
     avatarUrl,
     interests,
     photos,
+    answers,
   } = body;
 
   if (!name?.trim()) {
@@ -148,6 +150,7 @@ export async function POST(request: NextRequest) {
       avatarUrl: avatarUrl ?? null,
       interests: interests ?? null,
       photos: photos ?? null,
+      answers: answers ?? null,
     },
     update: {
       name: name.trim(),
@@ -163,6 +166,7 @@ export async function POST(request: NextRequest) {
       ...(avatarUrl !== undefined && { avatarUrl }),
       ...(interests !== undefined && { interests }),
       ...(photos !== undefined && { photos }),
+      ...(answers !== undefined && { answers }),
     },
   });
 

@@ -36,6 +36,7 @@ import {
   SUN_SUMMARIES,
 } from "@/lib/astrology";
 import { cn } from "@/lib/utils";
+import { PERSONALITY_QUESTIONS } from "@/lib/personality-questions";
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 
@@ -50,6 +51,7 @@ interface ProfileData {
     avatarUrl?: string | null;
     interests?: string | null;
     photos?: string | null;
+    answers?: string | null;
   };
   astrologyProfile: {
     sunSign: string;
@@ -659,10 +661,11 @@ export default function ProfilePage() {
   const [data, setData] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Local mutable state for avatar, interests, photos
+  // Local mutable state for avatar, interests, photos, answers
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [interests, setInterests] = useState<string[]>([]);
   const [photos, setPhotos] = useState<string[]>([]);
+  const [answers, setAnswers] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
@@ -687,6 +690,7 @@ export default function ProfilePage() {
         setAvatarUrl(raw.profile?.avatarUrl ?? null);
         setInterests(parseJson<string[]>(raw.profile?.interests, []));
         setPhotos(parseJson<string[]>(raw.profile?.photos, []));
+        setAnswers(parseJson<Record<string, string>>(raw.profile?.answers, {}));
       })
       .catch(console.error)
       .finally(() => setLoading(false));
@@ -843,6 +847,21 @@ export default function ProfilePage() {
           <div className="bg-white rounded-2xl border border-stone-100 shadow-sm p-5">
             <InterestsEditor interests={interests} onChange={handleInterestsChange} />
           </div>
+
+          {/* ── Fun questions ── */}
+          {PERSONALITY_QUESTIONS.some((q) => answers[q.key]) && (
+            <div className="bg-white rounded-2xl border border-stone-100 shadow-sm p-5 space-y-4">
+              <h3 className="font-serif text-stone-900 font-semibold text-sm">About Me</h3>
+              <div className="space-y-3">
+                {PERSONALITY_QUESTIONS.filter((q) => answers[q.key]).map((q) => (
+                  <div key={q.key} className="bg-stone-50 rounded-xl border border-stone-100 px-4 py-3">
+                    <p className="text-xs text-stone-400 mb-1">{q.emoji} {q.question}</p>
+                    <p className="text-sm font-medium text-stone-700">{answers[q.key]}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* ── Chart carousel ── */}
           {astro ? (
