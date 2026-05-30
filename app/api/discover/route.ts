@@ -43,7 +43,39 @@ export async function GET() {
   const swipedIds = new Set(currentUser.swipesGiven.map((s) => s.toUserId));
   swipedIds.add(userId); // exclude self
 
-  const { prefAgeMin, prefAgeMax } = currentUser.profile;
+  const { prefAgeMin, prefAgeMax, prefGenders, gender: myGender } = currentUser.profile;
+
+  // Parse gender preferences into an array e.g. ["Men","Women"]
+  const myPrefs: string[] =
+    prefGenders && prefGenders !== "any"
+      ? prefGenders.split(",").map((s) => s.trim()).filter(Boolean)
+      : [];
+
+  /** Does a candidate's gender match the current user's preferences? */
+  function wantsGender(candidateGender: string | null): boolean {
+    if (myPrefs.length === 0 || myPrefs.includes("Everyone")) return true;
+    const g = candidateGender ?? "";
+    return myPrefs.some((pref) => {
+      if (pref === "Women") return g === "Woman";
+      if (pref === "Men") return g === "Man";
+      if (pref === "Non-binary people") return g === "Non-binary" || g === "Other" || g === "Non-binary";
+      return false;
+    });
+  }
+
+  /** Would a candidate also be open to the current user's gender? */
+  function candidateWantsMe(candidatePrefGenders: string | null): boolean {
+    if (!candidatePrefGenders || candidatePrefGenders === "any") return true;
+    if (candidatePrefGenders.includes("Everyone")) return true;
+    const g = myGender ?? "";
+    const prefs = candidatePrefGenders.split(",").map((s) => s.trim());
+    return prefs.some((pref) => {
+      if (pref === "Women") return g === "Woman";
+      if (pref === "Men") return g === "Man";
+      if (pref === "Non-binary people") return g === "Non-binary" || g === "Other";
+      return false;
+    });
+  }
 
   // Fetch candidate pool
   const candidates = await prisma.user.findMany({
@@ -56,14 +88,16 @@ export async function GET() {
       profile: true,
       astrologyProfile: true,
     },
-    take: 100,
+    take: 200,
   });
 
-  // Filter by age preferences
+  // Filter by age AND gender preferences (both directions)
   const filtered = candidates.filter((c) => {
     if (!c.profile || !c.astrologyProfile) return false;
     const age = getAge(c.profile.birthDate);
     if (age < prefAgeMin || age > prefAgeMax) return false;
+    if (!wantsGender(c.profile.gender)) return false;
+    if (!candidateWantsMe(c.profile.prefGenders)) return false;
     return true;
   });
 

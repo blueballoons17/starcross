@@ -234,6 +234,9 @@ interface SeedProfile {
   gender: string;
   bio: string;
   interests: string[];
+  avatarUrl: string;
+  photos: string[];
+  answers: Record<string, string>;
 }
 
 const SEED_PROFILES: SeedProfile[] = [
@@ -247,33 +250,66 @@ const SEED_PROFILES: SeedProfile[] = [
     birthCountry: "Italy",
     gender: "Woman",
     bio: "Fashion designer with an obsession for Renaissance art and modern chaos. I sketch on trains, argue about pasta shapes, and think the best conversations happen over terrible wine at 1am. My apartment is half studio, half jungle.",
-    interests: ["Fashion design", "Art history", "Travel", "Wine", "Sketching", "Photography", "Architecture", "Cooking Italian food"],
+    interests: ["Art", "Travel", "Wine", "Photography", "Cooking", "Dancing", "Vintage Fashion", "Museums"],
+    avatarUrl: "https://randomuser.me/api/portraits/women/11.jpg",
+    photos: [
+      "https://randomuser.me/api/portraits/women/11.jpg",
+      "https://randomuser.me/api/portraits/women/12.jpg",
+      "https://randomuser.me/api/portraits/women/13.jpg",
+    ],
+    answers: {
+      themeSong: "A certified banger",
+      argumentStyle: "Send a 3-paragraph text",
+      idealSunday: "Spontaneous road trip",
+    },
   },
 
   // 2 ── Taurus — May 5 ────────────────────────────────────────────────────────
   {
     email: "luna.park@starcross.demo",
-    name: "Luna Park",
+    name: "Leo Park",
     birthDate: new Date("1994-05-05"),
     birthTime: "09:15",
     birthCity: "Seoul",
     birthCountry: "South Korea",
-    gender: "Woman",
-    bio: "Pastry chef, reluctant morning person, plant hoarder. I believe in slow Sundays, butter in everything, and desserts that make people cry a little. Currently perfecting a kouign-amann recipe that is genuinely ruining my sleep.",
-    interests: ["Baking", "Ceramics", "Plants", "Yoga", "K-dramas", "Hiking", "Reading", "Farmers markets"],
+    gender: "Man",
+    bio: "Chef and reluctant morning person. I believe in slow Sundays, good ingredients, and meals that actually mean something. I've spent years learning to make one perfect bowl of ramen. The search continues.",
+    interests: ["Cooking", "Plants", "Yoga", "Reading", "Hiking", "Meditation", "Coffee", "Journaling"],
+    avatarUrl: "https://randomuser.me/api/portraits/men/32.jpg",
+    photos: [
+      "https://randomuser.me/api/portraits/men/32.jpg",
+      "https://randomuser.me/api/portraits/men/33.jpg",
+      "https://randomuser.me/api/portraits/men/34.jpg",
+    ],
+    answers: {
+      themeSong: "Pure classical elegance",
+      argumentStyle: "Stress-eat something",
+      idealSunday: "Cooking an elaborate meal",
+    },
   },
 
   // 3 ── Gemini — Jun 5 ────────────────────────────────────────────────────────
   {
     email: "maya.chen@starcross.demo",
-    name: "Maya Chen",
+    name: "Mason Chen",
     birthDate: new Date("1998-06-05"),
     birthTime: "18:45",
     birthCity: "San Francisco",
     birthCountry: "USA",
-    gender: "Woman",
-    bio: "Investigative journalist who writes about tech and power. I have too many browser tabs open at all times, an alarming amount of opinions about fonts, and a habit of turning small talk into long conversations. I am exactly as curious as I am annoying about it.",
-    interests: ["Journalism", "Podcasts", "Rock climbing", "Chess", "Coffee shops", "Bookstores", "Live music", "Cycling"],
+    gender: "Man",
+    bio: "Software engineer who somehow ended up writing about tech ethics on the side. Too many browser tabs, strong opinions about fonts, and a habit of turning small talk into long conversations. I'll ask you a good question within five minutes.",
+    interests: ["Podcasts", "Coffee", "Music", "Reading", "Fitness", "Concerts", "Photography", "Art"],
+    avatarUrl: "https://randomuser.me/api/portraits/men/41.jpg",
+    photos: [
+      "https://randomuser.me/api/portraits/men/41.jpg",
+      "https://randomuser.me/api/portraits/men/42.jpg",
+      "https://randomuser.me/api/portraits/men/43.jpg",
+    ],
+    answers: {
+      themeSong: "An indie bop",
+      argumentStyle: "Make a pros & cons list",
+      idealSunday: "Brunch & farmers market",
+    },
   },
 
   // 4 ── Cancer — Jul 10 ───────────────────────────────────────────────────────
@@ -285,8 +321,19 @@ const SEED_PROFILES: SeedProfile[] = [
     birthCity: "Paris",
     birthCountry: "France",
     gender: "Woman",
-    bio: "Therapist and occasional novelist. I think a lot about what makes people feel safe — in therapy and in relationships. I'm deeply domestic and mildly unhinged about sourdough. My friends say I'm the one who remembers how you take your coffee without asking.",
-    interests: ["Psychology", "Writing", "Sourdough", "Films", "Museums", "Gardening", "Swimming", "Cooking for others"],
+    bio: "Therapist and occasional novelist. I think a lot about what makes people feel safe. I'm deeply domestic and mildly unhinged about sourdough. My friends say I'm the one who remembers how you take your coffee without asking.",
+    interests: ["Reading", "Film", "Cooking", "Journaling", "Meditation", "Museums", "Wine", "Yoga"],
+    avatarUrl: "https://randomuser.me/api/portraits/women/41.jpg",
+    photos: [
+      "https://randomuser.me/api/portraits/women/41.jpg",
+      "https://randomuser.me/api/portraits/women/42.jpg",
+      "https://randomuser.me/api/portraits/women/43.jpg",
+    ],
+    answers: {
+      themeSong: "A heartbreak anthem",
+      argumentStyle: "Go full silent mode",
+      idealSunday: "Cooking an elaborate meal",
+    },
   },
 
   // 5 ── Leo — Aug 5 ───────────────────────────────────────────────────────────
@@ -298,8 +345,19 @@ const SEED_PROFILES: SeedProfile[] = [
     birthCity: "London",
     birthCountry: "UK",
     gender: "Woman",
-    bio: "Stage actress who moonlights as a very loud brunch enthusiast. I'll quote Shakespeare at you and mean it. I genuinely like karaoke. I make playlists for situations that haven't happened yet. Not everyone can handle that. You should be warned.",
-    interests: ["Theatre", "Karaoke", "Brunch", "Screenwriting", "Dance", "Vintage clothes", "Travelling solo", "Podcasting"],
+    bio: "Stage actress who moonlights as a very loud brunch enthusiast. I'll quote Shakespeare at you and mean it. I genuinely like karaoke. I make playlists for situations that haven't happened yet. You should be warned.",
+    interests: ["Theatre", "Dancing", "Brunch", "Music", "Vintage Fashion", "Travel", "Concerts", "Film"],
+    avatarUrl: "https://randomuser.me/api/portraits/women/51.jpg",
+    photos: [
+      "https://randomuser.me/api/portraits/women/51.jpg",
+      "https://randomuser.me/api/portraits/women/52.jpg",
+      "https://randomuser.me/api/portraits/women/53.jpg",
+    ],
+    answers: {
+      themeSong: "A power ballad",
+      argumentStyle: "Send a 3-paragraph text",
+      idealSunday: "Brunch & farmers market",
+    },
   },
 
   // 6 ── Virgo — Sep 5 ─────────────────────────────────────────────────────────
@@ -311,8 +369,19 @@ const SEED_PROFILES: SeedProfile[] = [
     birthCity: "Barcelona",
     birthCountry: "Spain",
     gender: "Woman",
-    bio: "Architect who thinks about public space for a living and rearranges furniture for fun. I'm precise in the way that means I'll notice if something is two degrees off — but I'll also build you something beautiful from scratch. My love language is probably spreadsheets.",
-    interests: ["Architecture", "Urban design", "Cycling", "Tapas", "Drawing", "Minimalism", "Running", "Philosophy books"],
+    bio: "Architect who thinks about public space for a living and rearranges furniture for fun. I'm precise in the way that means I'll notice if something is two degrees off — but I'll also build you something beautiful from scratch.",
+    interests: ["Art", "Fitness", "Coffee", "Museums", "Photography", "Reading", "Hiking", "Meditation"],
+    avatarUrl: "https://randomuser.me/api/portraits/women/61.jpg",
+    photos: [
+      "https://randomuser.me/api/portraits/women/61.jpg",
+      "https://randomuser.me/api/portraits/women/62.jpg",
+      "https://randomuser.me/api/portraits/women/63.jpg",
+    ],
+    answers: {
+      themeSong: "Pure classical elegance",
+      argumentStyle: "Make a pros & cons list",
+      idealSunday: "Museum or gallery crawl",
+    },
   },
 
   // 7 ── Libra — Oct 10 ────────────────────────────────────────────────────────
@@ -324,8 +393,19 @@ const SEED_PROFILES: SeedProfile[] = [
     birthCity: "Montréal",
     birthCountry: "Canada",
     gender: "Woman",
-    bio: "Art curator and recovering perfectionist. I spend my days thinking about how objects carry meaning across centuries and my evenings being completely unable to choose a restaurant. I am very good at making things look beautiful. I am less good at making decisions.",
-    interests: ["Contemporary art", "Curating", "Vintage shopping", "Wine pairing", "Ballet", "French cinema", "Interior design", "Long dinners"],
+    bio: "Art curator and recovering perfectionist. I spend my days thinking about how objects carry meaning across centuries and my evenings being completely unable to choose a restaurant. I am very good at making things look beautiful.",
+    interests: ["Art", "Museums", "Wine", "Film", "Vintage Fashion", "Dancing", "Photography", "Theatre"],
+    avatarUrl: "https://randomuser.me/api/portraits/women/71.jpg",
+    photos: [
+      "https://randomuser.me/api/portraits/women/71.jpg",
+      "https://randomuser.me/api/portraits/women/72.jpg",
+      "https://randomuser.me/api/portraits/women/73.jpg",
+    ],
+    answers: {
+      themeSong: "An indie bop",
+      argumentStyle: "Go full silent mode",
+      idealSunday: "Museum or gallery crawl",
+    },
   },
 
   // 8 ── Scorpio — Nov 10 ──────────────────────────────────────────────────────
@@ -338,7 +418,18 @@ const SEED_PROFILES: SeedProfile[] = [
     birthCountry: "Argentina",
     gender: "Woman",
     bio: "Documentary filmmaker. I mostly make films about things people would rather not talk about. I'm an excellent listener and a suspicious question-asker. My apartment has one very dramatic lamp and every book I've ever touched.",
-    interests: ["Filmmaking", "Tango", "Investigative journalism", "Philosophy", "Late nights", "Reading", "Photography", "Political theory"],
+    interests: ["Film", "Photography", "Reading", "Tarot", "Journaling", "Concerts", "Art", "Dancing"],
+    avatarUrl: "https://randomuser.me/api/portraits/women/81.jpg",
+    photos: [
+      "https://randomuser.me/api/portraits/women/81.jpg",
+      "https://randomuser.me/api/portraits/women/82.jpg",
+      "https://randomuser.me/api/portraits/women/83.jpg",
+    ],
+    answers: {
+      themeSong: "Something lowkey unhinged",
+      argumentStyle: "Write a poem about it later",
+      idealSunday: "Bed until 2pm, no regrets",
+    },
   },
 
   // 9 ── Sagittarius — Dec 5 ───────────────────────────────────────────────────
@@ -349,35 +440,68 @@ const SEED_PROFILES: SeedProfile[] = [
     birthTime: "20:10",
     birthCity: "Tokyo",
     birthCountry: "Japan",
-    gender: "Non-binary",
-    bio: "Travel photographer and accidental philosopher. I've photographed 34 countries and still don't fully understand any of them. I'm happiest in transit — airports, overnight trains, anywhere that's between places. I'll always say yes to one more adventure.",
-    interests: ["Photography", "Hiking", "Travel", "Street food", "Meditation", "Surfing", "Journalism", "Collecting maps"],
+    gender: "Man",
+    bio: "Travel photographer and accidental philosopher. I've shot 34 countries and still don't fully understand any of them. Happiest in transit — airports, overnight trains, anywhere between places. I'll always say yes to one more adventure.",
+    interests: ["Photography", "Hiking", "Travel", "Meditation", "Yoga", "Podcasts", "Coffee", "Concerts"],
+    avatarUrl: "https://randomuser.me/api/portraits/men/52.jpg",
+    photos: [
+      "https://randomuser.me/api/portraits/men/52.jpg",
+      "https://randomuser.me/api/portraits/men/53.jpg",
+      "https://randomuser.me/api/portraits/men/54.jpg",
+    ],
+    answers: {
+      themeSong: "A certified banger",
+      argumentStyle: "Need a long walk alone",
+      idealSunday: "Spontaneous road trip",
+    },
   },
 
   // 10 ── Capricorn — Jan 10 ───────────────────────────────────────────────────
   {
     email: "elena.petrov@starcross.demo",
-    name: "Elena Petrov",
+    name: "Eli Petrov",
     birthDate: new Date("1992-01-10"),
     birthTime: "08:00",
     birthCity: "Berlin",
     birthCountry: "Germany",
-    gender: "Woman",
-    bio: "Climate tech founder. I spend most of my time trying to solve things and a smaller but meaningful amount of time trying not to take myself too seriously. I believe in cold plunges, strong coffee, and making things that last. Weekends are when I become a different and slightly better person.",
-    interests: ["Climate tech", "Swimming", "Chess", "Sauna", "Business strategy", "Mountain climbing", "Documentary films", "Cooking German food"],
+    gender: "Man",
+    bio: "Climate tech founder. I spend most of my time trying to solve things and a smaller but meaningful amount of time trying not to take myself too seriously. I believe in cold plunges, strong coffee, and making things that last. Weekends are when I become a better version of myself.",
+    interests: ["Fitness", "Hiking", "Reading", "Coffee", "Meditation", "Podcasts", "Film", "Cooking"],
+    avatarUrl: "https://randomuser.me/api/portraits/men/62.jpg",
+    photos: [
+      "https://randomuser.me/api/portraits/men/62.jpg",
+      "https://randomuser.me/api/portraits/men/63.jpg",
+      "https://randomuser.me/api/portraits/men/64.jpg",
+    ],
+    answers: {
+      themeSong: "A power ballad",
+      argumentStyle: "Make a pros & cons list",
+      idealSunday: "Hiking with a podcast",
+    },
   },
 
   // 11 ── Aquarius — Feb 10 ────────────────────────────────────────────────────
   {
     email: "jasmine.osei@starcross.demo",
-    name: "Jasmine Osei",
+    name: "Jasper Osei",
     birthDate: new Date("1998-02-10"),
     birthTime: "13:30",
     birthCity: "Accra",
     birthCountry: "Ghana",
-    gender: "Woman",
-    bio: "AI researcher and weekend DJ. I think about the future a lot — both professionally and, fine, existentially. I like ideas more than most people and find most ideas disappointing, so it evens out. I am surprisingly good company once you get past the part where I argue with everything you say.",
-    interests: ["AI research", "DJing", "Afrobeats", "Football", "Writing", "Tech ethics", "Running", "Cooking Ghanaian food"],
+    gender: "Man",
+    bio: "ML engineer and weekend DJ. I think about the future a lot — both professionally and, fine, existentially. I like ideas more than most people and find most ideas disappointing, so it evens out. I'm surprisingly good company once you get past the part where I argue with everything you say.",
+    interests: ["Music", "Dancing", "Fitness", "Travel", "Reading", "Concerts", "Podcasts", "Coffee"],
+    avatarUrl: "https://randomuser.me/api/portraits/men/22.jpg",
+    photos: [
+      "https://randomuser.me/api/portraits/men/22.jpg",
+      "https://randomuser.me/api/portraits/men/23.jpg",
+      "https://randomuser.me/api/portraits/men/24.jpg",
+    ],
+    answers: {
+      themeSong: "Something lowkey unhinged",
+      argumentStyle: "Send a 3-paragraph text",
+      idealSunday: "Hiking with a podcast",
+    },
   },
 
   // 12 ── Pisces — Mar 10 ──────────────────────────────────────────────────────
@@ -389,8 +513,19 @@ const SEED_PROFILES: SeedProfile[] = [
     birthCity: "Rio de Janeiro",
     birthCountry: "Brazil",
     gender: "Non-binary",
-    bio: "Composer and sound designer for film. I think music is how you say the thing you couldn't otherwise say. I spend a lot of time alone in the studio and a lot of time wanting not to be. I swim in the ocean before dawn when the city is quiet. It is the best decision I make every day.",
-    interests: ["Music composition", "Film scoring", "Ocean swimming", "Poetry", "Yoga", "Philosophy", "Jazz", "Learning Portuguese literature"],
+    bio: "Composer and sound designer for film. I think music is how you say the thing you couldn't otherwise say. I swim in the ocean before dawn when the city is quiet. It is the best decision I make every day.",
+    interests: ["Music", "Yoga", "Meditation", "Reading", "Photography", "Film", "Journaling", "Crystals"],
+    avatarUrl: "https://randomuser.me/api/portraits/men/72.jpg",
+    photos: [
+      "https://randomuser.me/api/portraits/men/72.jpg",
+      "https://randomuser.me/api/portraits/men/73.jpg",
+      "https://randomuser.me/api/portraits/men/74.jpg",
+    ],
+    answers: {
+      themeSong: "A heartbreak anthem",
+      argumentStyle: "Write a poem about it later",
+      idealSunday: "Bed until 2pm, no regrets",
+    },
   },
 ];
 
@@ -405,14 +540,12 @@ async function main() {
   for (const p of SEED_PROFILES) {
     const astro = buildAstroProfile(p.birthDate, p.birthTime);
 
-    // Upsert: skip if user already exists
     const existing = await prisma.user.findUnique({ where: { email: p.email } });
 
     let userId: string;
 
     if (existing) {
       userId = existing.id;
-      // Update profile & astrology with fresh data
       await prisma.profile.updateMany({
         where: { userId },
         data: {
@@ -427,6 +560,9 @@ async function main() {
           prefAgeMax: 50,
           bio: p.bio,
           interests: JSON.stringify(p.interests),
+          avatarUrl: p.avatarUrl,
+          photos: JSON.stringify(p.photos),
+          answers: JSON.stringify(p.answers),
         },
       });
       await prisma.astrologyProfile.updateMany({
@@ -459,6 +595,9 @@ async function main() {
               prefAgeMax: 50,
               bio: p.bio,
               interests: JSON.stringify(p.interests),
+              avatarUrl: p.avatarUrl,
+              photos: JSON.stringify(p.photos),
+              answers: JSON.stringify(p.answers),
             },
           },
           astrologyProfile: {
@@ -480,7 +619,7 @@ async function main() {
     createdIds.push(userId);
   }
 
-  // ── Pre-like all real (non-seed) users ───────────────────────────────────────
+  // ── Pre-like all real (non-seed) users ──────────────────────────────────────
   const realUsers = await prisma.user.findMany({
     where: {
       email: { notIn: SEED_EMAILS },
@@ -507,8 +646,10 @@ async function main() {
   }
 
   console.log("\n✅ Seed complete!\n");
-  console.log("  12 profiles created. Login password for any seed account: starcross123");
-  console.log("  Emails: aria, luna, maya, sophia, zara, isabel, celeste, nadia, kai, elena, jasmine, river — all @starcross.demo\n");
+  console.log("  Login password for all 12 accounts: starcross123");
+  console.log("  Emails:");
+  SEED_EMAILS.forEach((e) => console.log(`    ${e}`));
+  console.log();
 }
 
 main()
