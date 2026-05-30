@@ -269,7 +269,7 @@ export function ProfileDrawer({ open, onClose, match }: ProfileDrawerProps) {
 
               {/* Synastry graph */}
               {match.currentAstro && (
-                <div className="px-6 pb-2">
+                <div className="mx-6 mb-2 rounded-2xl bg-[#f7f4ef] px-4 py-4">
                   <AstroGraph
                     selfName="You"
                     otherName={match.otherUser.name}

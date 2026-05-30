@@ -230,9 +230,9 @@ export function AstroGraph({ selfName, otherName, self, other }: AstroGraphProps
     <div className="w-full select-none">
       {/* Title bar */}
       <div className="flex items-center gap-2 mb-3">
-        <div className="h-px flex-1 bg-white/8" />
-        <p className="text-[9px] tracking-[0.22em] uppercase text-stone-500">Synastry web</p>
-        <div className="h-px flex-1 bg-white/8" />
+        <div className="h-px flex-1 bg-stone-200" />
+        <p className="text-[9px] tracking-[0.22em] uppercase text-stone-400">Synastry web</p>
+        <div className="h-px flex-1 bg-stone-200" />
       </div>
 
       {/* SVG graph */}
@@ -279,10 +279,10 @@ export function AstroGraph({ selfName, otherName, self, other }: AstroGraphProps
               return (
                 <line key={e.id}
                   x1={a.x} y1={a.y} x2={b.x} y2={b.y}
-                  stroke="rgba(255,255,255,0.07)"
-                  strokeWidth="0.8"
+                  stroke="#ccc8c0"
+                  strokeWidth="0.7"
                   strokeDasharray="2 5"
-                  opacity={isDimmed ? 0.3 : 1}
+                  opacity={isDimmed ? 0.2 : 0.65}
                 />
               );
             }
@@ -319,7 +319,7 @@ export function AstroGraph({ selfName, otherName, self, other }: AstroGraphProps
             const el = SIGN_ELEMENT[n.sign] ?? "air";
             const elHex = EL_HEX[el] ?? "#818cf8";
             const r = n.type === "hub" ? 21 : 13;
-            const strokeColor = isActive || isConnected ? elHex : "rgba(255,255,255,0.2)";
+            const strokeColor = isActive || isConnected ? elHex : "#d4cfc8";
 
             return (
               <motion.g
@@ -339,8 +339,8 @@ export function AstroGraph({ selfName, otherName, self, other }: AstroGraphProps
                 {isActive && (
                   <motion.circle
                     cx={n.x} cy={n.y} r={r + 9}
-                    fill={elHex} fillOpacity={0.09}
-                    stroke={elHex} strokeOpacity={0.25} strokeWidth={0.8}
+                    fill={elHex} fillOpacity={0.07}
+                    stroke={elHex} strokeOpacity={0.18} strokeWidth={0.8}
                     initial={{ scale: 0.7, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 0.2 }}
@@ -350,10 +350,10 @@ export function AstroGraph({ selfName, otherName, self, other }: AstroGraphProps
                 {/* Node body */}
                 <circle
                   cx={n.x} cy={n.y} r={r}
-                  fill="#0c0f1a"
+                  fill="#ffffff"
                   stroke={strokeColor}
                   strokeWidth={isActive ? 1.8 : 1}
-                  opacity={isDimmed ? 0.25 : 1}
+                  opacity={isDimmed ? 0.3 : 1}
                   filter={isActive ? "url(#ag-soft)" : undefined}
                   style={{ transition: "stroke 0.2s, stroke-width 0.15s, opacity 0.2s" }}
                 />
@@ -363,7 +363,7 @@ export function AstroGraph({ selfName, otherName, self, other }: AstroGraphProps
                   <circle
                     cx={n.x} cy={n.y} r={r - 5}
                     fill="none"
-                    stroke={isDimmed ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.08)"}
+                    stroke={isDimmed ? "#ede9e3" : "#e5e1db"}
                     strokeWidth="0.5"
                     style={{ transition: "stroke 0.2s" }}
                   />
@@ -376,7 +376,7 @@ export function AstroGraph({ selfName, otherName, self, other }: AstroGraphProps
                     cx={n.x}
                     cy={n.y}
                     radius={r * 0.9}
-                    color={isDimmed ? "rgba(255,255,255,0.15)" : elHex}
+                    color={isDimmed ? "#ccc8c0" : elHex}
                     dimmed={isDimmed}
                   />
                 )}
@@ -386,7 +386,7 @@ export function AstroGraph({ selfName, otherName, self, other }: AstroGraphProps
                   <text
                     x={n.x} y={n.y + 1}
                     textAnchor="middle" dominantBaseline="central"
-                    fill={isDimmed ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.9)"}
+                    fill={isDimmed ? "#ccc8c0" : "#44403c"}
                     fontSize="9" fontWeight="600"
                     fontFamily="ui-serif, Georgia, serif"
                     style={{ pointerEvents: "none", userSelect: "none", transition: "fill 0.2s" }}
@@ -401,7 +401,7 @@ export function AstroGraph({ selfName, otherName, self, other }: AstroGraphProps
                     x={n.x}
                     y={n.person === "self" ? n.y - r - 5 : n.y - r - 5}
                     textAnchor="middle"
-                    fill={isDimmed ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.45)"}
+                    fill={isDimmed ? "#d8d3cc" : "#a09890"}
                     fontSize="6.5"
                     fontFamily="ui-sans-serif, system-ui, sans-serif"
                     letterSpacing="0.04em"
@@ -418,7 +418,7 @@ export function AstroGraph({ selfName, otherName, self, other }: AstroGraphProps
                     y={n.y + 1}
                     textAnchor={n.person === "self" ? "start" : "end"}
                     dominantBaseline="central"
-                    fill={isDimmed ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.3)"}
+                    fill={isDimmed ? "#d8d3cc" : "#78716c"}
                     fontSize="6.5"
                     fontFamily="ui-sans-serif, system-ui, sans-serif"
                     letterSpacing="0.08em"
@@ -448,7 +448,7 @@ export function AstroGraph({ selfName, otherName, self, other }: AstroGraphProps
 
       {/* Hover hint */}
       {!hoveredId && !tooltip && (
-        <p className="text-center text-[9px] text-stone-600 mt-1">
+        <p className="text-center text-[9px] text-stone-400 mt-1">
           Hover a node to see connections
         </p>
       )}
