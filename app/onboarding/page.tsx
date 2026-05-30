@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, ChevronRight, ChevronLeft, Check, Sun, Moon, ArrowUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -452,15 +453,62 @@ function ChartCarousel({
   );
 }
 
+function parseJson<T>(val: string | null | undefined, fallback: T): T {
+  if (!val) return fallback;
+  try { return JSON.parse(val) as T; } catch { return fallback; }
+}
+
 // ─── Main page ─────────────────────────────────────────────────────────────
 
 export default function OnboardingPage() {
   const router = useRouter();
+  const { status } = useSession();
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<FormData>(INITIAL_FORM);
+  const [loadingProfile, setLoadingProfile] = useState(true);
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+
+  // Pre-fill form with existing profile data when editing
+  useEffect(() => {
+    if (status === "loading") return;
+    if (status === "unauthenticated") {
+      setLoadingProfile(false);
+      return;
+    }
+    fetch("/api/profile")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.profile) {
+          const p = data.profile;
+          // birthDate comes back as ISO string — strip to YYYY-MM-DD for the date input
+          const birthDateStr = p.birthDate
+            ? new Date(p.birthDate).toISOString().split("T")[0]
+            : "";
+          // prefGenders stored as comma-separated string; "any" means nothing selected
+          const prefGendersArr: string[] =
+            p.prefGenders && p.prefGenders !== "any"
+              ? p.prefGenders.split(",").filter(Boolean)
+              : [];
+          setForm({
+            name: p.name ?? "",
+            birthDate: birthDateStr,
+            birthTime: p.birthTime ?? "",
+            birthCity: p.birthCity ?? "",
+            birthCountry: p.birthCountry ?? "",
+            gender: p.gender ?? "",
+            prefGenders: prefGendersArr,
+            prefAgeMin: p.prefAgeMin ?? 22,
+            prefAgeMax: p.prefAgeMax ?? 40,
+            interests: parseJson<string[]>(p.interests, []),
+            answers: parseJson<Record<string, string>>(p.answers, {}),
+          });
+        }
+      })
+      .catch(() => {/* no profile yet — start fresh */})
+      .finally(() => setLoadingProfile(false));
+  }, [status]);
 
   function update<K extends keyof FormData>(key: K, value: FormData[K]) {
     setForm((f) => ({ ...f, [key]: value }));
@@ -555,6 +603,17 @@ export default function OnboardingPage() {
     step === 3 && form.birthDate
       ? calculateAstrologyProfile(new Date(form.birthDate), form.birthTime || undefined, form.birthCity)
       : null;
+
+  if (loadingProfile) {
+    return (
+      <div className="min-h-screen bg-[#FAF8F4] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 rounded-full border-2 border-stone-400 border-t-stone-900 animate-spin" />
+          <p className="text-stone-400 text-sm">Loading your profile…</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#FAF8F4] flex flex-col items-center justify-center px-4 py-12">
