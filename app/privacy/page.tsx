@@ -397,7 +397,7 @@ export default function PrivacyPage() {
           concern, please contact:
         </P>
         <p className="text-sm font-medium text-stone-700 mb-3">
-          <a href="mailto:privacy@starcross.app" className="underline">privacy@starcross.app</a>
+          <a href="mailto:blueballoons17@gmail.com" className="underline">blueballoons17@gmail.com</a>
         </p>
         <P>
           We will respond within the time period required by applicable law.

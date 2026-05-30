@@ -125,7 +125,9 @@ export default function CookiesPage() {
 
         <Section title="6. Contact">
           <p>Questions about our use of cookies? Contact us at:</p>
-          <p className="font-medium text-stone-700">privacy@starcross.app</p>
+          <p className="text-sm font-medium text-stone-700">
+            <a href="mailto:blueballoons17@gmail.com" className="underline">blueballoons17@gmail.com</a>
+          </p>
         </Section>
       </main>
 

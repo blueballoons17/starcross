@@ -6,18 +6,43 @@ export const metadata = {
   description: "The terms and conditions governing your use of StarCross.",
 };
 
-const LAST_UPDATED = "May 30, 2025";
+const LAST_UPDATED = "May 30, 2026";
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function H2({ children }: { children: React.ReactNode }) {
   return (
-    <section className="mb-10">
-      <h2 className="font-serif text-xl font-semibold text-stone-900 mb-4 pb-2 border-b border-stone-100">
-        {title}
-      </h2>
-      <div className="space-y-3 text-stone-600 text-sm leading-relaxed">{children}</div>
-    </section>
+    <h2 className="font-serif text-xl font-semibold text-stone-900 mt-12 mb-4 pb-2 border-b border-stone-100">
+      {children}
+    </h2>
   );
 }
+
+function H3({ children }: { children: React.ReactNode }) {
+  return (
+    <h3 className="font-semibold text-stone-700 text-sm mt-6 mb-2">{children}</h3>
+  );
+}
+
+function P({ children }: { children: React.ReactNode }) {
+  return <p className="text-stone-600 text-sm leading-relaxed mb-3">{children}</p>;
+}
+
+function UL({ children }: { children: React.ReactNode }) {
+  return (
+    <ul className="list-disc pl-5 space-y-1 text-stone-600 text-sm leading-relaxed mb-3">
+      {children}
+    </ul>
+  );
+}
+
+function Callout({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="bg-stone-50 border border-stone-200 rounded-xl px-5 py-4 text-xs text-stone-600 leading-relaxed uppercase tracking-wide font-medium mb-3">
+      {children}
+    </div>
+  );
+}
+
+const EMAIL = "blueballoons17@gmail.com";
 
 export default function TermsPage() {
   return (
@@ -27,156 +52,304 @@ export default function TermsPage() {
         <div className="max-w-3xl mx-auto px-6 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <ShootingStarLogo size={16} className="text-stone-700" />
-            <span className="text-xs font-medium text-stone-700 uppercase tracking-[0.18em]"
-              style={{ fontFamily: "var(--font-cinzel)" }}>StarCross</span>
+            <span
+              className="text-xs font-medium text-stone-700 uppercase tracking-[0.18em]"
+              style={{ fontFamily: "var(--font-cinzel)" }}
+            >
+              StarCross
+            </span>
           </Link>
-          <Link href="/" className="text-xs text-stone-400 hover:text-stone-700 transition-colors">← Home</Link>
+          <Link href="/" className="text-xs text-stone-400 hover:text-stone-700 transition-colors">
+            ← Home
+          </Link>
         </div>
       </header>
 
       <main className="max-w-3xl mx-auto px-6 py-16">
+        {/* Title block */}
         <div className="mb-12">
           <p className="text-xs uppercase tracking-widest text-stone-400 mb-3">Legal</p>
           <h1 className="font-serif text-4xl font-semibold text-stone-900 mb-3">Terms of Service</h1>
           <p className="text-stone-400 text-sm">Last updated: {LAST_UPDATED}</p>
         </div>
 
-        <Section title="1. Agreement to These Terms">
-          <p>
-            By creating an account or using StarCross you agree to be bound by these Terms of Service (&quot;Terms&quot;). If you do not agree, do not use the service. These Terms form a binding legal agreement between you and StarCross.
-          </p>
-          <p>
-            We may update these Terms from time to time. Continued use of StarCross after changes are posted constitutes acceptance of the revised Terms. We will notify you of material changes by email or in-app notice.
-          </p>
-        </Section>
+        {/* 1 */}
+        <H2>1. Agreement to These Terms</H2>
+        <P>
+          These Terms of Service (&ldquo;Terms&rdquo;) govern your access to and use of StarCross and any related
+          websites, applications, and services (collectively, the &ldquo;Service&rdquo;).
+        </P>
+        <P>
+          The Service is operated by <strong className="text-stone-700">StarCross</strong> (&ldquo;StarCross,&rdquo;
+          &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;).
+        </P>
+        <P>
+          By creating an account, accessing, or using the Service, you agree to be bound by these Terms. If you do not
+          agree to these Terms, do not use the Service.
+        </P>
+        <P>
+          We may update these Terms from time to time. If we make material changes, we may provide notice through the
+          Service, by email, or by another reasonable method. Continued use of the Service after revised Terms become
+          effective constitutes acceptance of the updated Terms.
+        </P>
 
-        <Section title="2. Eligibility">
-          <ul className="list-disc pl-5 space-y-1">
-            <li>You must be at least <strong className="text-stone-700">18 years old</strong> to create an account or use StarCross.</li>
-            <li>You must not have been previously banned from StarCross.</li>
-            <li>You must be able to enter into a binding contract under the laws of your jurisdiction.</li>
-            <li>You must not be a convicted sex offender.</li>
-          </ul>
-          <p>
-            By using StarCross you confirm that you meet these requirements. We reserve the right to terminate accounts where eligibility requirements are not met.
-          </p>
-        </Section>
+        {/* 2 */}
+        <H2>2. Eligibility</H2>
+        <P>To use StarCross, you must:</P>
+        <UL>
+          <li>Be at least 18 years old.</li>
+          <li>Be legally capable of entering into a binding contract.</li>
+          <li>Not be prohibited from using the Service under applicable law.</li>
+          <li>
+            Not have previously been removed or banned from the Service unless expressly permitted by us.
+          </li>
+          <li>Not be required to register as a sex offender under applicable law.</li>
+        </UL>
+        <P>
+          By using the Service, you represent and warrant that you satisfy these requirements.
+        </P>
+        <P>
+          We reserve the right to suspend or terminate accounts that do not meet eligibility requirements.
+        </P>
 
-        <Section title="3. Your Account">
-          <p>
-            You are responsible for keeping your account credentials secure and for all activity that occurs under your account. Use a strong, unique password. If you believe your account has been compromised, contact us immediately.
-          </p>
-          <p>
-            You may only create one account. Duplicate accounts may be removed.
-          </p>
-        </Section>
+        {/* 3 */}
+        <H2>3. Your Account</H2>
+        <P>
+          You are responsible for maintaining the confidentiality of your account credentials and for all activities
+          that occur under your account.
+        </P>
+        <P>You agree to:</P>
+        <UL>
+          <li>Provide accurate and current information.</li>
+          <li>Keep your information updated.</li>
+          <li>Maintain the security of your login credentials.</li>
+          <li>Notify us promptly of any unauthorized access or security breach.</li>
+        </UL>
+        <P>
+          We may limit users to a single account and may remove duplicate or fraudulent accounts.
+        </P>
 
-        <Section title="4. Acceptable Use">
-          <p>You agree not to use StarCross to:</p>
-          <ul className="list-disc pl-5 space-y-1">
-            <li>Harass, threaten, stalk, intimidate, or harm other users</li>
-            <li>Post false, misleading, or deceptive profile information or photos</li>
-            <li>Impersonate any person or entity</li>
-            <li>Send unsolicited commercial messages or spam</li>
-            <li>Solicit money, financial information, or gifts from other users</li>
-            <li>Engage in any form of sexual exploitation or human trafficking</li>
-            <li>Use automated tools, bots, or scripts to interact with the service</li>
-            <li>Attempt to gain unauthorised access to any part of the service or its infrastructure</li>
-            <li>Scrape, copy, or redistribute content from StarCross without our written permission</li>
-            <li>Violate any applicable law or regulation</li>
-          </ul>
-          <p>
-            Violations may result in immediate account suspension or permanent ban.
-          </p>
-        </Section>
+        {/* 4 */}
+        <H2>4. License to Use the Service</H2>
+        <P>
+          Subject to your compliance with these Terms, StarCross grants you a limited, non-exclusive,
+          non-transferable, revocable license to access and use the Service for personal, non-commercial purposes.
+        </P>
+        <P>This license does not grant ownership of any aspect of the Service.</P>
 
-        <Section title="5. Content You Post">
-          <p>
-            You retain ownership of content you post on StarCross (photos, bio, messages, etc.). By posting content you grant StarCross a non-exclusive, royalty-free, worldwide licence to store, display, and transmit that content solely for the purpose of operating the service.
-          </p>
-          <p>
-            You are solely responsible for content you post. You must not post content that is illegal, abusive, defamatory, pornographic (outside of platforms that permit it), or that infringes the intellectual property rights of others.
-          </p>
-          <p>
-            We reserve the right to remove any content that violates these Terms or that we deem harmful to the community, without notice.
-          </p>
-        </Section>
+        {/* 5 */}
+        <H2>5. Acceptable Use</H2>
+        <P>You agree not to:</P>
+        <UL>
+          <li>Harass, threaten, stalk, intimidate, or harm other users.</li>
+          <li>Post false, misleading, or deceptive information.</li>
+          <li>Impersonate any person or entity.</li>
+          <li>Send spam or unsolicited commercial communications.</li>
+          <li>Solicit money, investments, gifts, or financial information.</li>
+          <li>Engage in sexual exploitation, trafficking, or unlawful activity.</li>
+          <li>Use bots, scrapers, automated systems, or unauthorized scripts.</li>
+          <li>Attempt to access systems, data, or infrastructure without authorization.</li>
+          <li>Reverse engineer or interfere with the Service.</li>
+          <li>Copy, distribute, or commercially exploit Service content without permission.</li>
+          <li>Violate any law or regulation.</li>
+        </UL>
+        <P>Violations may result in suspension or termination of access.</P>
 
-        <Section title="6. Subscriptions & Payments">
-          <p>
-            StarCross offers a free tier with limited daily swipes and a paid subscription (&quot;StarCross+&quot;) with unlimited access and additional features.
-          </p>
-          <ul className="list-disc pl-5 space-y-2">
-            <li><strong className="text-stone-700">Billing:</strong> Subscription fees are charged through Stripe. By subscribing you authorise us to charge your payment method on a recurring basis at the selected interval (monthly or annual).</li>
-            <li><strong className="text-stone-700">Cancellation:</strong> You may cancel your subscription at any time through your account settings or by contacting us. Cancellation takes effect at the end of the current billing period; you will not receive a pro-rated refund for unused time.</li>
-            <li><strong className="text-stone-700">Price changes:</strong> We may change subscription pricing with reasonable advance notice. Continued use after a price change constitutes acceptance.</li>
-            <li><strong className="text-stone-700">Refunds:</strong> All purchases are final and non-refundable except where required by applicable law. If you believe you have been charged in error, contact us within 30 days.</li>
-          </ul>
-        </Section>
+        {/* 6 */}
+        <H2>6. User Content</H2>
+        <P>
+          You retain ownership of content you submit to the Service, including photographs, profile information,
+          messages, and other materials (&ldquo;User Content&rdquo;).
+        </P>
+        <P>
+          To operate the Service, you grant StarCross a non-exclusive, worldwide, royalty-free license to host, store,
+          reproduce, display, transmit, and otherwise process User Content solely for the purpose of providing and
+          improving the Service.
+        </P>
+        <P>You represent and warrant that:</P>
+        <UL>
+          <li>You own or have the necessary rights to your User Content.</li>
+          <li>Your User Content does not violate any law or third-party rights.</li>
+          <li>Your User Content complies with these Terms.</li>
+        </UL>
+        <P>
+          We may remove User Content that violates these Terms or threatens the safety, integrity, or operation of the
+          Service.
+        </P>
 
-        <Section title="7. No Background Checks">
-          <p>
-            <strong className="text-stone-700">StarCross does not conduct criminal background checks or identity verification on its members.</strong> We are not responsible for the conduct of any user on or off the platform. Use common sense and exercise caution when meeting someone from the app in person.
-          </p>
-          <p>
-            If you encounter conduct that violates these Terms or that makes you feel unsafe, please report it through the app or contact us directly.
-          </p>
-        </Section>
+        {/* 7 */}
+        <H2>7. Subscriptions and Payments</H2>
+        <P>StarCross may offer free and paid subscription plans.</P>
 
-        <Section title="8. Intellectual Property">
-          <p>
-            All content, code, design, logos, and trade marks on StarCross (excluding user-generated content) are owned by or licensed to StarCross and protected by intellectual property law. You may not copy, reproduce, distribute, or create derivative works from our content without prior written permission.
-          </p>
-        </Section>
+        <H3>Billing</H3>
+        <P>
+          Paid subscriptions are billed through Stripe or another authorized payment provider.
+        </P>
+        <P>
+          By purchasing a subscription, you authorize recurring charges to your selected payment method until
+          cancellation.
+        </P>
 
-        <Section title="9. Disclaimer of Warranties">
-          <p>
-            StarCross is provided &quot;as is&quot; and &quot;as available&quot; without warranties of any kind, express or implied. We do not warrant that the service will be uninterrupted, error-free, or free of harmful components.
-          </p>
-          <p>
-            Astrological compatibility scores are for entertainment and self-reflection purposes. They are not a guarantee of romantic compatibility, and we make no representations about the suitability of any match.
-          </p>
-        </Section>
+        <H3>Cancellation</H3>
+        <P>You may cancel at any time through your account settings.</P>
+        <P>
+          Cancellation becomes effective at the end of the current billing period unless otherwise required by law.
+        </P>
 
-        <Section title="10. Limitation of Liability">
-          <p>
-            To the maximum extent permitted by law, StarCross will not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of or in connection with your use of the service, even if we have been advised of the possibility of such damages.
-          </p>
-          <p>
-            Our total liability to you for any claim arising out of these Terms or your use of StarCross shall not exceed the greater of (a) the amount you paid to StarCross in the 12 months preceding the claim, or (b) $100 USD.
-          </p>
-        </Section>
+        <H3>Refunds</H3>
+        <P>
+          Except where required by applicable law, purchases are non-refundable.
+        </P>
+        <P>
+          If you believe you were charged in error, contact us within 30 days of the charge.
+        </P>
 
-        <Section title="11. Indemnification">
-          <p>
-            You agree to indemnify and hold harmless StarCross and its officers, directors, employees, and agents from any claims, damages, or expenses (including reasonable legal fees) arising from your use of the service, your violation of these Terms, or your violation of any rights of another person.
-          </p>
-        </Section>
+        <H3>Pricing Changes</H3>
+        <P>
+          We may change pricing from time to time. Any material pricing changes will be communicated in advance and
+          will apply prospectively.
+        </P>
 
-        <Section title="12. Termination">
-          <p>
-            You may delete your account at any time from your profile settings. Deletion removes your profile data in accordance with our Privacy Policy.
-          </p>
-          <p>
-            We may suspend or terminate your account at any time for violation of these Terms or for any other reason at our discretion, with or without notice. Provisions that by their nature should survive termination (including Sections 5, 8, 9, 10, 11, and 13) will do so.
-          </p>
-        </Section>
+        {/* 8 */}
+        <H2>8. No Background Checks</H2>
+        <P>
+          StarCross does not routinely conduct criminal background checks, identity verification, or screening of
+          members.
+        </P>
+        <P>We do not guarantee the identity, intentions, or conduct of any user.</P>
+        <P>
+          You are solely responsible for your interactions with other users and should exercise caution when
+          communicating or meeting in person.
+        </P>
+        <P>If you encounter unsafe behavior, please report it immediately.</P>
 
-        <Section title="13. Governing Law & Disputes">
-          <p>
-            These Terms are governed by applicable law. Any dispute arising from these Terms or your use of StarCross that cannot be resolved informally should be submitted to binding arbitration or, where arbitration is not enforceable, to the courts of competent jurisdiction.
-          </p>
-          <p>
-            Before initiating any formal proceeding, you agree to first contact us at legal@starcross.app and give us 30 days to attempt to resolve the dispute informally.
-          </p>
-        </Section>
+        {/* 9 */}
+        <H2>9. Intellectual Property</H2>
+        <P>
+          Except for User Content, all content, software, designs, logos, trademarks, text, graphics, and other
+          materials associated with the Service are owned by or licensed to StarCross and are protected by intellectual
+          property laws.
+        </P>
+        <P>No rights are granted except those expressly stated in these Terms.</P>
 
-        <Section title="14. Contact">
-          <p>
-            Questions about these Terms? Contact us at:
-          </p>
-          <p className="font-medium text-stone-700">legal@starcross.app</p>
-        </Section>
+        {/* 10 */}
+        <H2>10. Copyright Complaints</H2>
+        <P>
+          If you believe content on the Service infringes your copyright, please contact:
+        </P>
+        <p className="text-sm font-medium text-stone-700 mb-3">
+          <a href={`mailto:${EMAIL}`} className="underline">{EMAIL}</a>
+        </p>
+        <P>Include:</P>
+        <UL>
+          <li>Identification of the copyrighted work.</li>
+          <li>Identification of the allegedly infringing material.</li>
+          <li>Your contact information.</li>
+          <li>A statement that you have a good-faith belief the use is unauthorized.</li>
+          <li>A statement that the information provided is accurate.</li>
+        </UL>
+        <P>We may remove allegedly infringing content where appropriate.</P>
+
+        {/* 11 */}
+        <H2>11. Disclaimer of Warranties</H2>
+        <Callout>
+          The service is provided &ldquo;as is&rdquo; and &ldquo;as available.&rdquo; To the maximum extent permitted
+          by law, StarCross disclaims all warranties, whether express, implied, statutory, or otherwise, including
+          warranties of merchantability, fitness for a particular purpose, title, non-infringement, and quiet
+          enjoyment. We do not guarantee continuous availability, error-free operation, successful matches,
+          compatibility with any user, or accuracy of astrological interpretations.
+        </Callout>
+        <P>
+          Astrological insights and compatibility scores are provided for entertainment and informational purposes only.
+        </P>
+
+        {/* 12 */}
+        <H2>12. Limitation of Liability</H2>
+        <Callout>
+          To the maximum extent permitted by law, StarCross shall not be liable for any indirect, incidental, special,
+          consequential, exemplary, or punitive damages arising from or related to your use of the service. Our total
+          liability for any claim arising from or related to the service shall not exceed the greater of: (a) the
+          amount you paid to StarCross during the twelve (12) months preceding the event giving rise to the claim; or
+          (b) one hundred U.S. dollars (US $100).
+        </Callout>
+        <P>
+          Some jurisdictions do not allow certain liability limitations, so some of these limitations may not apply to
+          you.
+        </P>
+
+        {/* 13 */}
+        <H2>13. Indemnification</H2>
+        <P>
+          You agree to indemnify, defend, and hold harmless StarCross, its affiliates, officers, directors, employees,
+          contractors, and agents from claims, liabilities, damages, losses, and expenses arising from:
+        </P>
+        <UL>
+          <li>Your use of the Service.</li>
+          <li>Your User Content.</li>
+          <li>Your violation of these Terms.</li>
+          <li>Your violation of any rights of another person or entity.</li>
+        </UL>
+
+        {/* 14 */}
+        <H2>14. Suspension and Termination</H2>
+        <P>You may stop using the Service and delete your account at any time.</P>
+        <P>We may suspend, restrict, or terminate access if:</P>
+        <UL>
+          <li>You violate these Terms.</li>
+          <li>
+            We reasonably believe your conduct creates legal risk, security risk, or harm to users.
+          </li>
+          <li>We are required to do so by law.</li>
+        </UL>
+        <P>
+          Sections that by their nature should survive termination will remain in effect after termination.
+        </P>
+
+        {/* 15 */}
+        <H2>15. Service Changes</H2>
+        <P>
+          We reserve the right to modify, suspend, discontinue, or remove features of the Service at any time.
+        </P>
+        <P>
+          We are not liable for any modification, suspension, or discontinuation of the Service.
+        </P>
+
+        {/* 16 */}
+        <H2>16. Dispute Resolution</H2>
+        <P>
+          Before filing a legal claim, you agree to contact us at{" "}
+          <a href={`mailto:${EMAIL}`} className="underline text-stone-700">{EMAIL}</a> and provide at least 30 days to
+          attempt informal resolution.
+        </P>
+        <P>
+          If a dispute cannot be resolved informally, it shall be resolved in accordance with applicable law and the
+          dispute resolution procedures required by that law.
+        </P>
+        <P>
+          Nothing in these Terms limits rights that cannot be waived under applicable consumer protection laws.
+        </P>
+
+        {/* 17 */}
+        <H2>17. Governing Law</H2>
+        <P>
+          These Terms shall be governed by applicable law, without regard to conflict-of-law principles, except where
+          otherwise required by applicable law.
+        </P>
+
+        {/* 18 */}
+        <H2>18. Mobile App Stores</H2>
+        <P>
+          If you access the Service through an application marketplace such as Apple&apos;s App Store or Google Play,
+          you acknowledge that those providers are not responsible for the Service and have no obligation to furnish
+          support or maintenance.
+        </P>
+
+        {/* 19 */}
+        <H2>19. Contact Us</H2>
+        <P>Questions regarding these Terms may be directed to:</P>
+        <p className="text-sm font-medium text-stone-700">
+          <a href={`mailto:${EMAIL}`} className="underline">{EMAIL}</a>
+        </p>
       </main>
 
       <footer className="border-t border-stone-100 py-8 px-6 text-center text-xs text-stone-400">
