@@ -398,7 +398,7 @@ export default function HomePage() {
             transition={{ duration: 0.8, delay: 0.32 }}
             className="text-base sm:text-lg text-stone-400 max-w-lg mx-auto leading-relaxed mb-12"
           >
-            StarCross maps your birth chart into a compatibility fingerprint — then finds the people who match it most deeply.
+            StarCross maps your birth chart into a compatibility fingerprint, then finds the people who match it most deeply.
           </motion.p>
 
           {/* CTAs */}
