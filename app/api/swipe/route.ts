@@ -4,6 +4,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
 import { calculateCompatibility } from "@/lib/matching";
 import type { AstrologyResult } from "@/lib/astrology";
+import { checkAndIncrementSwipe } from "@/lib/subscription";
 
 interface SessionUser {
   id?: string;
@@ -15,6 +16,15 @@ export async function POST(request: NextRequest) {
 
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Check swipe limit before processing
+  const { allowed, swipesUsed, swipesMax } = await checkAndIncrementSwipe(userId);
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "SWIPE_LIMIT", swipesUsed, swipesMax },
+      { status: 403 }
+    );
   }
 
   let body: { toUserId?: string; direction?: string };

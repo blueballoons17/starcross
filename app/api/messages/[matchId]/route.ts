@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
+import { isSubscriptionActive } from "@/lib/subscription";
 
 interface SessionUser {
   id?: string;
@@ -53,6 +54,18 @@ export async function POST(
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { matchId } = await params;
+
+  // Check premium subscription before allowing message send
+  const sender = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      subscriptionStatus: true,
+      subscriptionCurrentPeriodEnd: true,
+    },
+  });
+  if (!isSubscriptionActive(sender?.subscriptionStatus, sender?.subscriptionCurrentPeriodEnd)) {
+    return NextResponse.json({ error: "PREMIUM_REQUIRED" }, { status: 403 });
+  }
 
   const body = await req.json();
   const content = (body.content ?? "").trim();

@@ -14,6 +14,7 @@ import { StarField } from "@/components/ui/star-field";
 import { getZodiacColor } from "@/lib/zodiac-colors";
 import { ZodiacIcon } from "@/components/ui/zodiac-icon";
 import { cn } from "@/lib/utils";
+import { UpgradeModal } from "@/components/UpgradeModal";
 
 interface MessageData {
   id: string;
@@ -55,6 +56,8 @@ export default function MessagesChatPage() {
   const [sending, setSending] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [callOpen, setCallOpen] = useState(false);
+  const [isPremium, setIsPremium] = useState<boolean | null>(null);
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
 
   const bottomRef = useCallback((el: HTMLDivElement | null) => {
     el?.scrollIntoView({ behavior: "smooth" });
@@ -65,16 +68,19 @@ export default function MessagesChatPage() {
     if (status === "unauthenticated") router.push("/login");
   }, [status, router]);
 
-  // Load full match data
+  // Load full match data + subscription status
   useEffect(() => {
     if (status !== "authenticated") return;
-    fetch("/api/matches")
-      .then((r) => r.json())
-      .then((data) => {
+    Promise.all([
+      fetch("/api/matches").then((r) => r.json()),
+      fetch("/api/user/status").then((r) => r.json()),
+    ])
+      .then(([data, statusData]) => {
         const m = (data.matches ?? []).find(
           (m: ProfileDrawerMatch) => m.id === matchId
         );
         if (m) setMatchData(m);
+        if (!statusData.error) setIsPremium(statusData.isPremium);
       })
       .catch(console.error);
   }, [status, matchId]);
@@ -139,6 +145,10 @@ export default function MessagesChatPage() {
       if (res.ok) {
         await fetchMessages();
       } else {
+        const data = await res.json().catch(() => ({}));
+        if (res.status === 403 && data.error === "PREMIUM_REQUIRED") {
+          setUpgradeOpen(true);
+        }
         setMessages((prev) => prev.filter((m) => m.id !== optimisticId));
         setInput(text);
       }
@@ -271,6 +281,23 @@ export default function MessagesChatPage() {
                 </button>
               </div>
             </div>
+
+            {/* Premium messaging banner for free users */}
+            {isPremium === false && (
+              <div className="shrink-0 bg-indigo-950/60 border-b border-indigo-500/20 px-4 py-2.5 flex items-center justify-between gap-3">
+                <p className="text-indigo-300 text-xs">
+                  Messaging is a{" "}
+                  <span style={{ fontFamily: "var(--font-cinzel)" }}>StarCross+</span>{" "}
+                  feature
+                </p>
+                <button
+                  onClick={() => setUpgradeOpen(true)}
+                  className="text-xs text-white bg-indigo-600 hover:bg-indigo-500 px-3 py-1 rounded-full transition-colors shrink-0"
+                >
+                  Upgrade
+                </button>
+              </div>
+            )}
 
             {/* Messages scroll area — transparent so star field shows through */}
             <div className="flex-1 overflow-y-auto">
@@ -437,6 +464,13 @@ export default function MessagesChatPage() {
         matchSunSign={matchData?.otherAstro.sunSign}
         matchAvatarUrl={matchData?.otherUser.avatarUrl}
         matchScore={matchData?.matchScore}
+      />
+
+      {/* Messaging upgrade modal */}
+      <UpgradeModal
+        open={upgradeOpen}
+        onClose={() => setUpgradeOpen(false)}
+        feature="messaging"
       />
     </>
   );

@@ -7,6 +7,7 @@ import { NavBar } from "@/components/NavBar";
 import { SwipeDeck } from "@/components/SwipeDeck";
 import { MatchCelebration } from "@/components/MatchCelebration";
 import { PageStars } from "@/components/PageStars";
+import { UpgradeModal } from "@/components/UpgradeModal";
 
 interface Candidate {
   id: string;
@@ -48,6 +49,12 @@ interface CurrentUser {
   sunSign: string;
 }
 
+interface UserStatus {
+  isPremium: boolean;
+  swipesRemaining: number;
+  dailySwipesMax: number;
+}
+
 export default function DiscoverPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -55,6 +62,8 @@ export default function DiscoverPage() {
   const [loading, setLoading] = useState(true);
   const [pendingMatch, setPendingMatch] = useState<PendingMatch | null>(null);
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
+  const [userStatus, setUserStatus] = useState<UserStatus | null>(null);
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
 
   useEffect(() => {
     if (status === "unauthenticated") router.push("/login");
@@ -63,15 +72,23 @@ export default function DiscoverPage() {
   useEffect(() => {
     if (status !== "authenticated") return;
 
-    // Load candidates + current user's sun sign in parallel
+    // Load candidates, current user's sun sign, and subscription status in parallel
     Promise.all([
       fetch("/api/discover").then((r) => r.json()),
       fetch("/api/profile").then((r) => r.json()),
+      fetch("/api/user/status").then((r) => r.json()),
     ])
-      .then(([discoverData, profileData]) => {
+      .then(([discoverData, profileData, statusData]) => {
         if (discoverData.candidates) setCandidates(discoverData.candidates);
         if (profileData?.astrologyProfile?.sunSign) {
           setCurrentUser({ sunSign: profileData.astrologyProfile.sunSign });
+        }
+        if (!statusData.error) {
+          setUserStatus({
+            isPremium: statusData.isPremium,
+            swipesRemaining: statusData.swipesRemaining,
+            dailySwipesMax: statusData.dailySwipesMax,
+          });
         }
       })
       .catch(console.error)
@@ -87,6 +104,10 @@ export default function DiscoverPage() {
         body: JSON.stringify({ toUserId: userId, direction: "like" }),
       });
       const data = await res.json();
+      if (res.status === 403 && data.error === "SWIPE_LIMIT") {
+        setUpgradeOpen(true);
+        return;
+      }
       if (data.matched && data.matchId && candidate) {
         setPendingMatch({
           matchId: data.matchId,
@@ -99,6 +120,19 @@ export default function DiscoverPage() {
           birthCountry: candidate.profile.birthCountry,
         });
       }
+      // Refresh swipe count after a successful swipe
+      fetch("/api/user/status")
+        .then((r) => r.json())
+        .then((s) => {
+          if (!s.error) {
+            setUserStatus({
+              isPremium: s.isPremium,
+              swipesRemaining: s.swipesRemaining,
+              dailySwipesMax: s.dailySwipesMax,
+            });
+          }
+        })
+        .catch(() => {});
     } catch {
       // silent fail — card still removed
     }
@@ -106,11 +140,29 @@ export default function DiscoverPage() {
 
   async function handlePass(userId: string) {
     try {
-      await fetch("/api/swipe", {
+      const res = await fetch("/api/swipe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ toUserId: userId, direction: "pass" }),
       });
+      const data = await res.json();
+      if (res.status === 403 && data.error === "SWIPE_LIMIT") {
+        setUpgradeOpen(true);
+        return;
+      }
+      // Refresh swipe count after a successful pass
+      fetch("/api/user/status")
+        .then((r) => r.json())
+        .then((s) => {
+          if (!s.error) {
+            setUserStatus({
+              isPremium: s.isPremium,
+              swipesRemaining: s.swipesRemaining,
+              dailySwipesMax: s.dailySwipesMax,
+            });
+          }
+        })
+        .catch(() => {});
     } catch {
       // silent
     }
@@ -138,6 +190,24 @@ export default function DiscoverPage() {
             <p className="text-stone-400 text-sm">
               Swipe right to like · left to pass
             </p>
+            {/* Swipe counter for free users */}
+            {userStatus && !userStatus.isPremium && (
+              <div className="mt-3 inline-flex items-center gap-2">
+                <span className="text-xs text-stone-500">
+                  {userStatus.swipesRemaining === 0
+                    ? "No swipes left today"
+                    : `${userStatus.swipesRemaining} swipe${userStatus.swipesRemaining === 1 ? "" : "s"} left today`}
+                </span>
+                {userStatus.swipesRemaining === 0 && (
+                  <button
+                    onClick={() => setUpgradeOpen(true)}
+                    className="text-xs text-indigo-400 hover:text-indigo-300 transition-colors underline underline-offset-2"
+                  >
+                    Upgrade
+                  </button>
+                )}
+              </div>
+            )}
           </div>
 
           <SwipeDeck
@@ -157,6 +227,13 @@ export default function DiscoverPage() {
           mySunSign={currentUser?.sunSign ?? "Aries"}
         />
       )}
+
+      {/* Swipe limit upgrade modal */}
+      <UpgradeModal
+        open={upgradeOpen}
+        onClose={() => setUpgradeOpen(false)}
+        feature="swipes"
+      />
     </div>
   );
 }

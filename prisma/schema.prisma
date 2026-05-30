@@ -13,6 +13,15 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
+  // Stripe
+  stripeCustomerId             String?
+  stripeSubscriptionId         String?
+  subscriptionStatus           String?
+  subscriptionCurrentPeriodEnd DateTime?
+  // Free tier tracking
+  dailySwipeCount   Int      @default(0)
+  dailySwipeResetAt DateTime?
+
   profile          Profile?
   astrologyProfile AstrologyProfile?
   swipesGiven      Swipe[]         @relation("SwipeFrom")

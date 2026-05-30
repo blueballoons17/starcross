@@ -60,6 +60,13 @@ export function NavBar() {
         </div>
 
         <div className="flex items-center gap-1">
+          <Link
+            href="/pricing"
+            className="hidden sm:inline-flex items-center px-2.5 py-1 text-xs font-medium text-stone-500 hover:text-stone-200 transition-colors border border-stone-700/60 hover:border-stone-500/60 rounded-full"
+            style={{ fontFamily: "var(--font-cinzel)", letterSpacing: "0.08em" }}
+          >
+            +
+          </Link>
           <NotificationBell />
           <Button
             variant="ghost"

@@ -7,6 +7,7 @@ import Link from "next/link";
 import { ArrowLeft, MessageCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ZODIAC_PATHS } from "@/components/ui/zodiac-icon";
+import { UpgradeModal } from "@/components/UpgradeModal";
 
 // ─── Lookup tables ─────────────────────────────────────────────────────────────
 
@@ -863,13 +864,21 @@ export default function MatchSynastryPage() {
   const [loading,setLoading]=useState(true);
   const [hoveredNode,setHoveredNode]=useState<NodeDef|null>(null);
   const [hoveredEdge,setHoveredEdge]=useState<EdgeDef|null>(null);
+  const [isPremium,setIsPremium]=useState<boolean|null>(null);
+  const [upgradeOpen,setUpgradeOpen]=useState(false);
 
   useEffect(()=>{ if(status==="unauthenticated") router.push("/login"); },[status,router]);
 
   useEffect(()=>{
     if(status!=="authenticated"||!params.matchId) return;
-    fetch(`/api/matches/${params.matchId}`)
-      .then(r=>r.json()).then(d=>{ if(!d.error) setMatch(d); })
+    Promise.all([
+      fetch(`/api/matches/${params.matchId}`).then(r=>r.json()),
+      fetch("/api/user/status").then(r=>r.json()),
+    ])
+      .then(([matchData, statusData])=>{
+        if(!matchData.error) setMatch(matchData);
+        if(!statusData.error) setIsPremium(statusData.isPremium);
+      })
       .catch(console.error).finally(()=>setLoading(false));
   },[status,params.matchId]);
 
@@ -923,7 +932,7 @@ export default function MatchSynastryPage() {
       <div className="flex-1 flex overflow-hidden min-h-0">
 
         {/* Graph */}
-        <div className="flex-1 flex flex-col justify-center px-6 py-4 overflow-hidden min-w-0">
+        <div className="flex-1 flex flex-col justify-center px-6 py-4 overflow-hidden min-w-0 relative">
           {hasAstro?(
             <>
               <SynastryChart
@@ -942,7 +951,27 @@ export default function MatchSynastryPage() {
               <Link href="/onboarding" className="text-stone-700 text-sm font-medium underline">Set up your chart</Link>
             </div>
           )}
+
+          {/* Premium gate overlay for synastry chart */}
+          {isPremium === false && hasAstro && (
+            <div className="absolute inset-0 flex items-center justify-center bg-[#f7f4ef]/80 backdrop-blur-sm rounded-xl">
+              <div className="text-center px-8">
+                <p className="text-[10px] tracking-[0.22em] uppercase text-stone-500 mb-2">StarCross+</p>
+                <p className="font-serif text-stone-800 text-xl font-semibold mb-2">Full synastry charts</p>
+                <p className="text-stone-500 text-sm mb-5 max-w-xs mx-auto">Explore the complete planetary web of your connection. Upgrade to unlock.</p>
+                <button
+                  onClick={()=>setUpgradeOpen(true)}
+                  className="px-6 py-2.5 rounded-full bg-stone-900 hover:bg-stone-700 text-white text-sm font-medium transition-colors"
+                >
+                  Unlock synastry charts
+                </button>
+              </div>
+            </div>
+          )}
         </div>
+
+        {/* Upgrade modal for synastry */}
+        <UpgradeModal open={upgradeOpen} onClose={()=>setUpgradeOpen(false)} feature="synastry"/>
 
         {/* Detail panel */}
         <aside className="w-72 shrink-0 border-l border-stone-200 bg-white overflow-hidden flex flex-col">
