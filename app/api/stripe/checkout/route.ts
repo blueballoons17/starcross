@@ -36,6 +36,17 @@ export async function POST(_req: NextRequest) {
 
     let customerId = user?.stripeCustomerId;
 
+    // Verify the stored customer still exists in the current Stripe mode
+    if (customerId) {
+      try {
+        await stripe.customers.retrieve(customerId);
+      } catch {
+        // Customer doesn't exist in this mode (e.g. live ID used with test key) — create fresh
+        customerId = null;
+        await prisma.user.update({ where: { id: userId }, data: { stripeCustomerId: null } });
+      }
+    }
+
     if (!customerId) {
       const customer = await stripe.customers.create({
         email: user?.email ?? undefined,
