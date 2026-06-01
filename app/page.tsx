@@ -758,6 +758,135 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ── How the matching works (astrology education) ─────────────────── */}
+      <section className="py-32 px-6 bg-stone-950 text-white relative overflow-hidden">
+        <StarField count={70} />
+        <div className="max-w-5xl mx-auto relative z-10">
+
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-20"
+          >
+            <span className="text-xs tracking-widest uppercase text-stone-500 block mb-5">
+              The method
+            </span>
+            <h2 className="font-serif text-4xl md:text-5xl font-semibold text-white tracking-tight leading-[1.08] max-w-xl">
+              Astrology is not<br />
+              <span className="text-stone-400 italic">Sun-sign matchmaking.</span>
+            </h2>
+            <div className="w-10 h-px bg-white/15 mt-7 mb-7" />
+            <p className="text-stone-400 text-base leading-relaxed max-w-xl">
+              A birth chart captures where every planet sat at the exact moment you were born.
+              StarCross reads that chart — not just your Sun sign — and scores compatibility
+              across the dimensions that actually predict whether two people connect.
+            </p>
+          </motion.div>
+
+          {/* 4 pillars of astrology-based matching */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12 mb-24">
+            {[
+              {
+                n: "01",
+                title: "The birth chart",
+                body: "At the moment of birth, every planet occupied a specific degree of the zodiac. The natal chart records those positions. It doesn't determine fate — it describes the psychological landscape you came in with: the drives, needs, and patterns that show up repeatedly through your life.",
+              },
+              {
+                n: "02",
+                title: "Synastry",
+                body: "Synastry is what happens when you overlay two people's charts. The question isn't just what signs they are — it's which of their planets make contact, and at what angle. A Sun-Moon conjunction creates instant emotional recognition. Saturn conjunct Venus creates a bond that feels meaningful but tests both people.",
+              },
+              {
+                n: "03",
+                title: "Venus and Mars",
+                body: "Venus describes what you find beautiful, how you express affection, and what you need to feel loved. Mars describes how you pursue things and what activates you. Compatibility lives in how these planets interact between two charts — not just in Sun-sign pairing. Most apps ignore Venus and Mars entirely.",
+              },
+              {
+                n: "04",
+                title: "The houses",
+                body: "The 12 houses divide the chart into areas of life. The 7th house governs long-term partnership. The 5th governs romance and play. The 8th governs intimacy and deep bonding. Planets falling in these houses between two people's charts describe where the relationship will be most alive.",
+              },
+            ].map(({ n, title, body }, i) => (
+              <motion.div
+                key={n}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.55, delay: i * 0.1 }}
+                className="flex gap-6"
+              >
+                <span className="font-serif text-stone-600 text-sm shrink-0 pt-0.5">{n}</span>
+                <div>
+                  <h3 className="font-serif text-white text-xl font-semibold mb-3">{title}</h3>
+                  <p className="text-stone-400 text-sm leading-relaxed">{body}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* How StarCross scores it */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="border-t border-white/8 pt-14"
+          >
+            <h3 className="font-serif text-2xl md:text-3xl font-semibold text-white mb-4">
+              How StarCross reads the chart
+            </h3>
+            <p className="text-stone-400 text-sm leading-relaxed max-w-xl mb-12">
+              Sun-sign matching is where most apps stop. StarCross starts there and goes further —
+              calculating a full natal chart and scoring compatibility across the dimensions
+              that actually matter.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-14 gap-y-8 mb-12">
+              {[
+                {
+                  n: "01",
+                  title: "Full natal chart",
+                  desc: "Sun, Moon, Rising, Venus, and Mars positions calculated from your exact birth data.",
+                },
+                {
+                  n: "02",
+                  title: "Elemental balance",
+                  desc: "How your fire, earth, air, and water compositions interact — same-element comfort vs. cross-element spark.",
+                },
+                {
+                  n: "03",
+                  title: "Modal harmony",
+                  desc: "Whether your Cardinal, Fixed, and Mutable energies complement each other or compete for the lead.",
+                },
+                {
+                  n: "04",
+                  title: "Composite score",
+                  desc: "A weighted compatibility score from 0–100 that surfaces your most resonant matches first.",
+                },
+              ].map(({ n, title, desc }) => (
+                <div key={n} className="flex gap-5">
+                  <span className="font-serif text-stone-600 text-sm shrink-0 pt-0.5">{n}</span>
+                  <div>
+                    <p className="text-white text-sm font-semibold mb-1">{title}</p>
+                    <p className="text-stone-500 text-sm leading-relaxed">{desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <Link
+              href="/astrology"
+              className="inline-flex items-center gap-2 text-stone-400 hover:text-white text-sm transition-colors"
+            >
+              Read the full astrology guide
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </motion.div>
+
+        </div>
+      </section>
+
       {/* ── CTA ──────────────────────────────────────────────────────────── */}
       <section className="py-36 px-6 bg-stone-950 text-white text-center relative overflow-hidden">
         <StarField count={130} />
