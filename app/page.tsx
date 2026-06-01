@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion";
 import { ArrowRight, Heart, Sparkles, Moon } from "lucide-react";
 import { AnimatedHero } from "@/components/ui/animated-hero";
 import RadialOrbitalTimeline from "@/components/ui/radial-orbital-timeline";
@@ -342,6 +342,8 @@ export default function HomePage() {
   const { data: session } = useSession();
   const isLoggedIn = !!session;
   const heroRef = useRef<HTMLDivElement>(null);
+  const heroCTARef = useRef<HTMLDivElement>(null);
+  const heroCTAInView = useInView(heroCTARef, { margin: "0px 0px -40px 0px" });
   const { scrollYProgress: heroScroll } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
@@ -465,6 +467,7 @@ export default function HomePage() {
 
           {/* CTAs */}
           <motion.div
+            ref={heroCTARef}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
@@ -738,23 +741,6 @@ export default function HomePage() {
             ))}
           </div>
 
-          {/* Link to full astrology guide */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="text-center"
-          >
-            <Link
-              href="/astrology"
-              className="inline-flex items-center gap-2 text-sm font-medium text-stone-700 hover:text-stone-900 border border-stone-200 hover:border-stone-400 rounded-full px-7 py-3 transition-all hover:shadow-sm"
-            >
-              Explore the full astrology guide
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          </motion.div>
-
         </div>
       </section>
 
@@ -947,6 +933,29 @@ export default function HomePage() {
         </div>
         <p className="text-xs">&copy; {new Date().getFullYear()} StarCross. Written in the stars.</p>
       </footer>
+
+      {/* ── Sticky floating CTA ──────────────────────────────────────────── */}
+      <AnimatePresence>
+        {!isLoggedIn && !heroCTAInView && (
+          <motion.div
+            initial={{ y: 80, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 80, opacity: 0 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 pointer-events-none"
+          >
+            <Button
+              size="lg"
+              asChild
+              className="pointer-events-auto bg-stone-900 text-white hover:bg-stone-800 rounded-full px-10 h-12 font-medium shadow-2xl shadow-black/40 border border-stone-700/50 backdrop-blur-sm"
+            >
+              <Link href="/pricing">
+                Begin your journey <ArrowRight className="h-4 w-4 ml-2" />
+              </Link>
+            </Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <style>{`
         @keyframes ring-spin {
