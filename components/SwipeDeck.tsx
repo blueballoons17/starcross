@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 import { motion, useMotionValue, useTransform, AnimatePresence } from "framer-motion";
 import { Heart, X, Star, MapPin, ChevronDown } from "lucide-react";
 import { getZodiacColor } from "@/lib/zodiac-colors";
@@ -119,13 +118,13 @@ function ProfileDetailModal({
                 candidate.profile.avatarUrl ? "" : sunColor.bg
               )} style={{ height: 300 }}>
                 {candidate.profile.avatarUrl ? (
-                  <Image
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
                     src={candidate.profile.avatarUrl}
                     alt={candidate.profile.name}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 640px) 100vw, 640px"
-                    priority
+                    className="w-full h-full object-cover"
+                    loading="eager"
+                    decoding="async"
                   />
                 ) : (
                   <div className="flex flex-col items-center gap-3">
@@ -310,13 +309,13 @@ function ProfileCard({
           candidate.profile.avatarUrl ? "" : sunColor.bg
         )} style={{ height: 260 }}>
           {candidate.profile.avatarUrl ? (
-            <Image
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
               src={candidate.profile.avatarUrl}
               alt={candidate.profile.name}
-              fill
-              className="object-cover"
-              sizes="(max-width: 640px) 100vw, 384px"
-              priority
+              className="w-full h-full object-cover"
+              loading="eager"
+              decoding="async"
             />
           ) : (
             <div className="flex flex-col items-center gap-3">
