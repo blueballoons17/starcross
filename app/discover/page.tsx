@@ -8,6 +8,7 @@ import { SwipeDeck } from "@/components/SwipeDeck";
 import { MatchCelebration } from "@/components/MatchCelebration";
 import { PageStars } from "@/components/PageStars";
 import { UpgradeModal } from "@/components/UpgradeModal";
+import type { UpgradeFeature } from "@/components/UpgradeModal";
 
 interface Candidate {
   id: string;
@@ -55,6 +56,14 @@ interface UserStatus {
   dailySwipesMax: number;
 }
 
+interface Liker {
+  userId: string;
+  name: string;
+  avatarUrl: string | null;
+  birthCity: string;
+  sunSign: string;
+}
+
 export default function DiscoverPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -64,6 +73,9 @@ export default function DiscoverPage() {
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [userStatus, setUserStatus] = useState<UserStatus | null>(null);
   const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [upgradeFeature, setUpgradeFeature] = useState<UpgradeFeature>("swipes");
+  const [likers, setLikers] = useState<Liker[]>([]);
+  const [likerCount, setLikerCount] = useState<number>(0);
 
   useEffect(() => {
     if (status === "unauthenticated") router.push("/login");
@@ -72,13 +84,14 @@ export default function DiscoverPage() {
   useEffect(() => {
     if (status !== "authenticated") return;
 
-    // Load candidates, current user's sun sign, and subscription status in parallel
+    // Load candidates, profile, status, and incoming likes in parallel
     Promise.all([
       fetch("/api/discover").then((r) => r.json()),
       fetch("/api/profile").then((r) => r.json()),
       fetch("/api/user/status").then((r) => r.json()),
+      fetch("/api/likes/incoming").then((r) => r.json()),
     ])
-      .then(([discoverData, profileData, statusData]) => {
+      .then(([discoverData, profileData, statusData, likesData]) => {
         if (discoverData.candidates) setCandidates(discoverData.candidates);
         if (profileData?.astrologyProfile?.sunSign) {
           setCurrentUser({ sunSign: profileData.astrologyProfile.sunSign });
@@ -89,6 +102,14 @@ export default function DiscoverPage() {
             swipesRemaining: statusData.swipesRemaining,
             dailySwipesMax: statusData.dailySwipesMax,
           });
+        }
+        if (!likesData.error) {
+          if (likesData.isPremium) {
+            setLikers(likesData.likers ?? []);
+            setLikerCount((likesData.likers ?? []).length);
+          } else {
+            setLikerCount(likesData.count ?? 0);
+          }
         }
       })
       .catch(console.error)
@@ -105,6 +126,7 @@ export default function DiscoverPage() {
       });
       const data = await res.json();
       if (res.status === 403 && data.error === "SWIPE_LIMIT") {
+        setUpgradeFeature("swipes");
         setUpgradeOpen(true);
         return;
       }
@@ -147,6 +169,7 @@ export default function DiscoverPage() {
       });
       const data = await res.json();
       if (res.status === 403 && data.error === "SWIPE_LIMIT") {
+        setUpgradeFeature("swipes");
         setUpgradeOpen(true);
         return;
       }
@@ -210,6 +233,73 @@ export default function DiscoverPage() {
             )}
           </div>
 
+          {/* ── Who liked you ─────────────────────────────────────── */}
+          {likerCount > 0 && (
+            <div className="mb-6">
+              <p className="text-[10px] uppercase tracking-[0.16em] text-stone-500 mb-3">
+                Who liked you
+              </p>
+
+              {userStatus?.isPremium ? (
+                /* Premium: show real liker cards */
+                <div className="flex gap-2.5 overflow-x-auto pb-1 -mx-1 px-1">
+                  {likers.map((liker) => (
+                    <button
+                      key={liker.userId}
+                      onClick={() => handleLike(liker.userId)}
+                      className="shrink-0 flex flex-col items-center gap-1.5 group"
+                      title={`Like ${liker.name} back`}
+                    >
+                      {liker.avatarUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={liker.avatarUrl}
+                          alt={liker.name}
+                          className="w-12 h-12 rounded-full object-cover ring-2 ring-indigo-500/40 group-hover:ring-indigo-400 transition-all"
+                        />
+                      ) : (
+                        <div className="w-12 h-12 rounded-full bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-300 text-sm font-semibold">
+                          {liker.name[0]}
+                        </div>
+                      )}
+                      <span className="text-[10px] text-stone-400 group-hover:text-stone-200 transition-colors truncate max-w-[48px]">
+                        {liker.name.split(" ")[0]}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                /* Free: blurred teaser */
+                <button
+                  onClick={() => { setUpgradeFeature("likes"); setUpgradeOpen(true); }}
+                  className="w-full rounded-2xl border border-indigo-500/20 bg-indigo-500/5 hover:bg-indigo-500/10 px-4 py-4 text-left transition-colors"
+                >
+                  <div className="flex items-center gap-2.5 mb-2">
+                    {/* Ghost avatar blobs */}
+                    {Array.from({ length: Math.min(likerCount, 4) }).map((_, i) => (
+                      <div
+                        key={i}
+                        className="w-10 h-10 rounded-full bg-indigo-800/60 blur-[2px] shrink-0"
+                        style={{ opacity: 1 - i * 0.15 }}
+                      />
+                    ))}
+                    {likerCount > 4 && (
+                      <span className="text-stone-500 text-xs shrink-0 blur-[2px]">
+                        +{likerCount - 4}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-indigo-300 text-sm font-medium">
+                    {likerCount} {likerCount === 1 ? "person" : "people"} already liked you
+                  </p>
+                  <p className="text-stone-500 text-xs mt-0.5">
+                    Upgrade to StarCross+ to see who →
+                  </p>
+                </button>
+              )}
+            </div>
+          )}
+
           <SwipeDeck
             candidates={candidates}
             onLike={handleLike}
@@ -228,11 +318,11 @@ export default function DiscoverPage() {
         />
       )}
 
-      {/* Swipe limit upgrade modal */}
+      {/* Upgrade modal */}
       <UpgradeModal
         open={upgradeOpen}
         onClose={() => setUpgradeOpen(false)}
-        feature="swipes"
+        feature={upgradeFeature}
       />
     </div>
   );

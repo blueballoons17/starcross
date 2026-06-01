@@ -13,6 +13,7 @@ export default function MatchesPage() {
   const router = useRouter();
   const [matches, setMatches] = useState<ProfileDrawerMatch[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isPremium, setIsPremium] = useState<boolean | null>(null);
 
   useEffect(() => {
     if (status === "unauthenticated") router.push("/login");
@@ -20,9 +21,14 @@ export default function MatchesPage() {
 
   useEffect(() => {
     if (status !== "authenticated") return;
-    fetch("/api/matches")
-      .then((r) => r.json())
-      .then((data) => { if (data.matches) setMatches(data.matches); })
+    Promise.all([
+      fetch("/api/matches").then((r) => r.json()),
+      fetch("/api/user/status").then((r) => r.json()),
+    ])
+      .then(([data, statusData]) => {
+        if (data.matches) setMatches(data.matches);
+        if (!statusData.error) setIsPremium(statusData.isPremium);
+      })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, [status]);
@@ -75,7 +81,7 @@ export default function MatchesPage() {
             /* Unified editorial panel — one glass column, hairline dividers */
             <div className="bg-stone-900/50 backdrop-blur-md border border-white/[0.07] rounded-[6px] overflow-hidden px-5 divide-y divide-white/[0.06]">
               {matches.map((match) => (
-                <MatchCard key={match.id} match={match} />
+                <MatchCard key={match.id} match={match} isPremium={isPremium} />
               ))}
             </div>
           )}

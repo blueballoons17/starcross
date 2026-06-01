@@ -1,12 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ProfileDrawer } from "@/components/ProfileDrawer";
 import type { ProfileDrawerMatch } from "@/components/ProfileDrawer";
+import { UpgradeModal } from "@/components/UpgradeModal";
+import type { UpgradeFeature } from "@/components/UpgradeModal";
 
 interface MatchCardProps {
   match: ProfileDrawerMatch;
+  isPremium?: boolean | null;
 }
 
 function getInitials(name: string) {
@@ -56,9 +59,32 @@ function ScoreMark({ score }: { score: number }) {
   );
 }
 
-export function MatchCard({ match }: MatchCardProps) {
+export function MatchCard({ match, isPremium }: MatchCardProps) {
+  const router = useRouter();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [upgradeFeature, setUpgradeFeature] = useState<UpgradeFeature>("messaging");
   const age = getAge(match.otherUser.birthDate);
+
+  function handleMessage(e: React.MouseEvent) {
+    if (isPremium === false) {
+      e.preventDefault();
+      setUpgradeFeature("messaging");
+      setUpgradeOpen(true);
+    } else {
+      router.push(`/messages/${match.id}`);
+    }
+  }
+
+  function handleSynastry(e: React.MouseEvent) {
+    if (isPremium === false) {
+      e.preventDefault();
+      setUpgradeFeature("synastry");
+      setUpgradeOpen(true);
+    } else {
+      router.push(`/matches/${match.id}`);
+    }
+  }
 
   return (
     <>
@@ -125,19 +151,19 @@ export function MatchCard({ match }: MatchCardProps) {
 
             {/* Action row — text links, no buttons */}
             <div className="mt-4 flex items-center gap-1">
-              <Link
-                href={`/messages/${match.id}`}
+              <button
+                onClick={handleMessage}
                 className="text-[10px] uppercase tracking-[0.13em] text-stone-400 hover:text-stone-100 transition-colors duration-200 py-1 pr-3 border-b border-stone-700/60 hover:border-stone-400"
               >
                 Message
-              </Link>
+              </button>
               <span className="text-stone-700 px-1.5 select-none text-[10px]">·</span>
-              <Link
-                href={`/matches/${match.id}`}
+              <button
+                onClick={handleSynastry}
                 className="text-[10px] uppercase tracking-[0.13em] text-stone-600 hover:text-stone-400 transition-colors duration-200 py-1"
               >
                 Synastry Chart
-              </Link>
+              </button>
             </div>
           </div>
         </div>
@@ -147,6 +173,13 @@ export function MatchCard({ match }: MatchCardProps) {
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
         match={match}
+        isPremium={isPremium}
+      />
+
+      <UpgradeModal
+        open={upgradeOpen}
+        onClose={() => setUpgradeOpen(false)}
+        feature={upgradeFeature}
       />
     </>
   );

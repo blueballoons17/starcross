@@ -1,11 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, MessageCircle, Sparkles, AlertTriangle } from "lucide-react";
+import { X, MessageCircle, Sparkles, AlertTriangle, Lock } from "lucide-react";
 import Link from "next/link";
 import { getZodiacColor } from "@/lib/zodiac-colors";
 import { ZodiacIcon } from "@/components/ui/zodiac-icon";
 import { AstroGraph } from "@/components/AstroGraph";
+import { UpgradeModal } from "@/components/UpgradeModal";
 import { cn } from "@/lib/utils";
 
 export interface ProfileDrawerMatch {
@@ -43,6 +45,7 @@ interface ProfileDrawerProps {
   open: boolean;
   onClose: () => void;
   match: ProfileDrawerMatch | null;
+  isPremium?: boolean | null;
 }
 
 function getInitials(name: string) {
@@ -128,7 +131,8 @@ function BreakdownBar({
   );
 }
 
-export function ProfileDrawer({ open, onClose, match }: ProfileDrawerProps) {
+export function ProfileDrawer({ open, onClose, match, isPremium }: ProfileDrawerProps) {
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
   if (!match) return null;
 
   const sunColor = getZodiacColor(match.otherAstro.sunSign);
@@ -267,8 +271,8 @@ export function ProfileDrawer({ open, onClose, match }: ProfileDrawerProps) {
                 </div>
               </div>
 
-              {/* Synastry graph */}
-              {match.currentAstro && (
+              {/* Synastry graph — StarCross+ only */}
+              {isPremium !== false && match.currentAstro && (
                 <div className="mx-6 mb-2 rounded-2xl bg-[#f7f4ef] px-4 py-4">
                   <AstroGraph
                     selfName="You"
@@ -285,34 +289,59 @@ export function ProfileDrawer({ open, onClose, match }: ProfileDrawerProps) {
               {/* Compatibility */}
               <div className="px-6 pb-5 flex items-start gap-4">
                 <ScoreArc score={match.matchScore} />
-                <div className="flex-1 space-y-2.5 pt-1">
-                  <p className="text-[10px] font-semibold text-stone-500 uppercase tracking-wider mb-3">
-                    Compatibility
-                  </p>
-                  <BreakdownBar
-                    label="Elemental"
-                    value={match.breakdown.elemental}
-                    arcColor={arcColor}
-                  />
-                  <BreakdownBar
-                    label="Emotional"
-                    value={match.breakdown.emotional}
-                    arcColor={arcColor}
-                  />
-                  <BreakdownBar
-                    label="Communication"
-                    value={match.breakdown.communication}
-                    arcColor={arcColor}
-                  />
-                  <BreakdownBar
-                    label="Stability"
-                    value={match.breakdown.stability}
-                    arcColor={arcColor}
-                  />
-                </div>
+                {isPremium !== false ? (
+                  <div className="flex-1 space-y-2.5 pt-1">
+                    <p className="text-[10px] font-semibold text-stone-500 uppercase tracking-wider mb-3">
+                      Compatibility
+                    </p>
+                    <BreakdownBar
+                      label="Elemental"
+                      value={match.breakdown.elemental}
+                      arcColor={arcColor}
+                    />
+                    <BreakdownBar
+                      label="Emotional"
+                      value={match.breakdown.emotional}
+                      arcColor={arcColor}
+                    />
+                    <BreakdownBar
+                      label="Communication"
+                      value={match.breakdown.communication}
+                      arcColor={arcColor}
+                    />
+                    <BreakdownBar
+                      label="Stability"
+                      value={match.breakdown.stability}
+                      arcColor={arcColor}
+                    />
+                  </div>
+                ) : (
+                  <div className="flex-1 pt-1">
+                    <p className="text-[10px] font-semibold text-stone-500 uppercase tracking-wider mb-3">
+                      Compatibility
+                    </p>
+                    <button
+                      onClick={() => setUpgradeOpen(true)}
+                      className="w-full rounded-xl border border-indigo-500/20 bg-indigo-500/8 px-4 py-4 text-left hover:bg-indigo-500/12 transition-colors"
+                    >
+                      <div className="flex items-center gap-2 mb-2">
+                        <Lock className="h-3 w-3 text-indigo-400 shrink-0" />
+                        <span className="text-indigo-300 text-xs font-medium tracking-wide">
+                          StarCross+
+                        </span>
+                      </div>
+                      <p className="text-stone-500 text-xs leading-relaxed">
+                        Unlock the full elemental breakdown, synastry chart, and what makes this connection tick.
+                      </p>
+                      <span className="mt-3 inline-block text-[10px] text-indigo-400 font-medium tracking-wide">
+                        Upgrade to see →
+                      </span>
+                    </button>
+                  </div>
+                )}
               </div>
 
-              {/* Explanation */}
+              {/* Explanation — always visible */}
               {match.explanation && (
                 <div className="px-6 pb-5">
                   <div className="h-px bg-white/6 mb-5" />
@@ -325,8 +354,8 @@ export function ProfileDrawer({ open, onClose, match }: ProfileDrawerProps) {
                 </div>
               )}
 
-              {/* Strengths */}
-              {match.strengths.length > 0 && (
+              {/* Strengths — StarCross+ only */}
+              {isPremium !== false && match.strengths.length > 0 && (
                 <div className="px-6 pb-4">
                   <h4 className="text-[10px] font-semibold text-stone-500 uppercase tracking-wider flex items-center gap-1.5 mb-3">
                     <Sparkles className="h-3 w-3 text-emerald-400" />
@@ -346,8 +375,8 @@ export function ProfileDrawer({ open, onClose, match }: ProfileDrawerProps) {
                 </div>
               )}
 
-              {/* Friction */}
-              {match.frictionPoints.length > 0 && (
+              {/* Friction — StarCross+ only */}
+              {isPremium !== false && match.frictionPoints.length > 0 && (
                 <div className="px-6 pb-8">
                   <h4 className="text-[10px] font-semibold text-stone-500 uppercase tracking-wider flex items-center gap-1.5 mb-3">
                     <AlertTriangle className="h-3 w-3 text-amber-400" />
@@ -370,18 +399,34 @@ export function ProfileDrawer({ open, onClose, match }: ProfileDrawerProps) {
 
             {/* Sticky CTA */}
             <div className="shrink-0 px-6 py-4 bg-stone-950/90 backdrop-blur-sm border-t border-white/8">
-              <Link
-                href={`/messages/${match.id}`}
-                onClick={onClose}
-                className="flex items-center justify-center gap-2 w-full bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-semibold rounded-full py-3.5 transition-colors text-sm shadow-lg shadow-indigo-500/20"
-              >
-                <MessageCircle className="h-4 w-4" />
-                Send a Message
-              </Link>
+              {isPremium !== false ? (
+                <Link
+                  href={`/messages/${match.id}`}
+                  onClick={onClose}
+                  className="flex items-center justify-center gap-2 w-full bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-semibold rounded-full py-3.5 transition-colors text-sm shadow-lg shadow-indigo-500/20"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  Send a Message
+                </Link>
+              ) : (
+                <button
+                  onClick={() => setUpgradeOpen(true)}
+                  className="flex items-center justify-center gap-2 w-full bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-semibold rounded-full py-3.5 transition-colors text-sm shadow-lg shadow-indigo-500/20"
+                >
+                  <Lock className="h-4 w-4" />
+                  Unlock messaging — StarCross+
+                </button>
+              )}
             </div>
           </motion.div>
         </>
       )}
+
+      <UpgradeModal
+        open={upgradeOpen}
+        onClose={() => setUpgradeOpen(false)}
+        feature="synastry"
+      />
     </AnimatePresence>
   );
 }
