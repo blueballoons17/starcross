@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, ChevronRight, ChevronLeft, Check, Sun, Moon, ArrowUp } from "lucide-react";
+import { Star, ChevronRight, ChevronLeft, Check, Sun, Moon, ArrowUp, Camera, Plus, X, ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -47,6 +47,8 @@ interface FormData {
   prefAgeMax: number;
   interests: string[];
   answers: Record<string, string>;
+  avatarUrl: string;
+  photos: string[];
 }
 
 const INITIAL_FORM: FormData = {
@@ -61,9 +63,59 @@ const INITIAL_FORM: FormData = {
   prefAgeMax: 40,
   interests: [],
   answers: {},
+  avatarUrl: "",
+  photos: [],
 };
 
-const STEPS = ["About You", "Preferences", "Personality", "Your Chart"];
+const STEPS = ["About You", "Preferences", "Personality", "Photos", "Your Chart"];
+
+// ─── Image compression ────────────────────────────────────────────────────
+
+async function compressImage(file: File, maxDimension = 900, quality = 0.75): Promise<File> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+      let { width, height } = img;
+      if (width > maxDimension || height > maxDimension) {
+        if (width >= height) {
+          height = Math.round((height * maxDimension) / width);
+          width = maxDimension;
+        } else {
+          width = Math.round((width * maxDimension) / height);
+          height = maxDimension;
+        }
+      }
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) { reject(new Error("Canvas not available")); return; }
+      ctx.drawImage(img, 0, 0, width, height);
+      canvas.toBlob(
+        (blob) => {
+          if (blob) {
+            resolve(new File([blob], "photo.webp", { type: "image/webp" }));
+          } else {
+            canvas.toBlob(
+              (jpegBlob) => {
+                if (jpegBlob) resolve(new File([jpegBlob], "photo.jpg", { type: "image/jpeg" }));
+                else reject(new Error("Compression failed"));
+              },
+              "image/jpeg",
+              quality
+            );
+          }
+        },
+        "image/webp",
+        quality
+      );
+    };
+    img.onerror = () => { URL.revokeObjectURL(objectUrl); reject(new Error("Image load failed")); };
+    img.src = objectUrl;
+  });
+}
 
 // ─── Step indicator ────────────────────────────────────────────────────────
 
@@ -453,6 +505,206 @@ function ChartCarousel({
   );
 }
 
+// ─── Photo upload step ─────────────────────────────────────────────────────
+
+function PhotoStep({
+  avatarUrl,
+  photos,
+  onAvatarChange,
+  onPhotosChange,
+}: {
+  avatarUrl: string;
+  photos: string[];
+  onAvatarChange: (url: string) => void;
+  onPhotosChange: (photos: string[]) => void;
+}) {
+  const avatarInputRef = useRef<HTMLInputElement>(null);
+  const galleryInputRef = useRef<HTMLInputElement>(null);
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const [galleryUploading, setGalleryUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  async function uploadFile(file: File, maxDim: number): Promise<string | null> {
+    setUploadError(null);
+    try {
+      const compressed = await compressImage(file, maxDim);
+      const fd = new globalThis.FormData();
+      fd.append("file", compressed);
+      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      const data = await res.json();
+      if (data.url) return data.url as string;
+      setUploadError(data.error ?? "Upload failed — please try again.");
+      return null;
+    } catch {
+      setUploadError("Network error — please try again.");
+      return null;
+    }
+  }
+
+  async function handleAvatarFile(file: File) {
+    setAvatarUploading(true);
+    const url = await uploadFile(file, 800);
+    setAvatarUploading(false);
+    if (url) onAvatarChange(url);
+  }
+
+  async function handleGalleryFile(file: File) {
+    setGalleryUploading(true);
+    const url = await uploadFile(file, 900);
+    setGalleryUploading(false);
+    if (url) onPhotosChange([...photos, url]);
+  }
+
+  function removePhoto(url: string) {
+    onPhotosChange(photos.filter((p) => p !== url));
+  }
+
+  const MAX_GALLERY = 5; // up to 5 extra photos (profile photo is separate)
+
+  return (
+    <div className="bg-white border border-stone-100 rounded-2xl p-8 shadow-sm space-y-8">
+
+      {/* Profile photo */}
+      <div className="space-y-4">
+        <div>
+          <p className="text-sm font-medium text-stone-700">Profile photo</p>
+          <p className="text-xs text-stone-400 mt-0.5">
+            This is the first thing people see — make it count ✨
+          </p>
+        </div>
+
+        <div className="flex flex-col items-center gap-3">
+          {/* Large avatar preview */}
+          <button
+            type="button"
+            onClick={() => avatarInputRef.current?.click()}
+            disabled={avatarUploading}
+            className={cn(
+              "relative w-28 h-28 rounded-full overflow-hidden border-2 transition-all group",
+              avatarUrl
+                ? "border-stone-200 hover:border-stone-400"
+                : "border-dashed border-stone-300 hover:border-stone-500 bg-stone-50"
+            )}
+          >
+            {avatarUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={avatarUrl} alt="Profile" className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full flex flex-col items-center justify-center gap-1">
+                <Camera className="h-7 w-7 text-stone-300" />
+                <span className="text-xs text-stone-400">Add photo</span>
+              </div>
+            )}
+            {/* Overlay on hover */}
+            <div className={cn(
+              "absolute inset-0 bg-black/40 flex items-center justify-center rounded-full transition-opacity",
+              avatarUploading ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+            )}>
+              {avatarUploading ? (
+                <div className="w-6 h-6 rounded-full border-2 border-white border-t-transparent animate-spin" />
+              ) : (
+                <Camera className="h-5 w-5 text-white" />
+              )}
+            </div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => avatarInputRef.current?.click()}
+            disabled={avatarUploading}
+            className="text-xs text-stone-500 hover:text-stone-900 underline underline-offset-2 transition-colors"
+          >
+            {avatarUrl ? "Change photo" : "Choose from camera roll"}
+          </button>
+
+          <input
+            ref={avatarInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => { const f = e.target.files?.[0]; if (f) handleAvatarFile(f); e.target.value = ""; }}
+          />
+        </div>
+      </div>
+
+      {/* Divider */}
+      <div className="border-t border-stone-100" />
+
+      {/* Gallery */}
+      <div className="space-y-3">
+        <div>
+          <p className="text-sm font-medium text-stone-700">Gallery photos <span className="text-stone-400 font-normal">(optional)</span></p>
+          <p className="text-xs text-stone-400 mt-0.5">Show more of your world — up to {MAX_GALLERY} additional photos</p>
+        </div>
+
+        <div className="grid grid-cols-3 gap-2">
+          {Array.from({ length: MAX_GALLERY }).map((_, i) => {
+            const photo = photos[i];
+            if (photo) {
+              return (
+                <div key={i} className="relative aspect-square rounded-xl overflow-hidden bg-stone-100 group">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={photo} alt="" className="w-full h-full object-cover" />
+                  <button
+                    onClick={() => removePhoto(photo)}
+                    className="absolute top-1 right-1 w-5 h-5 rounded-full bg-stone-900/70 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <X className="h-3 w-3 text-white" />
+                  </button>
+                </div>
+              );
+            }
+            if (i === photos.length) {
+              return (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => galleryInputRef.current?.click()}
+                  disabled={galleryUploading}
+                  className="aspect-square rounded-xl border-2 border-dashed border-stone-200 flex flex-col items-center justify-center gap-1 hover:border-stone-400 hover:bg-stone-50 transition-colors"
+                >
+                  {galleryUploading ? (
+                    <div className="w-4 h-4 rounded-full border-2 border-stone-400 border-t-transparent animate-spin" />
+                  ) : (
+                    <>
+                      <Plus className="h-4 w-4 text-stone-400" />
+                      <span className="text-xs text-stone-400">Add</span>
+                    </>
+                  )}
+                </button>
+              );
+            }
+            return <div key={i} className="aspect-square rounded-xl bg-stone-50 border border-stone-100" />;
+          })}
+        </div>
+
+        <input
+          ref={galleryInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => { const f = e.target.files?.[0]; if (f) handleGalleryFile(f); e.target.value = ""; }}
+        />
+        <p className="text-xs text-stone-400">{photos.length}/{MAX_GALLERY} added</p>
+      </div>
+
+      {uploadError && (
+        <p className="text-red-500 text-xs text-center">{uploadError}</p>
+      )}
+
+      {/* Helpful nudge if nothing uploaded */}
+      {!avatarUrl && (
+        <div className="flex items-start gap-2.5 bg-amber-50 border border-amber-100 rounded-xl px-4 py-3">
+          <ImageIcon className="h-4 w-4 text-amber-500 mt-0.5 shrink-0" />
+          <p className="text-xs text-amber-700 leading-relaxed">
+            Profiles with a photo get significantly more matches. You can always add one later from your profile page.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function parseJson<T>(val: string | null | undefined, fallback: T): T {
   if (!val) return fallback;
   try { return JSON.parse(val) as T; } catch { return fallback; }
@@ -503,6 +755,8 @@ export default function OnboardingPage() {
             prefAgeMax: p.prefAgeMax ?? 40,
             interests: parseJson<string[]>(p.interests, []),
             answers: parseJson<Record<string, string>>(p.answers, {}),
+            avatarUrl: p.avatarUrl ?? "",
+            photos: parseJson<string[]>(p.photos, []),
           });
         }
       })
@@ -584,6 +838,8 @@ export default function OnboardingPage() {
           prefGenders: form.prefGenders.join(","),
           interests: JSON.stringify(form.interests),
           answers: JSON.stringify(form.answers),
+          photos: JSON.stringify(form.photos),
+          avatarUrl: form.avatarUrl || undefined,
         }),
       });
       const data = await res.json();
@@ -600,7 +856,7 @@ export default function OnboardingPage() {
   }
 
   const astrologyPreview =
-    step === 3 && form.birthDate
+    step === 4 && form.birthDate
       ? calculateAstrologyProfile(new Date(form.birthDate), form.birthTime || undefined, form.birthCity)
       : null;
 
@@ -625,7 +881,7 @@ export default function OnboardingPage() {
             <span className="font-serif text-xl font-semibold text-stone-900">StarCross</span>
           </div>
           <p className="text-stone-400 text-sm">
-            {step === 3 ? "Your cosmic profile" : "Tell us about yourself"}
+            {step === 4 ? "Your cosmic profile" : "Tell us about yourself"}
           </p>
         </div>
 
@@ -860,16 +1116,43 @@ export default function OnboardingPage() {
                   <ChevronLeft className="h-4 w-4" /> Back
                 </Button>
                 <Button onClick={handleNext} className="gap-2 bg-stone-900 text-white hover:bg-stone-800">
+                  Continue <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Step 3 — Photos */}
+          {step === 3 && (
+            <motion.div
+              key="step3"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.25 }}
+            >
+              <PhotoStep
+                avatarUrl={form.avatarUrl}
+                photos={form.photos}
+                onAvatarChange={(url) => update("avatarUrl", url)}
+                onPhotosChange={(p) => update("photos", p)}
+              />
+
+              <div className="flex items-center justify-between mt-6">
+                <Button variant="outline" onClick={handleBack} className="gap-2 border-stone-200 text-stone-600">
+                  <ChevronLeft className="h-4 w-4" /> Back
+                </Button>
+                <Button onClick={handleNext} className="gap-2 bg-stone-900 text-white hover:bg-stone-800">
                   See My Chart <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
             </motion.div>
           )}
 
-          {/* Step 3 — Your Chart */}
-          {step === 3 && astrologyPreview && (
+          {/* Step 4 — Your Chart */}
+          {step === 4 && astrologyPreview && (
             <motion.div
-              key="step3"
+              key="step4"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}

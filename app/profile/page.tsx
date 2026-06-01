@@ -114,7 +114,7 @@ function SignBadge({ sign, size = "md" }: { sign: string; size?: "sm" | "md" | "
 
 // ─── Client-side image compression ────────────────────────────────────────
 
-async function compressImage(file: File, maxDimension = 1200, quality = 0.82): Promise<File> {
+async function compressImage(file: File, maxDimension = 900, quality = 0.75): Promise<File> {
   return new Promise((resolve, reject) => {
     const img = new Image();
     const objectUrl = URL.createObjectURL(file);
@@ -182,7 +182,7 @@ function AvatarUpload({
     setUploading(true);
     setUploadError(null);
     try {
-      const compressed = await compressImage(file, 800); // avatars at 800px max
+      const compressed = await compressImage(file, 800); // avatars: 800px max
       const fd = new FormData();
       fd.append("file", compressed);
       const res = await fetch("/api/upload", { method: "POST", body: fd });
@@ -259,7 +259,7 @@ function PhotosGrid({
     setUploading(true);
     setUploadError(null);
     try {
-      const compressed = await compressImage(file, 1200); // gallery photos at 1200px max
+      const compressed = await compressImage(file, 900); // gallery: 900px max
       const fd = new FormData();
       fd.append("file", compressed);
       const res = await fetch("/api/upload", { method: "POST", body: fd });
