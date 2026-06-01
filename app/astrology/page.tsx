@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sun, Moon, ArrowUp } from "lucide-react";
+import { Sun, Moon, ArrowUp, MessageSquare } from "lucide-react";
 import { NavBar } from "@/components/NavBar";
 import { PageStars } from "@/components/PageStars";
 import { ZODIAC_PATHS } from "@/components/ui/zodiac-icon";
@@ -91,6 +90,49 @@ const SIGN_PLACEMENTS: Record<string, { sun: string; moon: string; rising: strin
     rising: "You come across as gentle, somewhat dreamlike, and easy to confide in. People feel they can tell you things. The first impression is open and a little otherworldly — people often find you memorable without knowing why.",
   },
 };
+
+// ─── Mercury in each sign ──────────────────────────────────────────────────────
+
+const MERCURY_SIGNS: Record<string, string> = {
+  Aries:       "Direct, fast, and unvarnished. Cuts to the point and moves on. In conversation, you'll always know where you stand — sometimes before you're ready to.",
+  Taurus:      "Deliberate and thorough. Thinks before speaking, and means what it says. Holds its positions firmly but rarely rushes to form them. Reliable in its word.",
+  Gemini:      "Quick, versatile, and naturally at home in conversation. Ideas come fast, sometimes faster than they're finished. Gets restless when the exchange slows down.",
+  Cancer:      "Communicates through feeling as much as words. Picks up on tone and mood before content. Has a long memory for what was said and how it landed.",
+  Leo:         "Expressive, animated, and hard to ignore. Natural storyteller. Wants to be genuinely heard — dismissal registers as something personal.",
+  Virgo:       "Precise, analytical, and attentive to detail. Notices what others miss and says so. Can read as critical, but holds itself to the same standard first.",
+  Libra:       "Measured, diplomatic, and genuinely fair-minded. Weighs all sides before speaking — sometimes past the point of usefulness. Skilled at conversation; less skilled at the hard truth.",
+  Scorpio:     "Probing, perceptive, and rarely showing its full hand. Doesn't do small talk. Excellent at reading what isn't being said. Prefers depth over pleasantry.",
+  Sagittarius: "Expansive, direct, and philosophical. Says what it means and expects the same in return. Thinks in large frames; can lose patience with granular detail.",
+  Capricorn:   "Measured, practical, and economical with words. Chooses language deliberately. Can seem aloof in casual exchange but is precise and reliable when it matters.",
+  Aquarius:    "Unconventional, idea-driven, and often ahead of the conversation. Thinks in systems. Can go abstract when others want the concrete. Excellent at seeing patterns no one else noticed.",
+  Pisces:      "Impressionistic and emotionally attuned. Communicates through feeling, metaphor, and implication. Can be difficult to pin down literally — but you always know the emotional truth of what they mean.",
+};
+
+// ─── Modalities ───────────────────────────────────────────────────────────────
+
+const MODALITIES = [
+  {
+    name: "Cardinal",
+    signs: ["Aries", "Cancer", "Libra", "Capricorn"],
+    tagline: "Initiation",
+    desc: "Cardinal signs begin things. They start relationships, conversations, and change. In synastry, two cardinal signs can create a dynamic where both want to lead — which produces either exciting momentum or constant redirection. The tension is generative if both partners can take turns.",
+    inLove: "Cardinal signs move fast. They're the ones who define the relationship, make the first move, and push for the next step before the other person is ready. What they struggle with is sustaining what they start once the novelty settles.",
+  },
+  {
+    name: "Fixed",
+    signs: ["Taurus", "Leo", "Scorpio", "Aquarius"],
+    tagline: "Sustaining",
+    desc: "Fixed signs hold position. They sustain what was started — in work, in love, in belief. In synastry, two fixed signs build relationships of extraordinary depth and durability. They also have the potential for extraordinary standoffs, since neither yields easily.",
+    inLove: "Fixed signs are the most loyal placement in the zodiac. When they commit, they mean it completely. They're also the hardest to convince once they've made up their mind — about a person, a relationship, or whether it's worth fighting for.",
+  },
+  {
+    name: "Mutable",
+    signs: ["Gemini", "Virgo", "Sagittarius", "Pisces"],
+    tagline: "Adaptation",
+    desc: "Mutable signs adapt. They're the transition points between seasons, and they carry that flexibility into relationships. In synastry, a mutable partner absorbs and responds to whatever the other person brings — which makes them naturally accommodating, sometimes at the cost of their own needs.",
+    inLove: "Mutable signs are the most flexible in relationships — and the hardest to pin down. They adjust to their partner and read the emotional landscape. The risk is losing themselves in the process, or avoiding necessary conflict through permanent accommodation.",
+  },
+];
 
 // ─── Zodiac signs ─────────────────────────────────────────────────────────────
 
@@ -185,7 +227,6 @@ function ZodiacWheel({
         const hex = EL[z.element as Element].hex;
         const act = activeIdx === i, usr = userIdx === i;
         const gp = polar(GLYPH_R, mid);
-        // SVG icon: a 24×24 path centred at gp, scaled to ~18px
         const iconS = 0.78;
         const iconOff = 12 * iconS;
         return (
@@ -198,7 +239,6 @@ function ZodiacWheel({
               fillOpacity={act ? 0.9 : usr ? 0.75 : 0.48}
               style={{ transition: "fill-opacity 0.15s" }} />
             {usr && <path d={sector(BAND, BAND + 6, a1, a2)} fill="white" fillOpacity="0.3" />}
-            {/* Hand-drawn SVG glyph — no emoji, no Unicode */}
             <g
               transform={`translate(${(gp.x - iconOff).toFixed(2)}, ${(gp.y - iconOff).toFixed(2)}) scale(${iconS})`}
               fill="none"
@@ -251,15 +291,31 @@ function ZodiacWheel({
   );
 }
 
-// ─── Sign detail panel ─────────────────────────────────────────────────────────
+// ─── Sign detail panel — tabbed (Sun / Moon / Rising / Mercury) ───────────────
+
+type PlacementTab = "sun" | "moon" | "rising" | "mercury";
+
+const PLACEMENT_TABS: { key: PlacementTab; label: string; title: string }[] = [
+  { key: "sun",     label: "Sun",     title: "Core identity"    },
+  { key: "moon",    label: "Moon",    title: "Emotional world"  },
+  { key: "rising",  label: "Rising",  title: "First impression" },
+  { key: "mercury", label: "Mercury", title: "How they communicate" },
+];
 
 function SignDetail({ activeIdx }: { activeIdx: number | null }) {
+  const [tab, setTab] = useState<PlacementTab>("sun");
   const z = activeIdx !== null ? ZODIAC[activeIdx] : null;
   const el = z ? EL[z.element as Element] : null;
   const placement = z ? SIGN_PLACEMENTS[z.sign] : null;
 
+  const bodyText = z && placement
+    ? tab === "mercury"
+      ? MERCURY_SIGNS[z.sign]
+      : placement[tab]
+    : null;
+
   return (
-    <div className="min-h-[180px] pt-6">
+    <div className="min-h-[230px] pt-6">
       <AnimatePresence mode="wait">
         {z && el && placement ? (
           <motion.div key={z.sign}
@@ -269,26 +325,55 @@ function SignDetail({ activeIdx }: { activeIdx: number | null }) {
             transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className="flex items-center gap-3 mb-2">
-              <svg viewBox="0 0 24 24" width={44} height={44} fill="none"
+              <svg viewBox="0 0 24 24" width={40} height={40} fill="none"
                 stroke={el.hex} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
                 style={{ flexShrink: 0 }}>
                 {ZODIAC_PATHS[z.sign]}
               </svg>
-              <h3 className="font-serif text-3xl font-semibold text-white leading-none">{z.sign}</h3>
+              <h3 className="font-serif text-2xl font-semibold text-white leading-none">{z.sign}</h3>
             </div>
-            <p className="text-stone-500 text-sm mb-1">{z.dates}</p>
-            <div className="flex items-center gap-2 mb-5">
-              <div className="h-px w-6" style={{ background: el.hex }} />
-              <span className="text-sm" style={{ color: el.hex }}>{z.element} · {z.modality} · {z.planet}</span>
+            <p className="text-stone-500 text-xs mb-1">{z.dates}</p>
+            <div className="flex items-center gap-2 mb-4">
+              <div className="h-px w-5" style={{ background: el.hex }} />
+              <span className="text-xs" style={{ color: el.hex }}>{z.element} · {z.modality} · {z.planet}</span>
             </div>
-            <p className="text-stone-300 text-sm leading-relaxed max-w-sm mb-4">{placement.sun}</p>
-            <p className="text-stone-500 text-xs tracking-[0.16em] uppercase">
-              {z.modality} {z.element} sign
-            </p>
+
+            {/* Placement tabs */}
+            <div className="flex flex-wrap gap-1 mb-4">
+              {PLACEMENT_TABS.map(({ key, label }) => (
+                <button
+                  key={key}
+                  onClick={() => setTab(key)}
+                  className={cn(
+                    "px-2.5 py-1 rounded-full text-xs transition-colors",
+                    tab === key
+                      ? "bg-white/10 text-white"
+                      : "text-stone-600 hover:text-stone-400"
+                  )}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+
+            <AnimatePresence mode="wait">
+              <motion.div key={tab}
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.18 }}
+              >
+                <p className="text-stone-500 text-[10px] tracking-[0.14em] uppercase mb-2">
+                  {PLACEMENT_TABS.find(t => t.key === tab)?.title}
+                </p>
+                <p className="text-stone-300 text-sm leading-relaxed max-w-sm">{bodyText}</p>
+              </motion.div>
+            </AnimatePresence>
           </motion.div>
         ) : (
           <motion.div key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <p className="text-stone-500 text-sm">Hover a sign to read its character</p>
+            <p className="text-stone-600 text-xs mt-2">Sun · Moon · Rising · Mercury for all 12 signs</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -336,6 +421,33 @@ function PersonalChart({ chart }: { chart: UserChart }) {
         })}
       </div>
 
+      {/* Mercury row */}
+      <div className="mt-10 pt-10 border-t border-white/8">
+        <p className="text-xs tracking-[0.22em] uppercase text-stone-500 mb-6">Mercury placements — how you communicate</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {[chart.sunSign, chart.moonSign, chart.risingSign].map((signName, i) => {
+            const labels = ["Sun sign", "Moon sign", "Rising sign"];
+            const mercText = MERCURY_SIGNS[signName];
+            if (!mercText) return null;
+            const sign = ZODIAC.find(z => z.sign === signName);
+            if (!sign) return null;
+            const elColor = EL[sign.element as Element].hex;
+            return (
+              <div key={signName + i}>
+                <div className="flex items-center gap-2 mb-2">
+                  <MessageSquare className="h-3 w-3 text-stone-600" />
+                  <span className="text-xs tracking-[0.13em] uppercase text-stone-500">
+                    {signName} <span className="text-stone-700">({labels[i]})</span>
+                  </span>
+                </div>
+                <div className="w-4 h-px mb-3" style={{ background: elColor, opacity: 0.5 }} />
+                <p className="text-stone-400 text-sm leading-relaxed">{mercText}</p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
       {chart.traits && (
         <div className="mt-10 pt-10 border-t border-white/8">
           <p className="text-xs tracking-[0.22em] uppercase text-stone-500 mb-8">How your chart reads in relationships</p>
@@ -360,7 +472,7 @@ function PersonalChart({ chart }: { chart: UserChart }) {
 // ─── Aspects explorer ──────────────────────────────────────────────────────────
 
 function AspectsExplorer() {
-  const [active, setActive] = useState<number>(3); // trine open by default
+  const [active, setActive] = useState<number>(3);
 
   return (
     <div>
@@ -407,6 +519,56 @@ function AspectsExplorer() {
   );
 }
 
+// ─── Modalities section ────────────────────────────────────────────────────────
+
+function ModalitiesSection() {
+  const [active, setActive] = useState<number>(0);
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {MODALITIES.map((m, i) => {
+        const isOpen = active === i;
+        return (
+          <button
+            key={m.name}
+            onClick={() => setActive(isOpen ? -1 : i)}
+            className={cn(
+              "text-left rounded-2xl border p-6 transition-colors",
+              isOpen
+                ? "border-white/15 bg-white/5"
+                : "border-white/8 hover:border-white/12 bg-transparent"
+            )}
+          >
+            <p className="text-xs tracking-[0.18em] uppercase text-stone-500 mb-1">{m.tagline}</p>
+            <h3 className="font-serif text-white text-xl font-semibold mb-3">{m.name}</h3>
+            <div className="flex flex-wrap gap-1.5 mb-4">
+              {m.signs.map(s => (
+                <span key={s} className="text-xs text-stone-400 bg-white/5 px-2 py-0.5 rounded-full border border-white/8">{s}</span>
+              ))}
+            </div>
+            <AnimatePresence>
+              {isOpen && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.22 }}
+                  className="overflow-hidden"
+                >
+                  <p className="text-stone-300 text-sm leading-relaxed mb-3">{m.desc}</p>
+                  <p className="text-stone-500 text-xs leading-relaxed border-t border-white/8 pt-3">{m.inLove}</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+            {!isOpen && (
+              <p className="text-stone-600 text-xs">Tap to expand</p>
+            )}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 // ─── Fade-in wrapper ───────────────────────────────────────────────────────────
 
 function FadeIn({ children, delay = 0, className }: {
@@ -429,14 +591,10 @@ function FadeIn({ children, delay = 0, className }: {
 
 export default function AstrologyPage() {
   const { status } = useSession();
-  const router = useRouter();
+  const isLoggedIn = status === "authenticated";
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
   const [userIdx,   setUserIdx]   = useState<number | null>(null);
   const [userChart, setUserChart] = useState<UserChart | null>(null);
-
-  useEffect(() => {
-    if (status === "unauthenticated") router.push("/login");
-  }, [status, router]);
 
   useEffect(() => {
     if (status !== "authenticated") return;
@@ -460,14 +618,6 @@ export default function AstrologyPage() {
       })
       .catch(() => null);
   }, [status]);
-
-  if (status === "loading") {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-7 h-7 rounded-full border-2 border-indigo-500/30 border-t-indigo-300 animate-spin" />
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen">
@@ -513,19 +663,37 @@ export default function AstrologyPage() {
           </section>
 
           {/* ── PERSONAL CHART ─────────────────────────────────────────────────── */}
-          {userChart ? (
-            <FadeIn>
-              <PersonalChart chart={userChart} />
-            </FadeIn>
+          {isLoggedIn ? (
+            userChart ? (
+              <FadeIn>
+                <PersonalChart chart={userChart} />
+              </FadeIn>
+            ) : (
+              <FadeIn>
+                <div className="border-t border-white/8 py-12 mb-24">
+                  <p className="text-stone-500 text-sm mb-2">Your personal chart</p>
+                  <p className="text-stone-400 text-sm max-w-sm">
+                    Complete your profile to see your Big Three and how your chart reads in relationships.
+                  </p>
+                  <Link href="/onboarding" className="inline-block mt-4 text-sm text-indigo-400 hover:text-indigo-300 transition-colors">
+                    Set up your profile →
+                  </Link>
+                </div>
+              </FadeIn>
+            )
           ) : (
             <FadeIn>
-              <div className="border-t border-white/8 py-12 mb-24">
-                <p className="text-stone-500 text-sm mb-2">Your personal chart</p>
-                <p className="text-stone-400 text-sm max-w-sm">
-                  Complete your profile to see your Big Three and how your chart reads in relationships.
+              <div className="border border-white/8 rounded-2xl px-8 py-10 mb-24 text-center max-w-lg mx-auto">
+                <p className="text-xs tracking-[0.18em] uppercase text-stone-500 mb-3">Your personal chart</p>
+                <p className="font-serif text-white text-xl font-semibold mb-3">See your Big Three</p>
+                <p className="text-stone-400 text-sm leading-relaxed mb-6 max-w-sm mx-auto">
+                  Create a free profile to see your Sun, Moon, and Rising sign interpretations — and how your chart reads in relationships.
                 </p>
-                <Link href="/onboarding" className="inline-block mt-4 text-sm text-indigo-400 hover:text-indigo-300 transition-colors">
-                  Set up your profile
+                <Link
+                  href="/signup"
+                  className="inline-block bg-white text-stone-900 rounded-full px-7 py-2.5 text-sm font-medium hover:bg-stone-100 transition-colors"
+                >
+                  Get started free
                 </Link>
               </div>
             </FadeIn>
@@ -616,6 +784,59 @@ export default function AstrologyPage() {
             </section>
           </FadeIn>
 
+          {/* ── MERCURY ───────────────────────────────────────────────────────── */}
+          <FadeIn>
+            <section className="mb-24 border-t border-white/8 pt-16">
+              <p className="text-xs tracking-[0.22em] uppercase text-stone-500 mb-5">Mercury</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-6 mb-10">
+                <div>
+                  <p className="font-serif text-white text-2xl font-semibold mb-4 leading-snug">
+                    The planet most compatibility guides forget
+                  </p>
+                  <p className="text-stone-300 text-sm leading-relaxed mb-4">
+                    Mercury governs how you think, how you speak, how you process information, and how you argue. In a relationship, Mercury compatibility often determines whether two people feel understood — even when they genuinely like each other.
+                  </p>
+                  <p className="text-stone-300 text-sm leading-relaxed">
+                    Mercury is rarely more than one or two signs away from your Sun, but its placement shifts your communication style significantly. A Scorpio Sun with Mercury in Libra is a very different communicator than a Scorpio Sun with Mercury in Sagittarius.
+                  </p>
+                </div>
+                <div>
+                  <p className="text-stone-300 text-sm leading-relaxed mb-4">
+                    Mercury in fire signs (Aries, Leo, Sagittarius) communicates with urgency and directness. They say what they mean, often before they've fully thought it through.
+                  </p>
+                  <p className="text-stone-300 text-sm leading-relaxed mb-4">
+                    Mercury in earth signs (Taurus, Virgo, Capricorn) is careful and precise. They think before they speak and mean what they say — but they can also take a long time to say it.
+                  </p>
+                  <p className="text-stone-300 text-sm leading-relaxed mb-4">
+                    Mercury in air signs (Gemini, Libra, Aquarius) is nimble and ideas-driven. They communicate through abstraction and enjoy debate for its own sake.
+                  </p>
+                  <p className="text-stone-300 text-sm leading-relaxed">
+                    Mercury in water signs (Cancer, Scorpio, Pisces) communicates emotionally. They pick up on subtext, speak in feeling-tones, and remember everything that was said and how it landed.
+                  </p>
+                </div>
+              </div>
+
+              {/* Mercury sign grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+                {ZODIAC.map((z) => {
+                  const elColor = EL[z.element as Element].hex;
+                  return (
+                    <div key={z.sign} className="bg-white/[0.03] border border-white/8 rounded-xl p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <svg viewBox="0 0 24 24" width={16} height={16} fill="none"
+                          stroke={elColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          {ZODIAC_PATHS[z.sign]}
+                        </svg>
+                        <span className="text-stone-300 text-xs font-medium">Mercury in {z.sign}</span>
+                      </div>
+                      <p className="text-stone-500 text-xs leading-relaxed">{MERCURY_SIGNS[z.sign]}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          </FadeIn>
+
           {/* ── THE FOUR ELEMENTS ──────────────────────────────────────────────── */}
           <FadeIn>
             <section className="mb-24 border-t border-white/8 pt-16">
@@ -644,6 +865,55 @@ export default function AstrologyPage() {
                     </div>
                   );
                 })}
+              </div>
+            </section>
+          </FadeIn>
+
+          {/* ── MODALITIES ────────────────────────────────────────────────────── */}
+          <FadeIn>
+            <section className="mb-24 border-t border-white/8 pt-16">
+              <p className="text-xs tracking-[0.22em] uppercase text-stone-500 mb-4">The three modalities</p>
+              <p className="text-stone-300 text-base leading-relaxed max-w-2xl mb-10">
+                Every sign belongs to one of three modalities — Cardinal, Fixed, or Mutable — which describe how a sign moves through the world. In synastry, modality compatibility shapes the pace of a relationship and how well two people navigate change together.
+              </p>
+              <ModalitiesSection />
+            </section>
+          </FadeIn>
+
+          {/* ── THE 12 HOUSES ─────────────────────────────────────────────────── */}
+          <FadeIn>
+            <section className="mb-24 border-t border-white/8 pt-16">
+              <p className="text-xs tracking-[0.22em] uppercase text-stone-500 mb-4">The 12 houses</p>
+              <p className="text-stone-300 text-base leading-relaxed max-w-2xl mb-10">
+                The houses divide the birth chart into 12 areas of life. Where planets fall in your chart — which house they occupy — describes where their energy is most active. In relationship astrology, certain houses carry more weight than others.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                {[
+                  { n: "1st",  title: "Identity",       rel: false, body: "The self, the body, first impressions. Your Rising sign is the cusp of this house." },
+                  { n: "2nd",  title: "Resources",      rel: false, body: "Money, possessions, self-worth. What you value and how you earn and spend." },
+                  { n: "3rd",  title: "Communication",  rel: true,  body: "Thought, speech, and local connection. Planets here shape how you talk and listen." },
+                  { n: "4th",  title: "Home",           rel: true,  body: "Roots, family, emotional foundation. The private self that partners eventually meet." },
+                  { n: "5th",  title: "Romance",        rel: true,  body: "Creativity, pleasure, dating, and play. Planets here directly color your romantic life." },
+                  { n: "6th",  title: "Daily life",     rel: false, body: "Work, routines, and health. How you function day to day — the texture of life with a partner." },
+                  { n: "7th",  title: "Partnership",    rel: true,  body: "Marriage, long-term relationship, and open enemies. The single most important house for synastry." },
+                  { n: "8th",  title: "Intimacy",       rel: true,  body: "Shared resources, sex, death, and transformation. Deep bonding and where two people merge." },
+                  { n: "9th",  title: "Philosophy",     rel: false, body: "Beliefs, travel, higher education, and meaning-making. Shared worldview is often found here." },
+                  { n: "10th", title: "Career",         rel: false, body: "Public standing, ambition, and reputation. What you're building in the world." },
+                  { n: "11th", title: "Community",      rel: false, body: "Friends, networks, hopes, and ideals. How you relate to groups and shared goals." },
+                  { n: "12th", title: "Solitude",       rel: true,  body: "Hidden matters, the unconscious, retreat. Secrets and what we bring to our deepest bonds." },
+                ].map(({ n, title, rel, body }) => (
+                  <div key={n} className={cn(
+                    "rounded-xl border p-4",
+                    rel ? "border-indigo-500/20 bg-indigo-500/5" : "border-white/8 bg-white/[0.02]"
+                  )}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="font-serif text-stone-500 text-xs w-7 shrink-0">{n}</span>
+                      <span className="text-white text-sm font-semibold">{title}</span>
+                      {rel && <span className="ml-auto text-[9px] tracking-[0.12em] uppercase text-indigo-400">Relationship</span>}
+                    </div>
+                    <p className="text-stone-500 text-xs leading-relaxed">{body}</p>
+                  </div>
+                ))}
               </div>
             </section>
           </FadeIn>
@@ -680,7 +950,7 @@ export default function AstrologyPage() {
 
                 <div className="flex items-center gap-8 text-sm">
                   <Link href="/discover" className="text-white font-semibold hover:text-stone-300 transition-colors">
-                    See your matches
+                    See your matches →
                   </Link>
                   <Link href="/profile" className="text-stone-400 hover:text-stone-300 transition-colors">
                     View your chart
