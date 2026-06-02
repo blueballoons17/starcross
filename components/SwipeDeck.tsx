@@ -497,11 +497,14 @@ export function SwipeDeck({ candidates, onLike, onPass }: SwipeDeckProps) {
           <Star className="h-10 w-10 text-stone-300" />
         </div>
         <div>
-          <h3 className="text-xl font-semibold text-stone-900 mb-2">
+          <h3 className="text-xl font-semibold text-white mb-2">
             {"You've seen everyone for now"}
           </h3>
-          <p className="text-stone-500 text-sm max-w-xs">
+          <p className="text-white/70 text-sm max-w-xs mb-3">
             Check back soon as new members join the constellation.
+          </p>
+          <p className="text-white/80 text-sm max-w-xs">
+            ✨ We&apos;ll email you as soon as a new match is found for you.
           </p>
         </div>
       </div>
