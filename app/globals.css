@@ -59,6 +59,22 @@ html { scroll-behavior: smooth; }
   animation: float 6s ease-in-out infinite;
 }
 
+/* ── Mobile tab bar safe-area helpers ─────────────────────────────── */
+/* Height of the tab bar: 64px links + iPhone home indicator clearance */
+:root {
+  --tab-bar-h: calc(4rem + env(safe-area-inset-bottom, 0px));
+}
+
+/* Content that must scroll above the tab bar */
+.pb-safe-tab {
+  padding-bottom: var(--tab-bar-h);
+}
+
+/* Fixed containers that must stop above the tab bar */
+.bottom-safe-tab {
+  bottom: var(--tab-bar-h);
+}
+
 @keyframes spotlight {
   0%   { opacity: 0; transform: translate(-72%, -62%) scale(0.5); }
   100% { opacity: 1; transform: translate(-50%, -40%) scale(1); }

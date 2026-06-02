@@ -82,7 +82,7 @@ export default function MessagesPage() {
         <StarField count={220} />
       </div>
 
-      <div className="fixed inset-x-0 bottom-0 flex overflow-hidden" style={{ top: 64 }}>
+      <div className="fixed inset-x-0 bottom-16 md:bottom-0 flex overflow-hidden" style={{ top: 64 }}>
         <NavBar />
 
         {/* Sidebar, no bg, stars show through */}

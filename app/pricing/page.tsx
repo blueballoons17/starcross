@@ -6,7 +6,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Check } from "lucide-react";
 import { PageStars } from "@/components/PageStars";
-import { ShootingStarLogo } from "@/components/ui/shooting-star-logo";
 
 const FEATURES = [
   "Unlimited swipes",
@@ -104,13 +103,12 @@ function PricingContent() {
       {/* Nav */}
       <header className="fixed top-0 left-0 right-0 z-40 border-b border-white/8 bg-stone-950/70 backdrop-blur-xl">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 group">
-            <ShootingStarLogo size={18} className="text-indigo-300" />
+          <Link href="/" className="flex items-center group">
             <span
-              className="text-[13px] font-medium text-white uppercase tracking-[0.18em]"
-              style={{ fontFamily: "var(--font-cinzel)" }}
+              className="text-[13px] font-normal text-white tracking-[0.32em]"
+              style={{ fontFamily: "var(--font-inter)" }}
             >
-              StarCross
+              starcross
             </span>
           </Link>
           <Link href="/login" className="text-stone-400 hover:text-stone-100 text-sm transition-colors">

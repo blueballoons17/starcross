@@ -206,7 +206,7 @@ export default function DiscoverPage() {
     <div className="min-h-screen">
       <PageStars />
       <NavBar />
-      <main className="pt-20 pb-8 px-4">
+      <main className="pt-20 pb-24 md:pb-8 px-4">
         <div className="max-w-lg mx-auto">
           <div className="text-center mb-8">
             <h1 className="font-serif text-2xl font-semibold text-white mb-1">Discover</h1>
