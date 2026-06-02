@@ -290,9 +290,9 @@ function PhoneMockup() {
 
 // ── Section nav links ─────────────────────────────────────────────────────────
 const NAV_SECTIONS = [
-  { id: "how-it-works", label: "How It Works" },
-  { id: "astrology",    label: "Astrology"    },
-  { id: "pricing-cta",  label: "Pricing"      },
+  { id: "how-it-works", label: "The Experience" },
+  { id: "astrology",    label: "Astrology"      },
+  { id: "pricing-cta",  label: "Pricing"        },
 ];
 
 // ── Page ─────────────────────────────────────────────────────────────────────
@@ -641,117 +641,84 @@ export default function HomePage() {
       </section>
 
       {/* ── CTA ──────────────────────────────────────────────────────────── */}
-      <section id="pricing-cta" className="py-28 px-6 text-white relative overflow-hidden" style={{ background: "#07091f" }}>
-        <StarField count={140} />
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          {[760, 520, 300].map((d) => (
-            <div key={d} className="absolute rounded-full border border-stone-800/50" style={{ width: d, height: d }} />
-          ))}
-        </div>
-
+      <section id="pricing-cta" className="py-28 px-6 bg-[#FAF8F4]">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="relative z-10 max-w-3xl mx-auto"
+          className="max-w-lg mx-auto"
         >
           {/* Heading */}
-          <div className="text-center mb-12">
-            <p className="text-xs tracking-[0.22em] uppercase text-indigo-400 mb-3" style={{ fontFamily: "var(--font-cinzel)" }}>
+          <div className="text-center mb-10">
+            <p className="text-xs tracking-[0.22em] uppercase text-indigo-500 mb-3" style={{ fontFamily: "var(--font-cinzel)" }}>
               Choose your path
             </p>
-            <h2 className="font-serif text-4xl md:text-5xl font-semibold leading-tight tracking-tight mb-3">
+            <h2 className="font-serif text-4xl md:text-5xl font-semibold text-stone-900 leading-tight tracking-tight mb-3">
               Find your cosmic match
             </h2>
-            <p className="text-stone-400 text-base">Start free. Upgrade whenever you&apos;re ready.</p>
+            <p className="text-stone-500 text-base">Unlock every connection the stars have written.</p>
           </div>
 
-          {/* Two-column pricing cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          {/* Single centered StarCross+ card */}
+          <div className="rounded-3xl border border-indigo-300/50 bg-white shadow-[0_8px_40px_rgba(99,102,241,0.12)] overflow-visible relative">
+            {/* Badge */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
+              <span className="bg-indigo-600 text-white text-[10px] font-semibold tracking-[0.12em] uppercase px-4 py-1.5 rounded-full shadow-lg">
+                Most popular
+              </span>
+            </div>
 
-            {/* Free */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.05 }}
-              className="rounded-3xl border border-white/10 bg-stone-900/40 backdrop-blur-md overflow-hidden flex flex-col"
-            >
-              <div className="px-7 pt-8 pb-6 text-center border-b border-white/[0.06]">
-                <p className="text-[10px] tracking-[0.22em] uppercase text-stone-500 mb-3" style={{ fontFamily: "var(--font-cinzel)" }}>Free</p>
-                <h3 className="text-2xl font-semibold text-white mb-2" style={{ fontFamily: "var(--font-cinzel)" }}>Starcross</h3>
-                <p className="text-stone-500 text-xs mb-4">Dip your toes in — no card required.</p>
-                <div className="flex items-baseline justify-center gap-1">
-                  <span className="text-4xl font-light text-white">$0</span>
-                  <span className="text-stone-500 text-sm">/ forever</span>
-                </div>
+            {/* Price block */}
+            <div className="px-8 pt-10 pb-6 text-center border-b border-stone-100">
+              <p className="text-[10px] tracking-[0.22em] uppercase text-indigo-500 mb-3" style={{ fontFamily: "var(--font-cinzel)" }}>Full access</p>
+              <h3 className="text-3xl font-semibold text-stone-900 mb-2" style={{ fontFamily: "var(--font-cinzel)" }}>StarCross+</h3>
+              <p className="text-stone-500 text-sm mb-5">Cancel anytime. No hidden fees.</p>
+              <div className="flex items-baseline justify-center gap-1">
+                <span className="text-5xl font-light text-stone-900">$14.99</span>
+                <span className="text-stone-400 text-base">/ month</span>
               </div>
-              <div className="px-7 py-5 flex-1">
-                <ul className="space-y-3">
-                  {[
-                    { text: "5 suggested matches", on: true },
-                    { text: "Message your matches", on: true },
-                    { text: "Astrology chart", on: true },
-                    { text: "Unlimited swipes", on: false },
-                    { text: "See who liked you", on: false },
-                    { text: "Full synastry breakdown", on: false },
-                  ].map(f => (
-                    <li key={f.text} className="flex items-center gap-3">
-                      <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[10px] ${f.on ? "bg-emerald-500/10 border border-emerald-500/30 text-emerald-400" : "bg-stone-800 border border-stone-700 text-stone-600"}`}>
-                        {f.on ? "✓" : "✕"}
-                      </div>
-                      <span className={`text-sm ${f.on ? "text-stone-300" : "text-stone-600"}`}>{f.text}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="px-7 pb-7">
-                <Button variant="outline" asChild className="w-full rounded-2xl border-white/15 hover:border-white/30 text-stone-300 hover:text-white bg-transparent hover:bg-white/5 h-12">
-                  <Link href="/signup">Continue for free</Link>
-                </Button>
-              </div>
-            </motion.div>
+            </div>
 
-            {/* Paid */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.12 }}
-              className="rounded-3xl border border-indigo-500/40 bg-stone-900/60 backdrop-blur-md overflow-hidden flex flex-col relative"
-            >
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                <span className="bg-indigo-500 text-white text-[10px] font-semibold tracking-[0.1em] uppercase px-3 py-1 rounded-full">Most popular</span>
-              </div>
-              <div className="px-7 pt-10 pb-6 text-center border-b border-white/[0.07]">
-                <p className="text-[10px] tracking-[0.22em] uppercase text-indigo-400 mb-3" style={{ fontFamily: "var(--font-cinzel)" }}>Full access</p>
-                <h3 className="text-2xl font-semibold text-white mb-2" style={{ fontFamily: "var(--font-cinzel)" }}>StarCross+</h3>
-                <p className="text-stone-400 text-xs mb-4">Unlock every connection the stars have written.</p>
-                <div className="flex items-baseline justify-center gap-1">
-                  <span className="text-4xl font-light text-white">$14.99</span>
-                  <span className="text-stone-400 text-sm">/ month</span>
-                </div>
-                <p className="text-stone-600 text-xs mt-1">Cancel anytime</p>
-              </div>
-              <div className="px-7 py-5 flex-1">
-                <ul className="space-y-3">
-                  {["Unlimited swipes", "Message all your matches", "Full synastry chart with planetary web", "Deep compatibility breakdown", "See who liked you", "Priority profile visibility"].map(f => (
-                    <li key={f} className="flex items-center gap-3">
-                      <div className="w-5 h-5 rounded-full bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center shrink-0 text-[10px] text-indigo-400">✓</div>
-                      <span className="text-stone-200 text-sm">{f}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="px-7 pb-7">
-                <Button asChild className="w-full rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white h-12 shadow-xl shadow-indigo-500/20">
-                  <Link href="/pricing">Begin your journey, $14.99/mo <ArrowRight className="h-4 w-4 ml-2" /></Link>
-                </Button>
-                <p className="text-center text-stone-600 text-xs mt-3">Secure payment via Stripe · Cancel anytime</p>
-              </div>
-            </motion.div>
+            {/* Features */}
+            <div className="px-8 py-6">
+              <ul className="space-y-3.5">
+                {[
+                  "Unlimited swipes",
+                  "Message all your matches",
+                  "Full synastry chart with planetary web",
+                  "Deep compatibility breakdown",
+                  "See who liked you",
+                  "Priority profile visibility",
+                ].map(f => (
+                  <li key={f} className="flex items-center gap-3">
+                    <div className="w-5 h-5 rounded-full bg-indigo-50 border border-indigo-200 flex items-center justify-center shrink-0">
+                      <span className="text-[10px] text-indigo-600">✓</span>
+                    </div>
+                    <span className="text-stone-700 text-sm">{f}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
+            {/* CTA */}
+            <div className="px-8 pb-8">
+              <Button asChild className="w-full rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white h-12 text-sm font-medium shadow-lg shadow-indigo-200">
+                <Link href="/pricing">
+                  Begin your journey <ArrowRight className="h-4 w-4 ml-2" />
+                </Link>
+              </Button>
+              <p className="text-center text-stone-400 text-xs mt-3">Secure payment via Stripe · Cancel anytime</p>
+            </div>
           </div>
+
+          {/* Free plan note below */}
+          <p className="text-center text-stone-400 text-sm mt-6">
+            Or{" "}
+            <Link href="/signup" className="text-stone-600 hover:text-stone-900 underline underline-offset-2 transition-colors">
+              start for free
+            </Link>
+            {" "}with 5 matches — no card required.
+          </p>
         </motion.div>
       </section>
 
