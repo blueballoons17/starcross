@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { motion, useInView, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
 import { ArrowRight, Heart, Sparkles, Moon } from "lucide-react";
 import { AnimatedHero } from "@/components/ui/animated-hero";
 import RadialOrbitalTimeline from "@/components/ui/radial-orbital-timeline";
@@ -176,7 +176,7 @@ function AppPreview() {
         <div className="flex flex-col items-center gap-1">
           <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-indigo-400/50">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="https://api.dicebear.com/9.x/adventurer/png?seed=Zara&skinColor=ae5d29&size=40" alt="Zara" className="w-full h-full object-cover" />
+            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Zara" className="w-full h-full object-cover" />
           </div>
           <p className="text-[7px] text-stone-300">Zara, 25</p>
           <p className="text-[6px] text-indigo-300/70">♉ Taurus</p>
@@ -192,7 +192,7 @@ function AppPreview() {
         <div className="flex flex-col items-center gap-1">
           <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-rose-400/50">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="https://api.dicebear.com/9.x/adventurer/png?seed=Sofia&skinColor=d08b5b&size=40" alt="Sofia" className="w-full h-full object-cover" />
+            <img src="https://randomuser.me/api/portraits/women/26.jpg" alt="Sofia" className="w-full h-full object-cover" />
           </div>
           <p className="text-[7px] text-stone-300">Sofia, 27</p>
           <p className="text-[6px] text-rose-300/70">♓ Pisces</p>
@@ -240,6 +240,37 @@ function AppPreview() {
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+// ── Phone mockup with ContainerScroll-style tilt on scroll ───────────────────
+function PhoneMockup() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "center 55%"],
+  });
+  // Smooth spring so the tilt feels fluid, not snappy
+  const rawRotate = useTransform(scrollYProgress, [0, 1], [24, 0]);
+  const rawScale  = useTransform(scrollYProgress, [0, 1], [0.86, 1]);
+  const rotateX   = useSpring(rawRotate, { stiffness: 80, damping: 22 });
+  const scale     = useSpring(rawScale,  { stiffness: 80, damping: 22 });
+
+  return (
+    <div ref={containerRef} className="flex justify-center" style={{ perspective: "1400px" }}>
+      <motion.div
+        style={{ rotateX, scale }}
+        className="relative rounded-[2.4rem] border-[3px] border-stone-800 bg-stone-950 overflow-hidden w-[260px] h-[520px]"
+        // layered shadow: subtle ambient + strong drop
+        initial={{ boxShadow: "0 48px 100px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04)" }}
+        whileInView={{ boxShadow: "0 32px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.06)" }}
+        viewport={{ once: true }}
+      >
+        {/* Dynamic Island / notch */}
+        <div className="absolute top-2 left-1/2 -translate-x-1/2 w-24 h-[22px] bg-stone-950 rounded-full z-20 border border-stone-700/40" />
+        <AppPreview />
+      </motion.div>
     </div>
   );
 }
@@ -442,15 +473,7 @@ export default function HomePage() {
                 </p>
               </div>
 
-              {/* Phone frame */}
-              <div
-                className="relative rounded-[2.2rem] border-[3px] border-stone-800 bg-stone-950 shadow-[0_32px_80px_rgba(0,0,0,0.55)] overflow-hidden w-[260px]"
-                style={{ height: "520px" }}
-              >
-                {/* Notch */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-20 h-5 bg-stone-950 rounded-b-xl z-20" />
-                <AppPreview />
-              </div>
+              <PhoneMockup />
             </motion.div>
 
             {/* ── Right: how it works ────────────────────────────── */}

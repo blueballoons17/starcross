@@ -1,32 +1,27 @@
 "use client";
 import { useEffect, useRef } from "react";
 
-// Diverse avatar faces — preloaded once at module level
+// Real diverse headshot photos — preloaded once at module level
+// randomuser.me serves CORS-safe 128×128 real face photos
 const FACE_SRCS = [
-  // Blonde / Northern European
-  "https://api.dicebear.com/9.x/adventurer/png?seed=Freya&skinColor=ffdbb4&hair=long20&hairColor=f9c23c&size=40",
-  // East Asian (Chinese)
-  "https://api.dicebear.com/9.x/adventurer/png?seed=Mei&skinColor=f2d3b1&hair=short07&hairColor=2c1b18&size=40",
-  // South Asian
-  "https://api.dicebear.com/9.x/adventurer/png?seed=Priya&skinColor=d08b5b&hair=long16&hairColor=2c1b18&size=40",
-  // African
-  "https://api.dicebear.com/9.x/adventurer/png?seed=Amara&skinColor=614335&hair=long01&hairColor=2c1b18&size=40",
-  // Mediterranean / Southern European
-  "https://api.dicebear.com/9.x/adventurer/png?seed=Sofia&skinColor=c68642&hair=long06&hairColor=724133&size=40",
-  // Brunette Western
-  "https://api.dicebear.com/9.x/adventurer/png?seed=Emma&skinColor=ffdbb4&hair=long04&hairColor=b58143&size=40",
-  // Japanese / East Asian
-  "https://api.dicebear.com/9.x/adventurer/png?seed=Kenji&skinColor=f2d3b1&hair=short06&hairColor=2c1b18&size=40",
-  // Latina
-  "https://api.dicebear.com/9.x/adventurer/png?seed=Maya&skinColor=ae5d29&hair=long09&hairColor=2c1b18&size=40",
-  // Middle Eastern
-  "https://api.dicebear.com/9.x/adventurer/png?seed=Layla&skinColor=c68642&hair=long13&hairColor=2c1b18&size=40",
-  // Blue-eyed / light features
-  "https://api.dicebear.com/9.x/adventurer/png?seed=Ingrid&skinColor=ffdbb4&hair=long21&hairColor=e8e1d4&size=40",
-  // Dark-skinned
-  "https://api.dicebear.com/9.x/adventurer/png?seed=Zara&skinColor=4a312c&hair=long14&hairColor=2c1b18&size=40",
-  // Red-haired
-  "https://api.dicebear.com/9.x/adventurer/png?seed=Saoirse&skinColor=ffdbb4&hair=long05&hairColor=d96c2b&size=40",
+  // Women — varied ethnicities
+  "https://randomuser.me/api/portraits/women/2.jpg",   // blonde/light
+  "https://randomuser.me/api/portraits/women/7.jpg",   // brunette European
+  "https://randomuser.me/api/portraits/women/26.jpg",  // East Asian
+  "https://randomuser.me/api/portraits/women/33.jpg",  // South Asian
+  "https://randomuser.me/api/portraits/women/44.jpg",  // Latina/mixed
+  "https://randomuser.me/api/portraits/women/55.jpg",  // African
+  "https://randomuser.me/api/portraits/women/65.jpg",  // Middle Eastern
+  "https://randomuser.me/api/portraits/women/75.jpg",  // Nordic/light
+  // Men — varied ethnicities
+  "https://randomuser.me/api/portraits/men/3.jpg",     // dark hair European
+  "https://randomuser.me/api/portraits/men/22.jpg",    // East Asian
+  "https://randomuser.me/api/portraits/men/36.jpg",    // South Asian
+  "https://randomuser.me/api/portraits/men/48.jpg",    // African
+  "https://randomuser.me/api/portraits/men/62.jpg",    // Latino/mixed
+  "https://randomuser.me/api/portraits/men/71.jpg",    // Middle Eastern
+  "https://randomuser.me/api/portraits/men/80.jpg",    // blonde/Nordic
+  "https://randomuser.me/api/portraits/men/9.jpg",     // brunette Western
 ];
 
 const faceImages: HTMLImageElement[] =
