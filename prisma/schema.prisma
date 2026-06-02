@@ -32,6 +32,8 @@ model User {
   notifications    Notification[]
   reportsFiled     Report[]       @relation("ReportsFiled")
   reportsReceived  Report[]       @relation("ReportsReceived")
+  reviewsGiven     Review[]       @relation("ReviewsGiven")
+  reviewsReceived  Review[]       @relation("ReviewsReceived")
 }
 
 model Profile {
@@ -107,6 +109,21 @@ model Message {
 
   match  Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
   sender User  @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  reviewerId String
+  reviewedId String
+  rating     Int      // 1–5
+  comment    String?  // public, shown anonymously to other users
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  reviewer User @relation("ReviewsGiven",    fields: [reviewerId], references: [id], onDelete: Cascade)
+  reviewed User @relation("ReviewsReceived", fields: [reviewedId], references: [id], onDelete: Cascade)
+
+  @@unique([reviewerId, reviewedId]) // one review per pair
 }
 
 model Report {

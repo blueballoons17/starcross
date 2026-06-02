@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, MessageCircle, Sparkles, AlertTriangle, Lock, Flag } from "lucide-react";
 import Link from "next/link";
@@ -133,6 +133,73 @@ function BreakdownBar({
   );
 }
 
+// ── Review helpers ──────────────────────────────────────────────────────────
+
+interface ReviewData {
+  averageRating: number | null;
+  count: number;
+  comments: string[];
+  myReview: { rating: number; comment: string | null } | null;
+}
+
+function StarDisplay({ value, size = 14 }: { value: number; size?: number }) {
+  return (
+    <span className="inline-flex items-center gap-px" aria-label={`${value} out of 5 stars`}>
+      {[1, 2, 3, 4, 5].map((s) => (
+        <svg
+          key={s}
+          width={size}
+          height={size}
+          viewBox="0 0 20 20"
+          fill={s <= Math.round(value) ? "#fbbf24" : "none"}
+          stroke={s <= Math.round(value) ? "#fbbf24" : "#57534e"}
+          strokeWidth="1.5"
+        >
+          <path d="M10 1.5l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.77l-4.77 2.44.91-5.32L2.27 7.12l5.34-.78z" />
+        </svg>
+      ))}
+    </span>
+  );
+}
+
+function StarPicker({ value, onChange }: { value: number; onChange: (v: number) => void }) {
+  const [hovered, setHovered] = useState(0);
+  const labels = ["Terrible", "Poor", "Okay", "Good", "Great"];
+  const active = hovered || value;
+  return (
+    <div className="flex flex-col items-center gap-1.5">
+      <div className="flex gap-1">
+        {[1, 2, 3, 4, 5].map((s) => (
+          <button
+            key={s}
+            type="button"
+            onClick={() => onChange(s)}
+            onMouseEnter={() => setHovered(s)}
+            onMouseLeave={() => setHovered(0)}
+            className="transition-transform hover:scale-125 focus:outline-none"
+            aria-label={`${s} star${s > 1 ? "s" : ""}`}
+          >
+            <svg
+              width={28}
+              height={28}
+              viewBox="0 0 20 20"
+              fill={active >= s ? "#fbbf24" : "none"}
+              stroke={active >= s ? "#fbbf24" : "#44403c"}
+              strokeWidth="1.5"
+              className="transition-colors duration-100"
+            >
+              <path d="M10 1.5l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.77l-4.77 2.44.91-5.32L2.27 7.12l5.34-.78z" />
+            </svg>
+          </button>
+        ))}
+      </div>
+      {active > 0 && (
+        <span className="text-[11px] text-stone-400">{labels[active - 1]}</span>
+      )}
+    </div>
+  );
+}
+
 const REPORT_REASONS = [
   { value: "spam",                  label: "Spam or scam" },
   { value: "harassment",            label: "Harassment or mean behavior" },
@@ -148,6 +215,30 @@ export function ProfileDrawer({ open, onClose, match, isPremium }: ProfileDrawer
   const [upgradeOpen, setUpgradeOpen] = useState(false);
   const [photoIdx, setPhotoIdx] = useState(0);
 
+  // Review state
+  const [reviews, setReviews]             = useState<ReviewData | null>(null);
+  const [reviewRating, setReviewRating]   = useState(0);
+  const [reviewComment, setReviewComment] = useState("");
+  const [reviewFormOpen, setReviewFormOpen] = useState(false);
+  const [reviewStatus, setReviewStatus]   = useState<"idle" | "submitting" | "done" | "error">("idle");
+
+  const fetchReviews = useCallback((userId: string) => {
+    fetch(`/api/review/${userId}`)
+      .then((r) => r.json())
+      .then((d: ReviewData) => {
+        setReviews(d);
+        if (d.myReview) {
+          setReviewRating(d.myReview.rating);
+          setReviewComment(d.myReview.comment ?? "");
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (open && match?.otherUser.id) fetchReviews(match.otherUser.id);
+  }, [open, match?.otherUser.id, fetchReviews]);
+
   // Report state
   const [reportOpen, setReportOpen]     = useState(false);
   const [reportReason, setReportReason] = useState<ReportReason | "">("");
@@ -156,11 +247,37 @@ export function ProfileDrawer({ open, onClose, match, isPremium }: ProfileDrawer
 
   useEffect(() => { setPhotoIdx(0); }, [match?.id]);
 
-  // Reset report form when drawer opens a new profile
+  // Reset forms when drawer closes or switches to a new profile
   useEffect(() => {
-    if (!open) { setReportOpen(false); setReportReason(""); setReportDetails(""); setReportStatus("idle"); }
+    if (!open) {
+      setReportOpen(false); setReportReason(""); setReportDetails(""); setReportStatus("idle");
+      setReviews(null); setReviewRating(0); setReviewComment(""); setReviewFormOpen(false); setReviewStatus("idle");
+    }
   }, [open, match?.id]);
   if (!match) return null;
+
+  async function submitReview() {
+    if (!reviewRating || !match) return;
+    setReviewStatus("submitting");
+    try {
+      const res = await fetch("/api/review", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          reviewedUserId: match.otherUser.id,
+          rating: reviewRating,
+          comment: reviewComment.trim() || undefined,
+        }),
+      });
+      if (!res.ok) throw new Error("Request failed");
+      setReviewStatus("done");
+      setReviewFormOpen(false);
+      // Refresh reviews to show updated data
+      fetchReviews(match.otherUser.id);
+    } catch {
+      setReviewStatus("error");
+    }
+  }
 
   async function submitReport() {
     if (!reportReason || !match) return;
@@ -294,9 +411,18 @@ export function ProfileDrawer({ open, onClose, match, isPremium }: ProfileDrawer
                   <h2 className="font-serif text-2xl font-semibold text-white leading-tight">
                     {match.otherUser.name}, {age}
                   </h2>
-                  <p className="text-white/60 text-sm mt-0.5">
-                    {match.otherUser.birthCity}, {match.otherUser.birthCountry}
-                  </p>
+                  <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                    <p className="text-white/60 text-sm">
+                      {match.otherUser.birthCity}, {match.otherUser.birthCountry}
+                    </p>
+                    {reviews && reviews.averageRating !== null && (
+                      <span className="inline-flex items-center gap-1 bg-black/30 backdrop-blur-sm rounded-full px-2 py-0.5">
+                        <StarDisplay value={reviews.averageRating} size={11} />
+                        <span className="text-white/80 text-[11px] font-medium">{reviews.averageRating}</span>
+                        <span className="text-white/40 text-[10px]">({reviews.count})</span>
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -436,6 +562,117 @@ export function ProfileDrawer({ open, onClose, match, isPremium }: ProfileDrawer
                   </p>
                 </div>
               )}
+
+              {/* ── Community reviews ─────────────────────────────────── */}
+              <div className="px-6 pb-5">
+                <div className="h-px bg-white/6 mb-5" />
+
+                {/* Header row */}
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="text-[10px] font-semibold text-stone-500 uppercase tracking-wider">
+                    Community Reviews
+                  </h4>
+                  {reviews && reviews.count > 0 && (
+                    <div className="flex items-center gap-1.5">
+                      <StarDisplay value={reviews.averageRating ?? 0} size={12} />
+                      <span className="text-stone-300 text-xs font-medium">{reviews.averageRating}</span>
+                      <span className="text-stone-600 text-xs">/ {reviews.count} review{reviews.count !== 1 ? "s" : ""}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Anonymous comments from other users */}
+                {reviews && reviews.comments.length > 0 ? (
+                  <div className="space-y-2 mb-4">
+                    {reviews.comments.map((c, i) => (
+                      <div key={i} className="bg-white/4 rounded-xl px-3 py-2.5 border border-white/6">
+                        <p className="text-stone-300 text-xs leading-relaxed">&ldquo;{c}&rdquo;</p>
+                        <p className="text-stone-600 text-[10px] mt-1.5">— StarCross user</p>
+                      </div>
+                    ))}
+                  </div>
+                ) : reviews && reviews.count === 0 ? (
+                  <p className="text-stone-600 text-xs mb-4">
+                    No reviews yet. Be the first!
+                  </p>
+                ) : null}
+
+                {/* Leave / edit a review */}
+                {!reviewFormOpen && !reviewStatus.startsWith("done") ? (
+                  <button
+                    onClick={() => setReviewFormOpen(true)}
+                    className="flex items-center gap-1.5 text-xs text-stone-500 hover:text-amber-400 transition-colors"
+                  >
+                    <span className="text-amber-500">★</span>
+                    {reviews?.myReview ? "Edit your review" : `Rate ${match.otherUser.name}`}
+                  </button>
+                ) : reviewStatus === "done" ? (
+                  <div className="rounded-xl bg-amber-500/10 border border-amber-500/15 px-4 py-2.5 text-center">
+                    <p className="text-amber-300 text-xs font-medium">Review saved ✦</p>
+                  </div>
+                ) : reviewFormOpen ? (
+                  /* Review form */
+                  <div className="rounded-xl border border-white/8 bg-white/3 overflow-hidden">
+                    {/* Form header */}
+                    <div className="flex items-center justify-between px-4 py-3 border-b border-white/6">
+                      <span className="text-sm font-medium text-stone-200">
+                        {reviews?.myReview ? "Update your review" : `Rate ${match.otherUser.name}`}
+                      </span>
+                      <button
+                        onClick={() => { setReviewFormOpen(false); setReviewStatus("idle"); }}
+                        className="text-stone-500 hover:text-stone-300 transition-colors"
+                        aria-label="Cancel"
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+
+                    <div className="px-4 pt-4 pb-2">
+                      {/* Context note */}
+                      <p className="text-[10px] text-stone-500 text-center mb-3 leading-relaxed">
+                        How was chatting with {match.otherUser.name}?<br />
+                        Reviews are shown anonymously to help everyone feel safe.
+                      </p>
+
+                      {/* Star picker */}
+                      <div className="flex justify-center mb-3">
+                        <StarPicker value={reviewRating} onChange={setReviewRating} />
+                      </div>
+
+                      {/* Comment */}
+                      <textarea
+                        rows={2}
+                        maxLength={300}
+                        placeholder={`Optional — e.g. "Very kind and easy to talk to" (public, anonymous)`}
+                        value={reviewComment}
+                        onChange={(e) => setReviewComment(e.target.value)}
+                        className="w-full rounded-lg bg-white/5 border border-white/8 text-stone-300 placeholder-stone-600 text-xs px-3 py-2 resize-none focus:outline-none focus:border-white/20 transition-colors"
+                      />
+                      <p className="text-[10px] text-stone-600 mt-1 text-right">
+                        {reviewComment.length}/300
+                      </p>
+                    </div>
+
+                    <div className="px-4 pb-4">
+                      {reviewStatus === "error" && (
+                        <p className="text-red-400 text-xs mb-2">Something went wrong — please try again.</p>
+                      )}
+                      <button
+                        onClick={submitReview}
+                        disabled={!reviewRating || reviewStatus === "submitting"}
+                        className={cn(
+                          "w-full py-2.5 rounded-lg text-xs font-semibold transition-colors",
+                          reviewRating && reviewStatus !== "submitting"
+                            ? "bg-amber-500 hover:bg-amber-400 text-stone-950"
+                            : "bg-white/5 text-stone-600 cursor-not-allowed"
+                        )}
+                      >
+                        {reviewStatus === "submitting" ? "Saving…" : reviews?.myReview ? "Update review" : "Submit review"}
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
+              </div>
 
               {/* Strengths: StarCross+ only */}
               {isPremium !== false && match.strengths.length > 0 && (
