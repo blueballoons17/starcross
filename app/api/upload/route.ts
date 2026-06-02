@@ -34,11 +34,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "File too large. Max 8 MB." }, { status: 400 });
     }
 
-    const ext = file.type === "image/webp" ? "webp"
-      : file.type === "image/png" ? "png"
-      : file.type === "image/gif" ? "gif"
-      : "jpg";
-    const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    // Verify actual file content via magic bytes — client-supplied MIME is spoofable
+    const header = new Uint8Array(await file.slice(0, 12).arrayBuffer());
+    const isJpeg = header[0] === 0xff && header[1] === 0xd8;
+    const isPng  = header[0] === 0x89 && header[1] === 0x50 && header[2] === 0x4e && header[3] === 0x47;
+    const isWebp = header[8] === 0x57 && header[9] === 0x45 && header[10] === 0x42 && header[11] === 0x50;
+    const isGif  = header[0] === 0x47 && header[1] === 0x49 && header[2] === 0x46;
+    if (!isJpeg && !isPng && !isWebp && !isGif) {
+      return NextResponse.json({ error: "File content does not match a supported image format." }, { status: 400 });
+    }
+
+    const ext = isPng ? "png" : isWebp ? "webp" : isGif ? "gif" : "jpg";
+    const filename = `${crypto.randomUUID()}.${ext}`;
 
     if (process.env.BLOB_READ_WRITE_TOKEN) {
       const { put } = await import("@vercel/blob");
@@ -64,6 +71,6 @@ export async function POST(request: NextRequest) {
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("Upload error:", message);
-    return NextResponse.json({ error: `Upload error: ${message}` }, { status: 500 });
+    return NextResponse.json({ error: "Upload failed. Please try again." }, { status: 500 });
   }
 }

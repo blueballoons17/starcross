@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
 import { isSubscriptionActive } from "@/lib/subscription";
+import { messageLimiter } from "@/lib/rate-limit";
 
 interface SessionUser {
   id?: string;
@@ -52,6 +53,11 @@ export async function POST(
   const session = await getServerSession(authOptions);
   const userId = (session?.user as SessionUser)?.id;
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  // Rate-limit: 30 messages per minute per user
+  if (messageLimiter.isLimited(userId)) {
+    return NextResponse.json({ error: "Slow down — too many messages." }, { status: 429 });
+  }
 
   const { matchId } = await params;
 

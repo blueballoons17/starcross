@@ -2,6 +2,7 @@ import NextAuth, { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
 import { verifyPassword } from "@/lib/auth";
+import { loginLimiter } from "@/lib/rate-limit";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -11,9 +12,19 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         if (!credentials?.email || !credentials?.password) {
           return null;
+        }
+
+        // Rate-limit by IP — 10 attempts per minute
+        const ip =
+          (req as { headers?: Record<string, string> }).headers?.["x-forwarded-for"]
+            ?.split(",")[0]
+            ?.trim() ??
+          "unknown";
+        if (loginLimiter.isLimited(ip)) {
+          throw new Error("Too many login attempts. Please wait a minute.");
         }
 
         const user = await prisma.user.findUnique({

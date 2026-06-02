@@ -2,28 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth";
 import { sendWelcomeEmail } from "@/lib/email";
-
-// Simple in-memory rate limiter
-const ipCounts = new Map<string, { count: number; resetAt: number }>();
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const entry = ipCounts.get(ip);
-  if (!entry || now > entry.resetAt) {
-    ipCounts.set(ip, { count: 1, resetAt: now + 60000 });
-    return false;
-  }
-  if (entry.count >= 5) return true;
-  entry.count++;
-  return false;
-}
+import { registerLimiter } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
   const ip =
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
     "unknown";
 
-  if (isRateLimited(ip)) {
+  if (registerLimiter.isLimited(ip)) {
     return NextResponse.json(
       { error: "Too many requests. Please wait a minute." },
       { status: 429 }
