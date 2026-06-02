@@ -41,11 +41,11 @@ function aspectKind(signA: string, signB: string): AspectKind {
 }
 
 const ASPECT_META: Record<AspectKind, { color: string; dash?: string; label: string; desc: string; weight: number }> = {
-  conjunction: { color: "#a78bfa", label: "Conjunction", desc: "Fused energy — intensely aligned",                 weight: 2 },
-  trine:       { color: "#34d399", label: "Trine",       desc: "Natural harmony — flows effortlessly",             weight: 1.5 },
-  sextile:     { color: "#38bdf8", dash: "5 3", label: "Sextile",   desc: "Cooperative flow — easy support",       weight: 1 },
-  square:      { color: "#fb923c", dash: "3 4", label: "Square",    desc: "Productive tension — growth through friction", weight: 1 },
-  opposition:  { color: "#f43f5e", dash: "2 4", label: "Opposition", desc: "Magnetic polarity — attracted to your complement", weight: 1 },
+  conjunction: { color: "#a78bfa", label: "Conjunction", desc: "Fused energy, intensely aligned",                 weight: 2 },
+  trine:       { color: "#34d399", label: "Trine",       desc: "Natural harmony, flows effortlessly",             weight: 1.5 },
+  sextile:     { color: "#38bdf8", dash: "5 3", label: "Sextile",   desc: "Cooperative flow, easy support",       weight: 1 },
+  square:      { color: "#fb923c", dash: "3 4", label: "Square",    desc: "Productive tension, growth through friction", weight: 1 },
+  opposition:  { color: "#f43f5e", dash: "2 4", label: "Opposition", desc: "Magnetic polarity, attracted to your complement", weight: 1 },
   neutral:     { color: "#374151", dash: "2 6", label: "",           desc: "",                                      weight: 0.5 },
 };
 
@@ -55,7 +55,7 @@ const W = 360, H = 260;
 const SELF_X = 76, OTHER_X = W - 76;
 const MID_Y = H / 2;
 
-// Planet offsets relative to hub — mirrored for each side
+// Planet offsets relative to hub, mirrored for each side
 // For self (left side): offset goes left-ish; for other (right side): mirror on x
 const PLANET_POS = [
   { planet: "Sun",    selfX: 18,  selfY: 62,  otherX: W - 18,  otherY: 62  },
@@ -222,7 +222,7 @@ export function AstroGraph({ selfName, otherName, self, other }: AstroGraphProps
   // Tooltip text
   const tooltip = tooltipEdge
     ? ASPECT_META[tooltipEdge.kind].desc
-      ? `${tooltipEdge.planetLabel}: ${ASPECT_META[tooltipEdge.kind].label} — ${ASPECT_META[tooltipEdge.kind].desc}`
+      ? `${tooltipEdge.planetLabel}: ${ASPECT_META[tooltipEdge.kind].label}, ${ASPECT_META[tooltipEdge.kind].desc}`
       : null
     : null;
 

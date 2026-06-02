@@ -26,7 +26,7 @@ const HOW_IT_WORKS = [
   },
   {
     id: 2, title: "Elements", subtitle: "Step 2",
-    content: "We map your elemental makeup — fire, earth, air, water — and modal tendencies across cardinal, fixed, and mutable energies.",
+    content: "We map your elemental makeup, fire, earth, air, water, and modal tendencies across cardinal, fixed, and mutable energies.",
     icon: "◈", relatedIds: [1, 3], energy: 90,
   },
   {
@@ -41,7 +41,7 @@ const HOW_IT_WORKS = [
   },
   {
     id: 5, title: "Connection", subtitle: "Step 5",
-    content: "See why each match works, what to navigate, and shared traits — so you start every conversation with context, not guesswork.",
+    content: "See why each match works, what to navigate, and shared traits, so you start every conversation with context, not guesswork.",
     icon: "✦", relatedIds: [4], energy: 75,
   },
 ];
@@ -77,7 +77,7 @@ const ELEMENTS = [
     signs: ["Gemini", "Libra", "Aquarius"],
     tagline: "Curiosity & Connection",
     description:
-      "Witty, communicative, and restlessly curious. Air signs need intellectual spark to truly fall — and stay — in love.",
+      "Witty, communicative, and restlessly curious. Air signs need intellectual spark to truly fall, and stay, in love.",
     accent: "#6366f1",
     bg: "#eef2ff",
     border: "#c7d2fe",
@@ -100,7 +100,7 @@ const ELEMENTS = [
 const FEATURES = [
   {
     symbol: "⊙", title: "Three-Sign Matching",
-    description: "Your Sun sign is just the beginning. We use your Sun, Moon, and Rising together — the way astrology was always meant to be read.",
+    description: "Your Sun sign is just the beginning. We use your Sun, Moon, and Rising together, the way astrology was always meant to be read.",
   },
   {
     symbol: "◈", title: "Elemental Harmony",
@@ -199,7 +199,7 @@ function ConstellationCanvas() {
   return <canvas ref={ref} className="absolute inset-0 w-full h-full" />;
 }
 
-// Thin arc score — matches the real app's ScoreMark
+// Thin arc score, matches the real app's ScoreMark
 function PreviewScoreMark({ score }: { score: number }) {
   const r = 13;
   const circ = 2 * Math.PI * r;
@@ -220,7 +220,7 @@ function PreviewScoreMark({ score }: { score: number }) {
   );
 }
 
-// Editorial match row — mirrors the real MatchCard style
+// Editorial match row, mirrors the real MatchCard style
 function PreviewMatchCard({ match, delay }: { match: typeof PREVIEW_MATCHES[0]; delay: number }) {
   return (
     <motion.div
@@ -447,7 +447,7 @@ export default function HomePage() {
             </div>
           </motion.div>
 
-          {/* ── Sub-headline — sits BELOW the reserved slot, never overlaps ── */}
+          {/* ── Sub-headline, sits BELOW the reserved slot, never overlaps ── */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -521,7 +521,7 @@ export default function HomePage() {
                 <span className="italic text-stone-500">beautifully surfaced</span>
               </h2>
               <p className="text-stone-500 text-base max-w-md mx-auto leading-relaxed">
-                Every profile scored, every connection explained — using the full depth of your birth chart.
+                Every profile scored, every connection explained, using the full depth of your birth chart.
               </p>
             </motion.div>
           }
@@ -565,7 +565,7 @@ export default function HomePage() {
 
       {/* ── Features ─────────────────────────────────────────────────────── */}
       <section className="py-32 px-6 bg-stone-950 relative overflow-hidden">
-        {/* Interactive star field — same engine as the hero */}
+        {/* Interactive star field, same engine as the hero */}
         <StarField count={180} />
         <div className="max-w-5xl mx-auto relative z-10">
           <motion.div
@@ -626,7 +626,7 @@ export default function HomePage() {
               <span className="italic text-stone-500">Much more.</span>
             </h2>
             <p className="text-stone-500 text-base max-w-lg mx-auto mt-6 leading-relaxed">
-              Most horoscopes only scratch the surface. StarCross reads your full elemental makeup — the four building blocks that shape how you love, communicate, and connect.
+              Most horoscopes only scratch the surface. StarCross reads your full elemental makeup, the four building blocks that shape how you love, communicate, and connect.
             </p>
           </motion.div>
 
@@ -718,7 +718,7 @@ export default function HomePage() {
             <div className="w-10 h-px bg-white/15 mt-7 mb-7" />
             <p className="text-stone-400 text-base leading-relaxed max-w-xl">
               A birth chart captures where every planet sat at the exact moment you were born.
-              StarCross reads that chart — not just your Sun sign — and scores compatibility
+              StarCross reads that chart, not just your Sun sign, and scores compatibility
               across the dimensions that actually predict whether two people connect.
             </p>
           </motion.div>
@@ -729,17 +729,17 @@ export default function HomePage() {
               {
                 n: "01",
                 title: "The birth chart",
-                body: "At the moment of birth, every planet occupied a specific degree of the zodiac. The natal chart records those positions. It doesn't determine fate — it describes the psychological landscape you came in with: the drives, needs, and patterns that show up repeatedly through your life.",
+                body: "At the moment of birth, every planet occupied a specific degree of the zodiac. The natal chart records those positions. It doesn't determine fate, it describes the psychological landscape you came in with: the drives, needs, and patterns that show up repeatedly through your life.",
               },
               {
                 n: "02",
                 title: "Synastry",
-                body: "Synastry is what happens when you overlay two people's charts. The question isn't just what signs they are — it's which of their planets make contact, and at what angle. A Sun-Moon conjunction creates instant emotional recognition. Saturn conjunct Venus creates a bond that feels meaningful but tests both people.",
+                body: "Synastry is what happens when you overlay two people's charts. The question isn't just what signs they are, it's which of their planets make contact, and at what angle. A Sun-Moon conjunction creates instant emotional recognition. Saturn conjunct Venus creates a bond that feels meaningful but tests both people.",
               },
               {
                 n: "03",
                 title: "Venus and Mars",
-                body: "Venus describes what you find beautiful, how you express affection, and what you need to feel loved. Mars describes how you pursue things and what activates you. Compatibility lives in how these planets interact between two charts — not just in Sun-sign pairing. Most apps ignore Venus and Mars entirely.",
+                body: "Venus describes what you find beautiful, how you express affection, and what you need to feel loved. Mars describes how you pursue things and what activates you. Compatibility lives in how these planets interact between two charts, not just in Sun-sign pairing. Most apps ignore Venus and Mars entirely.",
               },
               {
                 n: "04",
@@ -776,7 +776,7 @@ export default function HomePage() {
               How StarCross reads the chart
             </h3>
             <p className="text-stone-400 text-sm leading-relaxed max-w-xl mb-12">
-              Sun-sign matching is where most apps stop. StarCross starts there and goes further —
+              Sun-sign matching is where most apps stop. StarCross starts there and goes further
               calculating a full natal chart and scoring compatibility across the dimensions
               that actually matter.
             </p>
@@ -790,7 +790,7 @@ export default function HomePage() {
                 {
                   n: "02",
                   title: "Elemental balance",
-                  desc: "How your fire, earth, air, and water compositions interact — same-element comfort vs. cross-element spark.",
+                  desc: "How your fire, earth, air, and water compositions interact, same-element comfort vs. cross-element spark.",
                 },
                 {
                   n: "03",

@@ -39,33 +39,33 @@ const EL: Record<string, { hex:string; name:string; quality:string }> = {
 const SIGN_DESC: Record<string, { sun:string; moon:string; rising:string; keyword:string }> = {
   Aries: {
     keyword: "Initiative",
-    sun: "Identity is built around action and the first move. There's a genuine need to be in motion toward something — not restlessness, but a fundamental belief that things happen through doing. The challenge is learning to finish what's started, and to value depth as much as speed.",
+    sun: "Identity is built around action and the first move. There's a genuine need to be in motion toward something, not restlessness, but a fundamental belief that things happen through doing. The challenge is learning to finish what's started, and to value depth as much as speed.",
     moon: "Emotions are processed through action rather than reflection. Sitting with a feeling too long is uncomfortable; moving through it is instinctive. In relationships this reads as directness and intensity, sometimes as impatience with partners who need more processing time.",
-    rising: "The first impression is immediate and forward-moving. People register energy before they register nuance. There's an openness here — you'll walk toward things most people approach cautiously — which comes across as confidence, and occasionally as a lack of filter.",
+    rising: "The first impression is immediate and forward-moving. People register energy before they register nuance. There's an openness here, you'll walk toward things most people approach cautiously, which comes across as confidence, and occasionally as a lack of filter.",
   },
   Taurus: {
     keyword: "Constancy",
-    sun: "Identity is grounded in what's built, kept, and returned to. Stability isn't a comfort measure — it's the condition under which everything else becomes possible. The patience here is genuine, not performed, and it earns a loyalty that most people only approximate.",
-    moon: "Needs physical comfort and emotional constancy. Sudden shifts in tone or plan register as threats, even small ones. In practice, this means showing love through presence and consistency, and needing the same in return — nothing elaborate, just reliable.",
+    sun: "Identity is grounded in what's built, kept, and returned to. Stability isn't a comfort measure, it's the condition under which everything else becomes possible. The patience here is genuine, not performed, and it earns a loyalty that most people only approximate.",
+    moon: "Needs physical comfort and emotional constancy. Sudden shifts in tone or plan register as threats, even small ones. In practice, this means showing love through presence and consistency, and needing the same in return, nothing elaborate, just reliable.",
     rising: "The first impression is unhurried and solid. People sense quickly that you won't be pushed into anything, which either reassures them or frustrates them depending on what they came for. The groundedness is real, not a pose.",
   },
   Gemini: {
     keyword: "Exchange",
-    sun: "Identity is built in language and thought. The self becomes legible through conversation — talking isn't just communication, it's how ideas form. Boredom is a genuine threat. The need isn't novelty for its own sake, but the constant movement of ideas and people.",
+    sun: "Identity is built in language and thought. The self becomes legible through conversation, talking isn't just communication, it's how ideas form. Boredom is a genuine threat. The need isn't novelty for its own sake, but the constant movement of ideas and people.",
     moon: "Emotions need to be articulated to be real. Talking through a feeling often matters more than resolving it. The emotional register is quick and variable, which can read as light, but the underlying need for intellectual intimacy is serious.",
-    rising: "The first impression is quick, curious, and socially easy. People feel immediately at ease, which is both a gift and a kind of camouflage — the surface fluency can obscure how much is actually going on.",
+    rising: "The first impression is quick, curious, and socially easy. People feel immediately at ease, which is both a gift and a kind of camouflage, the surface fluency can obscure how much is actually going on.",
   },
   Cancer: {
     keyword: "Belonging",
-    sun: "Home, lineage, and protective love are at the center. Feelings are deep and retained long after the moment that generated them. The identity is shaped by what's been survived, cared for, and built into a sense of place — wherever that place is.",
+    sun: "Home, lineage, and protective love are at the center. Feelings are deep and retained long after the moment that generated them. The identity is shaped by what's been survived, cared for, and built into a sense of place, wherever that place is.",
     moon: "This is the Moon's home sign. The emotional world here is rich, porous, and long-memoried. Safety is required before full opening, and once it's established, the care given is total. The challenge is the boundary between empathy and absorption.",
-    rising: "The first impression is warm and careful. People sense that closeness takes time and that once earned it's permanent. There's a quality of not-quite-available that draws people in — they want to be the one who gets through.",
+    rising: "The first impression is warm and careful. People sense that closeness takes time and that once earned it's permanent. There's a quality of not-quite-available that draws people in, they want to be the one who gets through.",
   },
   Leo: {
     keyword: "Generosity",
-    sun: "Needs to matter and to be seen doing so — not from vanity, but from a genuine understanding that contribution requires acknowledgment. When there's room to lead and be appreciated, the generosity this unlocks is real and sustaining.",
+    sun: "Needs to matter and to be seen doing so, not from vanity, but from a genuine understanding that contribution requires acknowledgment. When there's room to lead and be appreciated, the generosity this unlocks is real and sustaining.",
     moon: "Needs warmth and recognition, not in small doses. Is hurt more easily by indifference than by open conflict. In relationships, gives a great deal and watches closely for whether it's received. The vulnerability here is real, even if it rarely shows.",
-    rising: "Enters with presence. People notice before anything is said. The first impression is warm and a little theatrical — not performed exactly, just large. People tend to remember the encounter.",
+    rising: "Enters with presence. People notice before anything is said. The first impression is warm and a little theatrical, not performed exactly, just large. People tend to remember the encounter.",
   },
   Virgo: {
     keyword: "Discernment",
@@ -75,39 +75,39 @@ const SIGN_DESC: Record<string, { sun:string; moon:string; rising:string; keywor
   },
   Libra: {
     keyword: "Reciprocity",
-    sun: "Relationships are the medium through which identity is understood. This isn't dependency — it's a genuine recognition that the self exists in context, and that balance and fairness are prerequisites for everything else.",
+    sun: "Relationships are the medium through which identity is understood. This isn't dependency, it's a genuine recognition that the self exists in context, and that balance and fairness are prerequisites for everything else.",
     moon: "Needs harmony as a baseline condition. Conflict is genuinely uncomfortable rather than just unpleasant, which means it gets avoided past the point of usefulness. Needs a partner who can name tensions so there's no pressure to be the one to raise them.",
-    rising: "The first impression is graceful and easy to like. People feel comfortable very quickly, which is partly warmth and partly skill. The surface harmony is real enough — what takes longer to see is what's underneath it.",
+    rising: "The first impression is graceful and easy to like. People feel comfortable very quickly, which is partly warmth and partly skill. The surface harmony is real enough, what takes longer to see is what's underneath it.",
   },
   Scorpio: {
     keyword: "Depth",
-    sun: "Depth is the standard everything is held to. Surface-level connection has no appeal. The identity is shaped through transformation — what's been survived, what's been lost, what's been fundamentally changed by experience.",
-    moon: "Feels everything completely and forgets nothing. Trust is built in geological time and breaks in a second. The intimacy needed is real and total — not approximate, not managed. The challenge is learning that not everyone who asks for less is settling.",
-    rising: "The first impression is intense and self-contained. People sense there is more happening than what's visible, which is accurate. The magnetism is real and often unconscious — it's the impression of someone who has nothing to prove.",
+    sun: "Depth is the standard everything is held to. Surface-level connection has no appeal. The identity is shaped through transformation, what's been survived, what's been lost, what's been fundamentally changed by experience.",
+    moon: "Feels everything completely and forgets nothing. Trust is built in geological time and breaks in a second. The intimacy needed is real and total, not approximate, not managed. The challenge is learning that not everyone who asks for less is settling.",
+    rising: "The first impression is intense and self-contained. People sense there is more happening than what's visible, which is accurate. The magnetism is real and often unconscious, it's the impression of someone who has nothing to prove.",
   },
   Sagittarius: {
     keyword: "Meaning",
-    sun: "Identity is organised around freedom and the question of whether the life being lived means something. The need isn't for constant travel — it's for the sense that expansion is always possible, that the horizon hasn't closed.",
-    moon: "Needs lightness and space. Heavy, demanding emotional dynamics drain quickly. Processes feelings through movement, perspective, and the long view — which sometimes looks like avoidance and sometimes genuinely is.",
+    sun: "Identity is organised around freedom and the question of whether the life being lived means something. The need isn't for constant travel, it's for the sense that expansion is always possible, that the horizon hasn't closed.",
+    moon: "Needs lightness and space. Heavy, demanding emotional dynamics drain quickly. Processes feelings through movement, perspective, and the long view, which sometimes looks like avoidance and sometimes genuinely is.",
     rising: "The first impression is open, enthusiastic, and unjudging. People feel immediately received. The warmth is real; the depth takes longer to disclose, which surprises people who assumed from the openness that there was nothing more.",
   },
   Capricorn: {
     keyword: "Integrity",
-    sun: "The sense of self is earned through work and responsibility. It isn't approval that matters — it's the private knowledge that obligations have been met and that what's been built is real. Takes commitment seriously and keeps it.",
+    sun: "The sense of self is earned through work and responsibility. It isn't approval that matters, it's the private knowledge that obligations have been met and that what's been built is real. Takes commitment seriously and keeps it.",
     moon: "Self-contained and slow to show it. Was probably taught early that holding it together is the job. In a relationship, what's needed is a person who makes it feel safe not to. This can take a long time to arrive at.",
     rising: "The first impression is competent, steady, and a little guarded. People assume the person in front of them has their life sorted, which is often true and occasionally lonely. Trust is built through consistency, not charisma.",
   },
   Aquarius: {
     keyword: "Autonomy",
-    sun: "Identity is individual, sometimes as a matter of principle. Thinking independently isn't just a preference — it's a kind of ethical commitment. Cares about the collective while needing freedom from it. Intellectual liberty is non-negotiable.",
-    moon: "More comfortable with ideas than with feelings. Cares deeply but processes care through understanding rather than warmth. Space is not indifference — it's the condition for re-engagement. Needs a partner who can read the difference.",
+    sun: "Identity is individual, sometimes as a matter of principle. Thinking independently isn't just a preference, it's a kind of ethical commitment. Cares about the collective while needing freedom from it. Intellectual liberty is non-negotiable.",
+    moon: "More comfortable with ideas than with feelings. Cares deeply but processes care through understanding rather than warmth. Space is not indifference, it's the condition for re-engagement. Needs a partner who can read the difference.",
     rising: "The first impression is unusual and hard to place. People sense they're encountering someone operating from a different set of values, which is interesting or unsettling depending on their tolerance for surprise. The distinctiveness is not a performance.",
   },
   Pisces: {
     keyword: "Porousness",
     sun: "The boundary between self and world is naturally thin. The identity is fluid, which makes for extraordinary empathy and an occasional difficulty locating the self when the world is very loud. The gift and the challenge are the same thing.",
-    moon: "Needs softness, creativity, and transcendence — something that lifts the experience above the ordinary. Harsh or cynical environments deplete quickly. Needs a partner who understands sensitivity as a form of perception, not as a problem to manage.",
-    rising: "The first impression is gentle, dreamlike, and easy to confide in. People feel immediately that they can say things. The openness is real, though what's behind it takes longer to understand — there is more structure there than the surface suggests.",
+    moon: "Needs softness, creativity, and transcendence, something that lifts the experience above the ordinary. Harsh or cynical environments deplete quickly. Needs a partner who understands sensitivity as a form of perception, not as a problem to manage.",
+    rising: "The first impression is gentle, dreamlike, and easy to confide in. People feel immediately that they can say things. The openness is real, though what's behind it takes longer to understand, there is more structure there than the surface suggests.",
   },
 };
 
@@ -122,43 +122,43 @@ const ASPECT: Record<AspectKind, {
 }> = {
   conjunction: {
     color:"#6d28d9", label:"Conjunction", weight:2,
-    desc: "These energies merge into one — the most direct contact two charts can make. There is no negotiation here, no translation. The planets involved operate as one force, for better or worse. In synastry, a conjunction is immediately felt and impossible to ignore.",
+    desc: "These energies merge into one, the most direct contact two charts can make. There is no negotiation here, no translation. The planets involved operate as one force, for better or worse. In synastry, a conjunction is immediately felt and impossible to ignore.",
     feel: "Fused, intense, immediate",
-    sunDesc: "Two identities recognising each other at the root level. You'll often feel mirrored in the ways that matter most — your drives, your sense of self, what you're working toward. The risk is too much of the same thing with no balance provided.",
-    moonDesc: "Emotional instincts are nearly identical. You react to the same things, need the same things from a partner. The comfort this creates is genuine. The risk is an emotional echo chamber — reinforcing each other's patterns without expanding them.",
+    sunDesc: "Two identities recognising each other at the root level. You'll often feel mirrored in the ways that matter most, your drives, your sense of self, what you're working toward. The risk is too much of the same thing with no balance provided.",
+    moonDesc: "Emotional instincts are nearly identical. You react to the same things, need the same things from a partner. The comfort this creates is genuine. The risk is an emotional echo chamber, reinforcing each other's patterns without expanding them.",
     risingDesc: "The way you each enter a room, handle first impressions, and present to the world is deeply aligned. You'll move through social contexts in a similar register, which creates cohesion but can also mean neither of you compensates for the other's blind spots.",
   },
   trine: {
     color:"#15803d", label:"Trine", weight:1.5,
-    desc: "Planets in trine share the same element, which means they operate from the same fundamental frequency. In synastry, this is the aspect of ease — not absence of complexity, but genuine natural alignment that doesn't require effort to sustain.",
+    desc: "Planets in trine share the same element, which means they operate from the same fundamental frequency. In synastry, this is the aspect of ease, not absence of complexity, but genuine natural alignment that doesn't require effort to sustain.",
     feel: "Natural, accepting, quietly sustaining",
-    sunDesc: "Your core identities share an elemental foundation. There's a basic understanding of each other's drives and values that doesn't need explaining. The ease is real — the risk is taking it for granted and letting the relationship coast on affinity rather than deepening it.",
+    sunDesc: "Your core identities share an elemental foundation. There's a basic understanding of each other's drives and values that doesn't need explaining. The ease is real, the risk is taking it for granted and letting the relationship coast on affinity rather than deepening it.",
     moonDesc: "Your emotional languages are the same. The Moon trine is one of the quietest gifts in synastry. You can be together without performance, without translation, without effort. Long silences that would feel uncomfortable with others are simply comfortable here.",
-    risingDesc: "The way you each navigate the world aligns naturally. Social contexts, first impressions, how you engage with strangers — these move in the same current. This creates an easy public-facing cohesion that others often notice before you do.",
+    risingDesc: "The way you each navigate the world aligns naturally. Social contexts, first impressions, how you engage with strangers, these move in the same current. This creates an easy public-facing cohesion that others often notice before you do.",
   },
   sextile: {
     color:"#0369a1", dash:"6 3", label:"Sextile", weight:1,
-    desc: "Planets 60 degrees apart run in compatible but distinct directions. In synastry, the sextile shows where two people's energies support each other without requiring them to be the same. It's a quiet aspect — it rarely announces itself, but it provides real texture to a relationship over time.",
+    desc: "Planets 60 degrees apart run in compatible but distinct directions. In synastry, the sextile shows where two people's energies support each other without requiring them to be the same. It's a quiet aspect, it rarely announces itself, but it provides real texture to a relationship over time.",
     feel: "Supportive, complementary, low friction",
-    sunDesc: "Your identities are compatible without being identical. You'll push each other forward without collision. This aspect tends to build over time rather than arriving fully-formed — the respect and support you find in each other will deepen as you grow.",
+    sunDesc: "Your identities are compatible without being identical. You'll push each other forward without collision. This aspect tends to build over time rather than arriving fully-formed, the respect and support you find in each other will deepen as you grow.",
     moonDesc: "Your emotional styles are compatible without being mirrors. You'll find each other's ways of handling feelings familiar enough to be comfortable, different enough to be illuminating. This is a steady, sustaining Moon contact.",
-    risingDesc: "How you each present to the world is complementary. You'll balance each other socially — one leading where the other holds back, without this feeling like a division of labour so much as a natural fit.",
+    risingDesc: "How you each present to the world is complementary. You'll balance each other socially, one leading where the other holds back, without this feeling like a division of labour so much as a natural fit.",
   },
   square: {
     color:"#b45309", dash:"3 4", label:"Square", weight:1,
-    desc: "Squares generate friction that demands resolution. In synastry, this is the aspect most associated with memorable, formative relationships — not because they're easy, but because they ask both people to grow. The most significant connections in a life often have squares.",
+    desc: "Squares generate friction that demands resolution. In synastry, this is the aspect most associated with memorable, formative relationships, not because they're easy, but because they ask both people to grow. The most significant connections in a life often have squares.",
     feel: "Activating, demanding, genuinely growth-oriented",
-    sunDesc: "Your identities push against each other in ways that require real negotiation. Your fundamental natures aren't incompatible — they're in creative tension. This relationship won't let either of you be passive about who you are or what you need.",
-    moonDesc: "Your emotional rhythms are out of phase. One may need closeness when the other needs distance, words when the other needs silence. This is the relationship's most persistent negotiation — not fatal, but requiring the development of a shared language that neither of you carries naturally.",
+    sunDesc: "Your identities push against each other in ways that require real negotiation. Your fundamental natures aren't incompatible, they're in creative tension. This relationship won't let either of you be passive about who you are or what you need.",
+    moonDesc: "Your emotional rhythms are out of phase. One may need closeness when the other needs distance, words when the other needs silence. This is the relationship's most persistent negotiation, not fatal, but requiring the development of a shared language that neither of you carries naturally.",
     risingDesc: "The way you each navigate the world creates friction. Your instinctive approaches to situations are different enough that you'll sometimes feel like you're misreading each other's social moves. This resolves into complementarity with time, but not without work.",
   },
   opposition: {
     color:"#be123c", dash:"2 4", label:"Opposition", weight:1,
-    desc: "Oppositions place two planets at maximum distance. In synastry, this is the aspect of attraction to your complement — the thing you hold differently, or don't hold at all. It creates genuine magnetism and genuine challenge: you are drawn to precisely what you find most foreign.",
+    desc: "Oppositions place two planets at maximum distance. In synastry, this is the aspect of attraction to your complement, the thing you hold differently, or don't hold at all. It creates genuine magnetism and genuine challenge: you are drawn to precisely what you find most foreign.",
     feel: "Magnetic, polarising, profoundly complementary",
-    sunDesc: "You are drawn to something in their fundamental identity that you carry differently. This is the classic attraction-to-your-opposite dynamic — not superficial, but structural. At its best, you'll provide what the other needs. At its hardest, you'll seem to want irreconcilable things from the same relationship.",
+    sunDesc: "You are drawn to something in their fundamental identity that you carry differently. This is the classic attraction-to-your-opposite dynamic, not superficial, but structural. At its best, you'll provide what the other needs. At its hardest, you'll seem to want irreconcilable things from the same relationship.",
     moonDesc: "You process emotion from different ends of the same axis. Your emotional defaults are in many ways each other's inverse. This creates a powerful pull and a persistent negotiation: you'll feel the other person emotionally in a way that's compelling and sometimes baffling.",
-    risingDesc: "The way you enter the world is opposite in orientation. This creates a fascinating initial impression on both sides — you present what the other doesn't, which is magnetic in early contact. In practice, it requires learning to read each other's social register accurately.",
+    risingDesc: "The way you enter the world is opposite in orientation. This creates a fascinating initial impression on both sides, you present what the other doesn't, which is magnetic in early contact. In practice, it requires learning to read each other's social register accurately.",
   },
   neutral: {
     color:"#9ca3af", dash:"2 6", label:"Neutral", weight:0.5,
@@ -185,26 +185,26 @@ function aspectKind(a:string, b:string): AspectKind {
 // ─── Relationship analysis engine ─────────────────────────────────────────────
 
 const BOTH_EL: Record<string, { heading:string; body:string }> = {
-  fire:  { heading:"You both lead with fire", body:"Shared fire means the relationship will have real energy — initiative, momentum, directness. You'll understand each other's urgency and the need for forward motion. The risk isn't too little energy; it's too much of the same kind. Without an earth or water counterbalance, things can flare and burn rather than build." },
-  earth: { heading:"You both carry earth energy", body:"Patience, practicality, and reliability run through both charts. The relationship will be stable and self-sustaining — built on what you do rather than what you declare. The risk is calcification: mutual comfort shading into mutual inertia when neither person pushes the other toward something new." },
-  air:   { heading:"You're both air-dominant", body:"Conversation and ideas are your shared native language. Expect genuine intellectual connection, hours of talking, a relationship that operates largely in the realm of thought. The risk is living too much in your heads — air-heavy connections sometimes avoid the emotional and physical depths that give relationships texture and durability." },
-  water: { heading:"You both move through water", body:"Deep feeling, intuitive connection, and emotional memory characterise both charts. You'll understand each other's inner worlds without explanation. The risk is amplification without grounding — two water charts together can reinforce each other's sensitivities without providing the structure needed to move through them." },
+  fire:  { heading:"You both lead with fire", body:"Shared fire means the relationship will have real energy, initiative, momentum, directness. You'll understand each other's urgency and the need for forward motion. The risk isn't too little energy; it's too much of the same kind. Without an earth or water counterbalance, things can flare and burn rather than build." },
+  earth: { heading:"You both carry earth energy", body:"Patience, practicality, and reliability run through both charts. The relationship will be stable and self-sustaining, built on what you do rather than what you declare. The risk is calcification: mutual comfort shading into mutual inertia when neither person pushes the other toward something new." },
+  air:   { heading:"You're both air-dominant", body:"Conversation and ideas are your shared native language. Expect genuine intellectual connection, hours of talking, a relationship that operates largely in the realm of thought. The risk is living too much in your heads, air-heavy connections sometimes avoid the emotional and physical depths that give relationships texture and durability." },
+  water: { heading:"You both move through water", body:"Deep feeling, intuitive connection, and emotional memory characterise both charts. You'll understand each other's inner worlds without explanation. The risk is amplification without grounding, two water charts together can reinforce each other's sensitivities without providing the structure needed to move through them." },
 };
 const NEITHER_EL: Record<string, { heading:string; body:string }> = {
-  fire:  { heading:"Neither brings natural fire", body:"Motivation, directness, and spontaneity don't come instinctively to either chart. This doesn't mean the relationship lacks energy — but initiating action, taking risks, and recovering quickly from setbacks may require more conscious effort than feels natural. You may both find yourselves waiting for the other to go first." },
-  earth: { heading:"Neither brings much earth", body:"Stability, practicality, and patience with the material world are underrepresented in both charts. The relationship may feel alive and emotionally rich, but building something durable — routines, shared finances, long-term plans — will take intention. Without it, there's a risk of something genuinely good remaining unbuilt." },
-  air:   { heading:"Neither brings strong air", body:"Verbal detachment, intellectual lightness, and easy surface-level exchange aren't natural to either chart. Your conversations may go deep immediately, which is a gift — but breadth and levity in communication require more work. Processing disagreements in real time, without emotional charge, may be harder than you'd expect." },
-  water: { heading:"Neither defaults to water", body:"Neither chart leads with emotional depth, intuitive connection, or feelings-first processing. The relationship will likely be practical and clear-headed, but emotional intimacy won't cultivate itself — it needs deliberate attention. Long pauses in emotional closeness may pass without either of you naming them, which over time creates distance that feels inexplicable." },
+  fire:  { heading:"Neither brings natural fire", body:"Motivation, directness, and spontaneity don't come instinctively to either chart. This doesn't mean the relationship lacks energy, but initiating action, taking risks, and recovering quickly from setbacks may require more conscious effort than feels natural. You may both find yourselves waiting for the other to go first." },
+  earth: { heading:"Neither brings much earth", body:"Stability, practicality, and patience with the material world are underrepresented in both charts. The relationship may feel alive and emotionally rich, but building something durable, routines, shared finances, long-term plans, will take intention. Without it, there's a risk of something genuinely good remaining unbuilt." },
+  air:   { heading:"Neither brings strong air", body:"Verbal detachment, intellectual lightness, and easy surface-level exchange aren't natural to either chart. Your conversations may go deep immediately, which is a gift, but breadth and levity in communication require more work. Processing disagreements in real time, without emotional charge, may be harder than you'd expect." },
+  water: { heading:"Neither defaults to water", body:"Neither chart leads with emotional depth, intuitive connection, or feelings-first processing. The relationship will likely be practical and clear-headed, but emotional intimacy won't cultivate itself, it needs deliberate attention. Long pauses in emotional closeness may pass without either of you naming them, which over time creates distance that feels inexplicable." },
 };
 const BOTH_MOD: Record<string, { heading:string; body:string }> = {
-  Cardinal: { heading:"Both of you initiate", body:"Cardinal energy runs through both charts — you're both starters, initiators, people who begin things. Expect a relationship with real momentum and genuine mutual drive. The challenge is follow-through: Cardinal signs often move to the next thing before the current one is finished. Neither of you will naturally be the one to sustain and consolidate." },
-  Fixed:    { heading:"You're both fixed in nature", body:"Fixed energy characterises both charts — persistence, commitment, and a resistance to being redirected. The relationship will be built to last, but not quickly. Trust is earned slowly and held onto tightly. The challenge is stubbornness: when you disagree, neither of you will naturally be the one to yield." },
-  Mutable:  { heading:"You're both highly adaptable", body:"Mutable energy fills both charts — flexibility, adaptability, and a preference for movement over structure. You'll move with each other easily and handle change well together. The challenge is grounding: without a Fixed or Cardinal anchor, the relationship can remain perpetually in motion, changing form before it settles into anything." },
+  Cardinal: { heading:"Both of you initiate", body:"Cardinal energy runs through both charts, you're both starters, initiators, people who begin things. Expect a relationship with real momentum and genuine mutual drive. The challenge is follow-through: Cardinal signs often move to the next thing before the current one is finished. Neither of you will naturally be the one to sustain and consolidate." },
+  Fixed:    { heading:"You're both fixed in nature", body:"Fixed energy characterises both charts, persistence, commitment, and a resistance to being redirected. The relationship will be built to last, but not quickly. Trust is earned slowly and held onto tightly. The challenge is stubbornness: when you disagree, neither of you will naturally be the one to yield." },
+  Mutable:  { heading:"You're both highly adaptable", body:"Mutable energy fills both charts, flexibility, adaptability, and a preference for movement over structure. You'll move with each other easily and handle change well together. The challenge is grounding: without a Fixed or Cardinal anchor, the relationship can remain perpetually in motion, changing form before it settles into anything." },
 };
 const NEITHER_MOD: Record<string, { heading:string; body:string }> = {
-  Cardinal: { heading:"Neither tends to initiate", body:"The impulse to begin new things, set direction, and push forward isn't prominent in either chart. The relationship will be warm and deep, but choosing to act — starting new phases, addressing things directly, making decisions — may require more activation energy than feels natural for either of you." },
-  Fixed:    { heading:"Neither holds firm naturally", body:"Fixed determination — the capacity to stay with something past the point where it stops being exciting — isn't native to either chart. The relationship will move well, but building something that truly lasts may require consciously developing the kind of commitment and follow-through that neither of you defaults to." },
-  Mutable:  { heading:"Neither is particularly adaptable", body:"Flexibility and adaptability aren't the dominant notes in either chart. This means the relationship will have a strong, consistent character — but may struggle with change, disruption, and the unexpected. When life requires pivoting, you may both find yourselves more resistant than the situation calls for." },
+  Cardinal: { heading:"Neither tends to initiate", body:"The impulse to begin new things, set direction, and push forward isn't prominent in either chart. The relationship will be warm and deep, but choosing to act, starting new phases, addressing things directly, making decisions, may require more activation energy than feels natural for either of you." },
+  Fixed:    { heading:"Neither holds firm naturally", body:"Fixed determination, the capacity to stay with something past the point where it stops being exciting, isn't native to either chart. The relationship will move well, but building something that truly lasts may require consciously developing the kind of commitment and follow-through that neither of you defaults to." },
+  Mutable:  { heading:"Neither is particularly adaptable", body:"Flexibility and adaptability aren't the dominant notes in either chart. This means the relationship will have a strong, consistent character, but may struggle with change, disruption, and the unexpected. When life requires pivoting, you may both find yourselves more resistant than the situation calls for." },
 };
 
 function buildRelationshipAnalysis(self: ChartData, other: ChartData) {
@@ -241,24 +241,24 @@ function buildRelationshipAnalysis(self: ChartData, other: ChartData) {
   // Sun-Sun paragraph
   const ss = self.sunSign, os = other.sunSign;
   const sunMap: Partial<Record<AspectKind,string>> = {
-    conjunction: `Your ${ss} Sun meeting their ${os} Sun directly is one of the cleaner forms of recognition in synastry. You see each other quickly — identity-level resonance that creates immediate comfort. The risk is a mirror that only validates: same-sign Sun contacts can reinforce who you already are rather than calling you toward who you're becoming. Staying distinct within the closeness requires some effort.`,
-    trine: `Your ${ss} Sun and their ${os} Sun are in trine — same element, different expression. Your core identities move in the same current without being identical. There's a basic understanding of each other's drives that doesn't need to be explained. This is a gift, but gifts get taken for granted: the ease of this contact can make the relationship comfortable before it becomes deep.`,
-    sextile: `Your ${ss} Sun and their ${os} Sun are in sextile. Your identities are compatible without being mirrors — you'll push each other forward without friction. This is an aspect that builds quietly over time rather than arriving complete. The respect you develop for each other will increase as you grow together and see how the differences complement.`,
-    square: `Your ${ss} Sun squares their ${os} Sun — your identities are in fundamental creative tension. This doesn't mean opposition so much as dynamic friction: you each push on something real in the other. The most memorable relationships often carry a Sun-Sun square. It won't let you be passive about who you are, and it will ask both of you to grow past comfortable positions.`,
-    opposition: `Your ${ss} Sun sits opposite their ${os} Sun — you are drawn to something in their identity that you hold differently or don't hold at all. This is the original attraction pattern. Each person represents something the other finds compelling and partly foreign. At its best, this polarity creates real balance. The challenge is that what draws you together also describes where you most fundamentally differ.`,
+    conjunction: `Your ${ss} Sun meeting their ${os} Sun directly is one of the cleaner forms of recognition in synastry. You see each other quickly, identity-level resonance that creates immediate comfort. The risk is a mirror that only validates: same-sign Sun contacts can reinforce who you already are rather than calling you toward who you're becoming. Staying distinct within the closeness requires some effort.`,
+    trine: `Your ${ss} Sun and their ${os} Sun are in trine, same element, different expression. Your core identities move in the same current without being identical. There's a basic understanding of each other's drives that doesn't need to be explained. This is a gift, but gifts get taken for granted: the ease of this contact can make the relationship comfortable before it becomes deep.`,
+    sextile: `Your ${ss} Sun and their ${os} Sun are in sextile. Your identities are compatible without being mirrors, you'll push each other forward without friction. This is an aspect that builds quietly over time rather than arriving complete. The respect you develop for each other will increase as you grow together and see how the differences complement.`,
+    square: `Your ${ss} Sun squares their ${os} Sun, your identities are in fundamental creative tension. This doesn't mean opposition so much as dynamic friction: you each push on something real in the other. The most memorable relationships often carry a Sun-Sun square. It won't let you be passive about who you are, and it will ask both of you to grow past comfortable positions.`,
+    opposition: `Your ${ss} Sun sits opposite their ${os} Sun, you are drawn to something in their identity that you hold differently or don't hold at all. This is the original attraction pattern. Each person represents something the other finds compelling and partly foreign. At its best, this polarity creates real balance. The challenge is that what draws you together also describes where you most fundamentally differ.`,
   };
-  trajectory.push(sunMap[sunA] ?? `Your ${ss} Sun and their ${os} Sun meet without a strong aspect — the relationship's identity-level tone will be set less by Sun contact and more by how Moon and Rising connect.`);
+  trajectory.push(sunMap[sunA] ?? `Your ${ss} Sun and their ${os} Sun meet without a strong aspect, the relationship's identity-level tone will be set less by Sun contact and more by how Moon and Rising connect.`);
 
   // Moon-Moon paragraph
   const sm = self.moonSign, om = other.moonSign;
   const moonMap: Partial<Record<AspectKind,string>> = {
-    conjunction: `Emotionally, your ${sm} Moon and their ${om} Moon are in the same sign — your instinctive responses, what you need when things are hard, and how you recover are nearly identical. The comfort this creates is real and deep. The challenge is the echo chamber effect: two people with the same Moon can amplify each other's emotional patterns rather than expanding them. Growth may require reaching outside what feels naturally familiar.`,
-    trine: `Your ${sm} Moon and their ${om} Moon are in trine. Emotionally, you speak the same language without having learned it together. This is one of the quieter gifts in synastry — not dramatic, but deeply sustaining. You can be in the same space without performance, without explanation, without effort. The long silences that would feel awkward with others simply feel right here.`,
-    sextile: `Your ${sm} Moon and their ${om} Moon are in sextile — emotionally compatible without being identical. Your emotional styles will feel familiar enough to be comfortable and different enough to be interesting. This is a steady, sustaining Moon contact that tends to deepen with time rather than peaking early.`,
-    square: `Your ${sm} Moon and their ${om} Moon are in square, which is where the relationship does most of its real work. You have different emotional rhythms: different defaults for how much closeness feels right, how much space, how long to sit with something before naming it. This isn't incompatibility — it's the relationship's most persistent negotiation, and how you handle it will determine more than almost anything else.`,
-    opposition: `Your ${sm} Moon and their ${om} Moon oppose each other — you process emotion from different ends of the same axis. This is both the source of genuine fascination and the relationship's most demanding dynamic. You'll find each other's emotional styles compelling and occasionally baffling. At its best, each of you provides what the other's emotional nature lacks. At its most difficult, you'll feel like you're feeling the same things in completely different languages.`,
+    conjunction: `Emotionally, your ${sm} Moon and their ${om} Moon are in the same sign, your instinctive responses, what you need when things are hard, and how you recover are nearly identical. The comfort this creates is real and deep. The challenge is the echo chamber effect: two people with the same Moon can amplify each other's emotional patterns rather than expanding them. Growth may require reaching outside what feels naturally familiar.`,
+    trine: `Your ${sm} Moon and their ${om} Moon are in trine. Emotionally, you speak the same language without having learned it together. This is one of the quieter gifts in synastry, not dramatic, but deeply sustaining. You can be in the same space without performance, without explanation, without effort. The long silences that would feel awkward with others simply feel right here.`,
+    sextile: `Your ${sm} Moon and their ${om} Moon are in sextile, emotionally compatible without being identical. Your emotional styles will feel familiar enough to be comfortable and different enough to be interesting. This is a steady, sustaining Moon contact that tends to deepen with time rather than peaking early.`,
+    square: `Your ${sm} Moon and their ${om} Moon are in square, which is where the relationship does most of its real work. You have different emotional rhythms: different defaults for how much closeness feels right, how much space, how long to sit with something before naming it. This isn't incompatibility, it's the relationship's most persistent negotiation, and how you handle it will determine more than almost anything else.`,
+    opposition: `Your ${sm} Moon and their ${om} Moon oppose each other, you process emotion from different ends of the same axis. This is both the source of genuine fascination and the relationship's most demanding dynamic. You'll find each other's emotional styles compelling and occasionally baffling. At its best, each of you provides what the other's emotional nature lacks. At its most difficult, you'll feel like you're feeling the same things in completely different languages.`,
   };
-  trajectory.push(moonMap[moonA] ?? `Your ${sm} Moon and their ${om} Moon meet without a strong aspect. Emotional compatibility will be built more through shared experience than chart-level resonance — a slower build, but no less real.`);
+  trajectory.push(moonMap[moonA] ?? `Your ${sm} Moon and their ${om} Moon meet without a strong aspect. Emotional compatibility will be built more through shared experience than chart-level resonance, a slower build, but no less real.`);
 
   // Synthesis paragraph
   const aspects = [sunA, moonA, risingA];
@@ -269,15 +269,15 @@ function buildRelationshipAnalysis(self: ChartData, other: ChartData) {
 
   let synthesis = "";
   if (trineCount >= 2) {
-    synthesis = "Across the primary contacts, this chart leans toward natural ease. The relationship will feel sustaining and comfortable from early on. The thing to watch is whether ease becomes complacency — charts this harmonious sometimes lack the friction that drives individual growth. The relationship is a gift; the work is staying curious within it.";
+    synthesis = "Across the primary contacts, this chart leans toward natural ease. The relationship will feel sustaining and comfortable from early on. The thing to watch is whether ease becomes complacency, charts this harmonious sometimes lack the friction that drives individual growth. The relationship is a gift; the work is staying curious within it.";
   } else if (squareCount >= 2) {
-    synthesis = "Multiple squares across the primary contacts means this is a relationship that will ask a great deal of both people. Not ask in a punishing way, but in the way a serious thing asks — it won't let you coast. The challenge and the depth are inseparable here. What's built through the friction will be real in a way that easier connections sometimes aren't.";
+    synthesis = "Multiple squares across the primary contacts means this is a relationship that will ask a great deal of both people. Not ask in a punishing way, but in the way a serious thing asks, it won't let you coast. The challenge and the depth are inseparable here. What's built through the friction will be real in a way that easier connections sometimes aren't.";
   } else if (conjCount >= 2) {
-    synthesis = "Strong conjunction energy across the chart means you'll feel immediately and persistently recognised by each other. There's a directness to this connection that can feel rare. The work is maintaining distinctness — in relationships with this much merger, it's possible to lose track of where one person ends and the other begins, which ultimately serves neither.";
+    synthesis = "Strong conjunction energy across the chart means you'll feel immediately and persistently recognised by each other. There's a directness to this connection that can feel rare. The work is maintaining distinctness, in relationships with this much merger, it's possible to lose track of where one person ends and the other begins, which ultimately serves neither.";
   } else if (oppCount >= 2) {
-    synthesis = "Opposition contacts dominate the primary aspects, which means this is a relationship shaped by polarity. You each represent something the other needs, and the attraction runs deep for exactly that reason. The challenge is learning to hold your own position while genuinely making room for theirs — the magnetism is real, but so is the distance it can create when either person feels unseen.";
+    synthesis = "Opposition contacts dominate the primary aspects, which means this is a relationship shaped by polarity. You each represent something the other needs, and the attraction runs deep for exactly that reason. The challenge is learning to hold your own position while genuinely making room for theirs, the magnetism is real, but so is the distance it can create when either person feels unseen.";
   } else {
-    synthesis = "The primary aspects here are mixed — some ease, some friction, some polarity. That balance tends to create relationships that are interesting and durable: not so harmonious that nothing is asked, not so difficult that the cost outweighs the connection. The texture will shift depending on which layer of the relationship is most active at a given time.";
+    synthesis = "The primary aspects here are mixed, some ease, some friction, some polarity. That balance tends to create relationships that are interesting and durable: not so harmonious that nothing is asked, not so difficult that the cost outweighs the connection. The texture will shift depending on which layer of the relationship is most active at a given time.";
   }
   trajectory.push(synthesis);
 
@@ -374,7 +374,7 @@ function buildGraph(selfName:string, otherName:string, self:ChartData, other:Cha
     const ctrl=CROSS_CTRL[`${a}-${b}`]??{cx:320,cy:192};
     const na=nm[`s-${a.toLowerCase()}`], nb=nm[`o-${b.toLowerCase()}`];
     if (!na||!nb) return;
-    edges.push({ id:`cross-${a}-${b}`, fromX:na.x, fromY:na.y, toX:nb.x, toY:nb.y, ...ctrl, kind:k, isPrimary:false, planetLabel:`${a} — ${b}`, selfPlanet:a, otherPlanet:b, selfSign:ss[a], otherSign:os[b], fromId:na.id, toId:nb.id });
+    edges.push({ id:`cross-${a}-${b}`, fromX:na.x, fromY:na.y, toX:nb.x, toY:nb.y, ...ctrl, kind:k, isPrimary:false, planetLabel:`${a}, ${b}`, selfPlanet:a, otherPlanet:b, selfSign:ss[a], otherSign:os[b], fromId:na.id, toId:nb.id });
   });
 
   return { nodes, edges, nm };

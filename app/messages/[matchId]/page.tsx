@@ -218,7 +218,7 @@ export default function MessagesChatPage() {
 
   return (
     <>
-      {/* Local star canvas — lives inside this page's stacking context */}
+      {/* Local star canvas, lives inside this page's stacking context */}
       <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }}>
         <StarField count={220} />
       </div>
@@ -226,7 +226,7 @@ export default function MessagesChatPage() {
       <NavBar />
 
       <div className="fixed inset-x-0 bottom-0 flex overflow-hidden" style={{ top: 64 }}>
-          {/* Sidebar — no bg panel, stars visible through */}
+          {/* Sidebar, no bg panel, stars visible through */}
           <div className="hidden md:flex w-[340px] lg:w-[380px] shrink-0 border-r border-white/8 flex-col overflow-hidden">
             <ConversationSidebar activeMatchId={matchId} />
           </div>
@@ -234,7 +234,7 @@ export default function MessagesChatPage() {
           {/* Chat panel */}
           <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
 
-            {/* Chat header — click name/avatar to open profile */}
+            {/* Chat header, click name/avatar to open profile */}
             <div className="shrink-0 bg-stone-950/55 backdrop-blur-md border-b border-white/8 px-4 py-3">
               <div className="max-w-3xl mx-auto flex items-center gap-3">
                 <Link
@@ -326,7 +326,7 @@ export default function MessagesChatPage() {
               </div>
             )}
 
-            {/* Messages scroll area — transparent so star field shows through */}
+            {/* Messages scroll area, transparent so star field shows through */}
             <div className="flex-1 overflow-y-auto">
               <div className="max-w-3xl mx-auto px-4 py-6 space-y-5">
                 {messages.length === 0 && (
@@ -376,7 +376,7 @@ export default function MessagesChatPage() {
                               isFirst && !isMine ? "mt-3" : ""
                             )}
                           >
-                            {/* Their avatar — only last in group */}
+                            {/* Their avatar, only last in group */}
                             {!isMine && (
                               <div className="w-7 h-7 shrink-0 mb-0.5">
                                 {isLast && (

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ShootingStarLogo } from "@/components/ui/shooting-star-logo";
 
 export const metadata = {
-  title: "Terms of Service — StarCross",
+  title: "Terms of Service | StarCross",
   description: "The terms and conditions governing your use of StarCross.",
 };
 

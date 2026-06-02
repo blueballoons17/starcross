@@ -17,7 +17,7 @@ const HEADLINES: Record<UpgradeFeature, string> = {
   swipes: "You've used your 3 daily swipes",
   messaging: "Messaging is StarCross+",
   synastry: "Full synastry charts are StarCross+",
-  likes: "See who liked you — StarCross+",
+  likes: "See who liked you: StarCross+",
 };
 
 const SUBLINES: Record<UpgradeFeature, string> = {

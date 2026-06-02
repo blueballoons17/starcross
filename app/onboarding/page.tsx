@@ -337,7 +337,7 @@ function ChartCarousel({
 
       {!form.birthTime && (
         <p className="text-xs text-stone-400 text-center leading-relaxed bg-amber-50 border border-amber-100 rounded-xl px-4 py-2.5">
-          Rising sign is approximate — add your birth time for a more accurate reading.
+          Rising sign is approximate, add your birth time for a more accurate reading.
         </p>
       )}
     </div>,
@@ -533,10 +533,10 @@ function PhotoStep({
       const res = await fetch("/api/upload", { method: "POST", body: fd });
       const data = await res.json();
       if (data.url) return data.url as string;
-      setUploadError(data.error ?? "Upload failed — please try again.");
+      setUploadError(data.error ?? "Upload failed. please try again.");
       return null;
     } catch {
-      setUploadError("Network error — please try again.");
+      setUploadError("Network error. please try again.");
       return null;
     }
   }
@@ -569,7 +569,7 @@ function PhotoStep({
         <div>
           <p className="text-sm font-medium text-stone-700">Profile photo</p>
           <p className="text-xs text-stone-400 mt-0.5">
-            This is the first thing people see — make it count ✨
+            This is the first thing people see, make it count ✨
           </p>
         </div>
 
@@ -634,7 +634,7 @@ function PhotoStep({
       <div className="space-y-3">
         <div>
           <p className="text-sm font-medium text-stone-700">Gallery photos <span className="text-stone-400 font-normal">(optional)</span></p>
-          <p className="text-xs text-stone-400 mt-0.5">Show more of your world — up to {MAX_GALLERY} additional photos</p>
+          <p className="text-xs text-stone-400 mt-0.5">Show more of your world, up to {MAX_GALLERY} additional photos</p>
         </div>
 
         <div className="grid grid-cols-3 gap-2">
@@ -734,7 +734,7 @@ export default function OnboardingPage() {
       .then((data) => {
         if (data.profile) {
           const p = data.profile;
-          // birthDate comes back as ISO string — strip to YYYY-MM-DD for the date input
+          // birthDate comes back as ISO string, strip to YYYY-MM-DD for the date input
           const birthDateStr = p.birthDate
             ? new Date(p.birthDate).toISOString().split("T")[0]
             : "";
@@ -760,7 +760,7 @@ export default function OnboardingPage() {
           });
         }
       })
-      .catch(() => {/* no profile yet — start fresh */})
+      .catch(() => {/* no profile yet, start fresh */})
       .finally(() => setLoadingProfile(false));
   }, [status]);
 
@@ -891,10 +891,10 @@ export default function OnboardingPage() {
           <p className="text-stone-500 text-sm">{STEPS[step]}</p>
         </div>
 
-        {/* Steps — wrapped in animated cards */}
+        {/* Steps, wrapped in animated cards */}
         <AnimatePresence mode="wait">
 
-          {/* Step 0 — About You */}
+          {/* Step 0, About You */}
           {step === 0 && (
             <motion.div
               key="step0"
@@ -919,7 +919,7 @@ export default function OnboardingPage() {
                 <div className="space-y-1.5">
                   <Label htmlFor="birthTime">
                     Time of Birth{" "}
-                    <span className="text-stone-400 font-normal">(optional — improves rising sign accuracy)</span>
+                    <span className="text-stone-400 font-normal">(optional, improves rising sign accuracy)</span>
                   </Label>
                   <Input id="birthTime" type="time" value={form.birthTime} onChange={(e) => update("birthTime", e.target.value)} className="h-11" />
                 </div>
@@ -946,7 +946,7 @@ export default function OnboardingPage() {
             </motion.div>
           )}
 
-          {/* Step 1 — Preferences */}
+          {/* Step 1, Preferences */}
           {step === 1 && (
             <motion.div
               key="step1"
@@ -1030,7 +1030,7 @@ export default function OnboardingPage() {
             </motion.div>
           )}
 
-          {/* Step 2 — Personality (interests + questions) */}
+          {/* Step 2, Personality (interests + questions) */}
           {step === 2 && (
             <motion.div
               key="step2"
@@ -1077,7 +1077,7 @@ export default function OnboardingPage() {
                 <div className="space-y-6">
                   <div>
                     <Label>A few fun questions</Label>
-                    <p className="text-xs text-stone-400 mt-0.5">All optional — but your matches will love seeing these</p>
+                    <p className="text-xs text-stone-400 mt-0.5">All optional, but your matches will love seeing these</p>
                   </div>
 
                   {PERSONALITY_QUESTIONS.map((q) => (
@@ -1122,7 +1122,7 @@ export default function OnboardingPage() {
             </motion.div>
           )}
 
-          {/* Step 3 — Photos */}
+          {/* Step 3, Photos */}
           {step === 3 && (
             <motion.div
               key="step3"
@@ -1149,7 +1149,7 @@ export default function OnboardingPage() {
             </motion.div>
           )}
 
-          {/* Step 4 — Your Chart */}
+          {/* Step 4, Your Chart */}
           {step === 4 && astrologyPreview && (
             <motion.div
               key="step4"

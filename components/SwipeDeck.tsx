@@ -303,7 +303,7 @@ function ProfileCard({
       className="absolute inset-0 cursor-grab active:cursor-grabbing touch-none"
     >
       <div className="relative h-full rounded-3xl overflow-hidden bg-white border border-stone-100 shadow-xl shadow-stone-200/80 select-none flex flex-col">
-        {/* Avatar area — fixed height */}
+        {/* Avatar area, fixed height */}
         <div className={cn(
           "relative flex-shrink-0 flex items-center justify-center overflow-hidden",
           candidate.profile.avatarUrl ? "" : sunColor.bg
@@ -413,12 +413,12 @@ function ProfileCard({
               })}
             </div>
 
-            {/* Bio — full, no truncation */}
+            {/* Bio, full, no truncation */}
             {candidate.profile.bio && (
               <p className="text-stone-600 text-sm leading-relaxed">{candidate.profile.bio}</p>
             )}
 
-            {/* Interests — all shown */}
+            {/* Interests, all shown */}
             {interests.length > 0 && (
               <div className="flex flex-wrap gap-1.5">
                 {interests.map((tag) => (
@@ -445,7 +445,7 @@ function ProfileCard({
           </div>
         </div>
 
-        {/* Action buttons — always visible at card bottom */}
+        {/* Action buttons, always visible at card bottom */}
         <div className="absolute bottom-4 left-0 right-0 flex justify-center items-center gap-6 pointer-events-none">
           <button
             onClick={onPass}

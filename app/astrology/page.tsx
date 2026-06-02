@@ -30,17 +30,17 @@ interface UserChart {
 
 const SIGN_PLACEMENTS: Record<string, { sun: string; moon: string; rising: string }> = {
   Aries: {
-    sun: "You identify with action. Your sense of self is tied to initiative — the first move, the open door, the thing started before anyone else got there. You need to feel like you're moving toward something.",
+    sun: "You identify with action. Your sense of self is tied to initiative, the first move, the open door, the thing started before anyone else got there. You need to feel like you're moving toward something.",
     moon: "Emotionally, you process by doing, not sitting with it. Slow-burn conflict wears you down faster than direct confrontation. You need space, independence, and a partner who doesn't take your directness personally.",
     rising: "You come across as immediate and self-assured. People feel your energy before you say much. First impressions are energetic, forward, sometimes a little intense.",
   },
   Taurus: {
-    sun: "Your identity is grounded in what you build, what you keep, and what you return to. Stability isn't complacency for you — it's a prerequisite for everything else. You're patient in ways most people aren't.",
+    sun: "Your identity is grounded in what you build, what you keep, and what you return to. Stability isn't complacency for you, it's a prerequisite for everything else. You're patient in ways most people aren't.",
     moon: "You need physical comfort and emotional constancy. Sudden changes in affection or plan destabilize you more than you let on. What you give takes time to develop, and you expect the same in return.",
     rising: "You present as calm, unhurried, and trustworthy. People sense early that you won't be pushed around or rushed. There's a groundedness that either reassures people or frustrates them, depending on who they are.",
   },
   Gemini: {
-    sun: "Your sense of self is built in language. You need to talk things through to know what you think, and you need people who can keep up. Boredom is a genuine threat. Variety isn't restlessness — it's how you stay alive.",
+    sun: "Your sense of self is built in language. You need to talk things through to know what you think, and you need people who can keep up. Boredom is a genuine threat. Variety isn't restlessness, it's how you stay alive.",
     moon: "Emotionally, you need to think out loud. Talking through a feeling often matters more than resolving it. You're uncomfortable with heavy emotional demands and do better with partners who can hold things lightly.",
     rising: "You come across as quick, curious, and easy to talk to. You put people at ease fast. The first impression is friendly and sharp, though people sometimes wonder if you're fully present.",
   },
@@ -50,7 +50,7 @@ const SIGN_PLACEMENTS: Record<string, { sun: string; moon: string; rising: strin
     rising: "You read as warm and somewhat guarded at first. People sense that getting close takes time, and that once they're in, it means something real. You can come across as shy, but it's more like careful.",
   },
   Leo: {
-    sun: "You need to matter — to be seen, recognized, and appreciated for what you actually bring. That's not vanity; it's honesty. When you're given room to lead, you become genuinely generous with it.",
+    sun: "You need to matter, to be seen, recognized, and appreciated for what you actually bring. That's not vanity; it's honesty. When you're given room to lead, you become genuinely generous with it.",
     moon: "Emotionally, you need warmth and recognition. You're hurt more easily by indifference than by criticism. You give a lot in relationships and need that energy acknowledged, even in small ways.",
     rising: "You enter a room and people notice. Presence comes naturally. The first impression is warm, a little theatrical, sometimes magnetic. People remember meeting you.",
   },
@@ -60,17 +60,17 @@ const SIGN_PLACEMENTS: Record<string, { sun: string; moon: string; rising: strin
     rising: "You come across as composed, observant, and careful with your words. People sense that you're paying attention to everything. The first impression is competent and measured, occasionally a little reserved.",
   },
   Libra: {
-    sun: "Relationships are your natural habitat. Your identity is shaped in relation to others — not because you lack self, but because you genuinely understand that the self exists in context. Balance and fairness are non-negotiable values.",
+    sun: "Relationships are your natural habitat. Your identity is shaped in relation to others, not because you lack self, but because you genuinely understand that the self exists in context. Balance and fairness are non-negotiable values.",
     moon: "Emotionally, you need harmony and dislike making demands. Conflict makes you uncomfortable enough that you'll avoid it past the point of usefulness. You need a partner who can articulate what's wrong so you don't have to guess.",
     rising: "You come across as graceful, easy to like, and naturally diplomatic. People feel comfortable around you quickly. The first impression is polished and personable, sometimes hard to read beneath the surface.",
   },
   Scorpio: {
-    sun: "Depth is the standard you hold everything to. Surface-level connection doesn't interest you. Your sense of self is built around transformation — what you've survived, what you've changed, what you know that others don't.",
+    sun: "Depth is the standard you hold everything to. Surface-level connection doesn't interest you. Your sense of self is built around transformation, what you've survived, what you've changed, what you know that others don't.",
     moon: "Emotionally, you feel everything fully and forget nothing. Trust takes a long time to build and a moment to break. You need a level of intimacy that most people aren't ready for, and you know it.",
-    rising: "You come across as intense and self-contained. People sense there's more going on beneath the surface. The first impression is magnetic but hard to penetrate — which is more or less the point.",
+    rising: "You come across as intense and self-contained. People sense there's more going on beneath the surface. The first impression is magnetic but hard to penetrate, which is more or less the point.",
   },
   Sagittarius: {
-    sun: "Your identity is organized around freedom and meaning. You need to believe the life you're living matters and that there's always a bigger picture. Constraint — physical, intellectual, or emotional — is genuinely difficult for you.",
+    sun: "Your identity is organized around freedom and meaning. You need to believe the life you're living matters and that there's always a bigger picture. Constraint, physical, intellectual, or emotional, is genuinely difficult for you.",
     moon: "Emotionally, you need space and levity. Heavy, demanding relationships drain you quickly. You process feelings through movement and perspective: travel, philosophy, the long view. You need a partner who doesn't clip your wings.",
     rising: "You come across as open, enthusiastic, and easy to approach. People feel immediately that you're not judging them. The first impression is warm and a little wild, like someone who just got back from somewhere interesting.",
   },
@@ -80,32 +80,32 @@ const SIGN_PLACEMENTS: Record<string, { sun: string; moon: string; rising: strin
     rising: "You come across as competent, steady, and a little serious. People assume you have your life handled, which is often true and sometimes lonely. The first impression is trustworthy, occasionally a bit distant.",
   },
   Aquarius: {
-    sun: "Your identity is individual, sometimes to the point of principle. You think for yourself first and care about the collective second — but the collective still matters to you more than it does to most. You need intellectual freedom above everything.",
+    sun: "Your identity is individual, sometimes to the point of principle. You think for yourself first and care about the collective second, but the collective still matters to you more than it does to most. You need intellectual freedom above everything.",
     moon: "Emotionally, you're more comfortable with ideas than feelings. You care deeply, but you process care through understanding, not warmth. You need a partner who respects your need for space and doesn't read detachment as rejection.",
     rising: "You come across as unusual and hard to categorize. People sense you're operating from a slightly different set of values. The first impression is interesting and a bit electric, occasionally a little remote.",
   },
   Pisces: {
     sun: "Boundaries between self and world are naturally porous for you. You absorb the emotional atmosphere of every room you walk into. Your identity is fluid, which makes you extraordinarily empathetic and occasionally hard to locate.",
     moon: "Emotionally, you need softness, creativity, and some degree of transcendence. Harsh, demanding environments deplete you quickly. You need a partner who understands sensitivity as a form of perception, not weakness.",
-    rising: "You come across as gentle, somewhat dreamlike, and easy to confide in. People feel they can tell you things. The first impression is open and a little otherworldly — people often find you memorable without knowing why.",
+    rising: "You come across as gentle, somewhat dreamlike, and easy to confide in. People feel they can tell you things. The first impression is open and a little otherworldly, people often find you memorable without knowing why.",
   },
 };
 
 // ─── Mercury in each sign ──────────────────────────────────────────────────────
 
 const MERCURY_SIGNS: Record<string, string> = {
-  Aries:       "Direct, fast, and unvarnished. Cuts to the point and moves on. In conversation, you'll always know where you stand — sometimes before you're ready to.",
+  Aries:       "Direct, fast, and unvarnished. Cuts to the point and moves on. In conversation, you'll always know where you stand, sometimes before you're ready to.",
   Taurus:      "Deliberate and thorough. Thinks before speaking, and means what it says. Holds its positions firmly but rarely rushes to form them. Reliable in its word.",
   Gemini:      "Quick, versatile, and naturally at home in conversation. Ideas come fast, sometimes faster than they're finished. Gets restless when the exchange slows down.",
   Cancer:      "Communicates through feeling as much as words. Picks up on tone and mood before content. Has a long memory for what was said and how it landed.",
-  Leo:         "Expressive, animated, and hard to ignore. Natural storyteller. Wants to be genuinely heard — dismissal registers as something personal.",
+  Leo:         "Expressive, animated, and hard to ignore. Natural storyteller. Wants to be genuinely heard, dismissal registers as something personal.",
   Virgo:       "Precise, analytical, and attentive to detail. Notices what others miss and says so. Can read as critical, but holds itself to the same standard first.",
-  Libra:       "Measured, diplomatic, and genuinely fair-minded. Weighs all sides before speaking — sometimes past the point of usefulness. Skilled at conversation; less skilled at the hard truth.",
+  Libra:       "Measured, diplomatic, and genuinely fair-minded. Weighs all sides before speaking, sometimes past the point of usefulness. Skilled at conversation; less skilled at the hard truth.",
   Scorpio:     "Probing, perceptive, and rarely showing its full hand. Doesn't do small talk. Excellent at reading what isn't being said. Prefers depth over pleasantry.",
   Sagittarius: "Expansive, direct, and philosophical. Says what it means and expects the same in return. Thinks in large frames; can lose patience with granular detail.",
   Capricorn:   "Measured, practical, and economical with words. Chooses language deliberately. Can seem aloof in casual exchange but is precise and reliable when it matters.",
   Aquarius:    "Unconventional, idea-driven, and often ahead of the conversation. Thinks in systems. Can go abstract when others want the concrete. Excellent at seeing patterns no one else noticed.",
-  Pisces:      "Impressionistic and emotionally attuned. Communicates through feeling, metaphor, and implication. Can be difficult to pin down literally — but you always know the emotional truth of what they mean.",
+  Pisces:      "Impressionistic and emotionally attuned. Communicates through feeling, metaphor, and implication. Can be difficult to pin down literally, but you always know the emotional truth of what they mean.",
 };
 
 // ─── Modalities ───────────────────────────────────────────────────────────────
@@ -115,22 +115,22 @@ const MODALITIES = [
     name: "Cardinal",
     signs: ["Aries", "Cancer", "Libra", "Capricorn"],
     tagline: "Initiation",
-    desc: "Cardinal signs begin things. They start relationships, conversations, and change. In synastry, two cardinal signs can create a dynamic where both want to lead — which produces either exciting momentum or constant redirection. The tension is generative if both partners can take turns.",
+    desc: "Cardinal signs begin things. They start relationships, conversations, and change. In synastry, two cardinal signs can create a dynamic where both want to lead, which produces either exciting momentum or constant redirection. The tension is generative if both partners can take turns.",
     inLove: "Cardinal signs move fast. They're the ones who define the relationship, make the first move, and push for the next step before the other person is ready. What they struggle with is sustaining what they start once the novelty settles.",
   },
   {
     name: "Fixed",
     signs: ["Taurus", "Leo", "Scorpio", "Aquarius"],
     tagline: "Sustaining",
-    desc: "Fixed signs hold position. They sustain what was started — in work, in love, in belief. In synastry, two fixed signs build relationships of extraordinary depth and durability. They also have the potential for extraordinary standoffs, since neither yields easily.",
-    inLove: "Fixed signs are the most loyal placement in the zodiac. When they commit, they mean it completely. They're also the hardest to convince once they've made up their mind — about a person, a relationship, or whether it's worth fighting for.",
+    desc: "Fixed signs hold position. They sustain what was started, in work, in love, in belief. In synastry, two fixed signs build relationships of extraordinary depth and durability. They also have the potential for extraordinary standoffs, since neither yields easily.",
+    inLove: "Fixed signs are the most loyal placement in the zodiac. When they commit, they mean it completely. They're also the hardest to convince once they've made up their mind, about a person, a relationship, or whether it's worth fighting for.",
   },
   {
     name: "Mutable",
     signs: ["Gemini", "Virgo", "Sagittarius", "Pisces"],
     tagline: "Adaptation",
-    desc: "Mutable signs adapt. They're the transition points between seasons, and they carry that flexibility into relationships. In synastry, a mutable partner absorbs and responds to whatever the other person brings — which makes them naturally accommodating, sometimes at the cost of their own needs.",
-    inLove: "Mutable signs are the most flexible in relationships — and the hardest to pin down. They adjust to their partner and read the emotional landscape. The risk is losing themselves in the process, or avoiding necessary conflict through permanent accommodation.",
+    desc: "Mutable signs adapt. They're the transition points between seasons, and they carry that flexibility into relationships. In synastry, a mutable partner absorbs and responds to whatever the other person brings, which makes them naturally accommodating, sometimes at the cost of their own needs.",
+    inLove: "Mutable signs are the most flexible in relationships, and the hardest to pin down. They adjust to their partner and read the emotional landscape. The risk is losing themselves in the process, or avoiding necessary conflict through permanent accommodation.",
   },
 ];
 
@@ -166,7 +166,7 @@ const ASPECTS = [
   {
     name: "Conjunction", angle: "0°", symbol: "☌", kind: "variable",
     short: "Fusion of energies",
-    desc: "Two planets occupy the same position. Their energies don't complement each other — they become one thing. In synastry, a conjunction is the most direct contact two charts can make. Whether that's comfortable depends entirely on which planets are involved. Sun conjunct Sun creates immediate mutual recognition. Saturn conjunct Venus can mean the relationship feels meaningful but restricted.",
+    desc: "Two planets occupy the same position. Their energies don't complement each other, they become one thing. In synastry, a conjunction is the most direct contact two charts can make. Whether that's comfortable depends entirely on which planets are involved. Sun conjunct Sun creates immediate mutual recognition. Saturn conjunct Venus can mean the relationship feels meaningful but restricted.",
     feel: "Intense, immediate, sometimes too much",
   },
   {
@@ -178,7 +178,7 @@ const ASPECTS = [
   {
     name: "Square", angle: "90°", symbol: "□", kind: "hard",
     short: "Productive tension",
-    desc: "Squares generate friction that demands resolution. They're not obstacles so much as the thing that keeps a relationship dynamic. The most memorable connections often have squares in their synastry: something to work through, something that doesn't resolve itself passively. Mars square Moon is a classic — strong attraction, but clashing emotional rhythms.",
+    desc: "Squares generate friction that demands resolution. They're not obstacles so much as the thing that keeps a relationship dynamic. The most memorable connections often have squares in their synastry: something to work through, something that doesn't resolve itself passively. Mars square Moon is a classic, strong attraction, but clashing emotional rhythms.",
     feel: "Challenging, activating, growth-oriented",
   },
   {
@@ -291,7 +291,7 @@ function ZodiacWheel({
   );
 }
 
-// ─── Sign detail panel — tabbed (Sun / Moon / Rising / Mercury) ───────────────
+// ─── Sign detail panel, tabbed (Sun / Moon / Rising / Mercury) ───────────────
 
 type PlacementTab = "sun" | "moon" | "rising" | "mercury";
 
@@ -423,7 +423,7 @@ function PersonalChart({ chart }: { chart: UserChart }) {
 
       {/* Mercury row */}
       <div className="mt-10 pt-10 border-t border-white/8">
-        <p className="text-xs tracking-[0.22em] uppercase text-stone-500 mb-6">Mercury placements — how you communicate</p>
+        <p className="text-xs tracking-[0.22em] uppercase text-stone-500 mb-6">Mercury placements, how you communicate</p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[chart.sunSign, chart.moonSign, chart.risingSign].map((signName, i) => {
             const labels = ["Sun sign", "Moon sign", "Rising sign"];
@@ -687,7 +687,7 @@ export default function AstrologyPage() {
                 <p className="text-xs tracking-[0.18em] uppercase text-stone-500 mb-3">Your personal chart</p>
                 <p className="font-serif text-white text-xl font-semibold mb-3">See your Big Three</p>
                 <p className="text-stone-400 text-sm leading-relaxed mb-6 max-w-sm mx-auto">
-                  Create a free profile to see your Sun, Moon, and Rising sign interpretations — and how your chart reads in relationships.
+                  Create a free profile to see your Sun, Moon, and Rising sign interpretations, and how your chart reads in relationships.
                 </p>
                 <Link
                   href="/signup"
@@ -774,7 +774,7 @@ export default function AstrologyPage() {
                     Mars is what drives you, what you want, and how you go after it. In synastry, Venus-Mars contacts between two charts produce the most direct chemistry. When your Venus falls in the same sign as someone's Mars, the attraction is immediate and mutual.
                   </p>
                   <p className="text-stone-300 text-sm leading-relaxed mb-4">
-                    When Venus and Mars are in the same element across two charts — say, Venus in Scorpio and Mars in Cancer — both water signs — there's a shared emotional frequency that makes desire feel safe. When they're in conflicting elements, the attraction is often still there, but the rhythm requires more translation.
+                    When Venus and Mars are in the same element across two charts, say, Venus in Scorpio and Mars in Cancer, both water signs, there's a shared emotional frequency that makes desire feel safe. When they're in conflicting elements, the attraction is often still there, but the rhythm requires more translation.
                   </p>
                   <p className="text-stone-300 text-sm leading-relaxed">
                     Most sun-sign compatibility guides ignore Venus and Mars entirely. That's why they're often wrong. Two people with incompatible Sun signs can have Venus trine Mars and feel like they've known each other for years.
@@ -794,7 +794,7 @@ export default function AstrologyPage() {
                     The planet most compatibility guides forget
                   </p>
                   <p className="text-stone-300 text-sm leading-relaxed mb-4">
-                    Mercury governs how you think, how you speak, how you process information, and how you argue. In a relationship, Mercury compatibility often determines whether two people feel understood — even when they genuinely like each other.
+                    Mercury governs how you think, how you speak, how you process information, and how you argue. In a relationship, Mercury compatibility often determines whether two people feel understood, even when they genuinely like each other.
                   </p>
                   <p className="text-stone-300 text-sm leading-relaxed">
                     Mercury is rarely more than one or two signs away from your Sun, but its placement shifts your communication style significantly. A Scorpio Sun with Mercury in Libra is a very different communicator than a Scorpio Sun with Mercury in Sagittarius.
@@ -805,7 +805,7 @@ export default function AstrologyPage() {
                     Mercury in fire signs (Aries, Leo, Sagittarius) communicates with urgency and directness. They say what they mean, often before they've fully thought it through.
                   </p>
                   <p className="text-stone-300 text-sm leading-relaxed mb-4">
-                    Mercury in earth signs (Taurus, Virgo, Capricorn) is careful and precise. They think before they speak and mean what they say — but they can also take a long time to say it.
+                    Mercury in earth signs (Taurus, Virgo, Capricorn) is careful and precise. They think before they speak and mean what they say, but they can also take a long time to say it.
                   </p>
                   <p className="text-stone-300 text-sm leading-relaxed mb-4">
                     Mercury in air signs (Gemini, Libra, Aquarius) is nimble and ideas-driven. They communicate through abstraction and enjoy debate for its own sake.
@@ -874,7 +874,7 @@ export default function AstrologyPage() {
             <section className="mb-24 border-t border-white/8 pt-16">
               <p className="text-xs tracking-[0.22em] uppercase text-stone-500 mb-4">The three modalities</p>
               <p className="text-stone-300 text-base leading-relaxed max-w-2xl mb-10">
-                Every sign belongs to one of three modalities — Cardinal, Fixed, or Mutable — which describe how a sign moves through the world. In synastry, modality compatibility shapes the pace of a relationship and how well two people navigate change together.
+                Every sign belongs to one of three modalities, Cardinal, Fixed, or Mutable, which describe how a sign moves through the world. In synastry, modality compatibility shapes the pace of a relationship and how well two people navigate change together.
               </p>
               <ModalitiesSection />
             </section>
@@ -885,7 +885,7 @@ export default function AstrologyPage() {
             <section className="mb-24 border-t border-white/8 pt-16">
               <p className="text-xs tracking-[0.22em] uppercase text-stone-500 mb-4">The 12 houses</p>
               <p className="text-stone-300 text-base leading-relaxed max-w-2xl mb-10">
-                The houses divide the birth chart into 12 areas of life. Where planets fall in your chart — which house they occupy — describes where their energy is most active. In relationship astrology, certain houses carry more weight than others.
+                The houses divide the birth chart into 12 areas of life. Where planets fall in your chart, which house they occupy, describes where their energy is most active. In relationship astrology, certain houses carry more weight than others.
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 {[
@@ -894,7 +894,7 @@ export default function AstrologyPage() {
                   { n: "3rd",  title: "Communication",  rel: true,  body: "Thought, speech, and local connection. Planets here shape how you talk and listen." },
                   { n: "4th",  title: "Home",           rel: true,  body: "Roots, family, emotional foundation. The private self that partners eventually meet." },
                   { n: "5th",  title: "Romance",        rel: true,  body: "Creativity, pleasure, dating, and play. Planets here directly color your romantic life." },
-                  { n: "6th",  title: "Daily life",     rel: false, body: "Work, routines, and health. How you function day to day — the texture of life with a partner." },
+                  { n: "6th",  title: "Daily life",     rel: false, body: "Work, routines, and health. How you function day to day, the texture of life with a partner." },
                   { n: "7th",  title: "Partnership",    rel: true,  body: "Marriage, long-term relationship, and open enemies. The single most important house for synastry." },
                   { n: "8th",  title: "Intimacy",       rel: true,  body: "Shared resources, sex, death, and transformation. Deep bonding and where two people merge." },
                   { n: "9th",  title: "Philosophy",     rel: false, body: "Beliefs, travel, higher education, and meaning-making. Shared worldview is often found here." },
@@ -934,7 +934,7 @@ export default function AstrologyPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-14 gap-y-7 mb-12">
                   {[
                     { n: "01", title: "Full natal chart", desc: "Sun, Moon, Rising, Venus, and Mars positions calculated from your birth data." },
-                    { n: "02", title: "Elemental balance", desc: "How your elemental compositions interact — same-element comfort vs. cross-element spark." },
+                    { n: "02", title: "Elemental balance", desc: "How your elemental compositions interact, same-element comfort vs. cross-element spark." },
                     { n: "03", title: "Modal harmony",     desc: "Whether your Cardinal, Fixed, and Mutable energies complement or compete." },
                     { n: "04", title: "Composite score",   desc: "A weighted compatibility score that surfaces your most resonant matches first." },
                   ].map(({ n, title, desc }) => (

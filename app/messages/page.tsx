@@ -51,7 +51,7 @@ export default function MessagesPage() {
                 Messaging is StarCross+
               </h2>
               <p className="text-stone-400 text-sm leading-relaxed max-w-xs mx-auto">
-                Upgrade to start conversations with all your cosmic matches — unlimited messages, full synastry charts, and more.
+                Upgrade to start conversations with all your cosmic matches, unlimited messages, full synastry charts, and more.
               </p>
             </div>
             <div className="space-y-3">
@@ -77,7 +77,7 @@ export default function MessagesPage() {
 
   return (
     <>
-      {/* Local star canvas — lives inside this page's stacking context */}
+      {/* Local star canvas, lives inside this page's stacking context */}
       <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }}>
         <StarField count={220} />
       </div>
@@ -85,12 +85,12 @@ export default function MessagesPage() {
       <div className="fixed inset-x-0 bottom-0 flex overflow-hidden" style={{ top: 64 }}>
         <NavBar />
 
-        {/* Sidebar — no bg, stars show through */}
+        {/* Sidebar, no bg, stars show through */}
         <div className="w-full md:w-[340px] lg:w-[380px] shrink-0 border-r border-white/8 overflow-hidden flex flex-col">
           <ConversationSidebar />
         </div>
 
-        {/* Empty state — desktop only */}
+        {/* Empty state, desktop only */}
         <div className="hidden md:flex flex-1 items-center justify-center">
           <div className="text-center space-y-4 px-8">
             <div className="relative w-20 h-20 mx-auto">

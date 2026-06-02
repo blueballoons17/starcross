@@ -14,7 +14,7 @@ export async function POST(_req: NextRequest) {
     const userId = (session?.user as SessionUser)?.id;
 
     if (!userId) {
-      return NextResponse.json({ error: "Not logged in — please sign in first." }, { status: 401 });
+      return NextResponse.json({ error: "Not logged in, please sign in first." }, { status: 401 });
     }
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
@@ -41,7 +41,7 @@ export async function POST(_req: NextRequest) {
       try {
         await stripe.customers.retrieve(customerId);
       } catch {
-        // Customer doesn't exist in this mode (e.g. live ID used with test key) — create fresh
+        // Customer doesn't exist in this mode (e.g. live ID used with test key), create fresh
         customerId = null;
         await prisma.user.update({ where: { id: userId }, data: { stripeCustomerId: null } });
       }

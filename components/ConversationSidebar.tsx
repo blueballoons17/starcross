@@ -101,7 +101,7 @@ export function ConversationSidebar({ activeMatchId, onSelect }: ConversationSid
           <div className="text-center py-16 px-6 space-y-3">
             <div className="text-3xl">🌌</div>
             <p className="text-stone-500 text-sm">
-              {query ? "No conversations found" : "No matches yet — keep swiping!"}
+              {query ? "No conversations found" : "No matches yet. keep swiping!"}
             </p>
           </div>
         ) : (

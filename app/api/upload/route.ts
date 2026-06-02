@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "File too large. Max 8 MB." }, { status: 400 });
     }
 
-    // Verify actual file content via magic bytes — client-supplied MIME is spoofable
+    // Verify actual file content via magic bytes, client-supplied MIME is spoofable
     const header = new Uint8Array(await file.slice(0, 12).arrayBuffer());
     const isJpeg = header[0] === 0xff && header[1] === 0xd8;
     const isPng  = header[0] === 0x89 && header[1] === 0x50 && header[2] === 0x4e && header[3] === 0x47;
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ url: `/uploads/${userId}/${filename}` });
     } else {
       return NextResponse.json(
-        { error: "Photo storage is not configured yet — please set up Vercel Blob." },
+        { error: "Photo storage is not configured yet, please set up Vercel Blob." },
         { status: 503 }
       );
     }

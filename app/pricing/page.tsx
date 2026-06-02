@@ -27,7 +27,7 @@ function PricingContent() {
   async function handleSubscribe() {
     setError("");
 
-    // Not logged in — send to signup, then back here
+    // Not logged in, send to signup, then back here
     if (status === "unauthenticated") {
       router.push("/signup?callbackUrl=/pricing");
       return;
@@ -184,7 +184,7 @@ function PricingContent() {
                     Redirecting to checkout…
                   </>
                 ) : (
-                  <>Begin your journey — $14.99/mo</>
+                  <>Begin your journey, $14.99/mo</>
                 )}
               </button>
               <p className="text-center text-stone-600 text-xs mt-3">

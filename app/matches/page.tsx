@@ -74,11 +74,11 @@ export default function MatchesPage() {
                 No matches yet
               </h3>
               <p className="text-stone-600 text-sm tracking-wide">
-                Keep swiping — the stars are aligning.
+                Keep swiping. the stars are aligning.
               </p>
             </div>
           ) : (
-            /* Unified editorial panel — one glass column, hairline dividers */
+            /* Unified editorial panel, one glass column, hairline dividers */
             <div className="bg-stone-900/50 backdrop-blur-md border border-white/[0.07] rounded-[6px] overflow-hidden px-5 divide-y divide-white/[0.06]">
               {matches.map((match) => (
                 <MatchCard key={match.id} match={match} isPremium={isPremium} />

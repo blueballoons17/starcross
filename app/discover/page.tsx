@@ -156,7 +156,7 @@ export default function DiscoverPage() {
         })
         .catch(() => {});
     } catch {
-      // silent fail — card still removed
+      // silent fail, card still removed
     }
   }
 

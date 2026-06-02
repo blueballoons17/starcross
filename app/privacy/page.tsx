@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ShootingStarLogo } from "@/components/ui/shooting-star-logo";
 
 export const metadata = {
-  title: "Privacy Policy — StarCross",
+  title: "Privacy Policy | StarCross",
   description: "How StarCross collects, uses, and protects your personal information.",
 };
 
@@ -63,7 +63,7 @@ export default function PrivacyPage() {
         <H2>1. Who We Are</H2>
         <P>
           StarCross (&ldquo;StarCross,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) is an
-          astrology-based dating and connection platform operated by Iveena Mukherjee. This Privacy Policy explains
+          astrology-based dating and connection platform operated by its owner. This Privacy Policy explains
           what personal information we collect, how we use it, and the choices available to you regarding your
           information.
         </P>
@@ -76,40 +76,40 @@ export default function PrivacyPage() {
 
         <H3>Information You Provide Directly</H3>
         <P>
-          <strong className="text-stone-700">Account credentials</strong> — email address and password. Passwords are
+          <strong className="text-stone-700">Account credentials</strong>: email address and password. Passwords are
           hashed using bcrypt before storage, and we do not store plaintext passwords.
         </P>
         <P>
-          <strong className="text-stone-700">Profile information</strong> — your name, date of birth, time of birth,
+          <strong className="text-stone-700">Profile information</strong>: your name, date of birth, time of birth,
           birth city, and birth country.
         </P>
         <P>
-          <strong className="text-stone-700">Identity and preferences</strong> — gender, age preferences, and gender
+          <strong className="text-stone-700">Identity and preferences</strong>: gender, age preferences, and gender
           preferences.
         </P>
         <P>
-          <strong className="text-stone-700">Profile content</strong> — bio, profile photo, gallery photos, interests,
+          <strong className="text-stone-700">Profile content</strong>: bio, profile photo, gallery photos, interests,
           and personality question answers.
         </P>
         <P>
-          <strong className="text-stone-700">Messages</strong> — content of messages you send to other members.
+          <strong className="text-stone-700">Messages</strong>: content of messages you send to other members.
         </P>
         <P>
-          <strong className="text-stone-700">Payment information</strong> — subscription and billing information
+          <strong className="text-stone-700">Payment information</strong>: subscription and billing information
           processed by our payment provider. We do not store complete payment card numbers or banking information.
         </P>
 
         <H3>Information Generated Automatically</H3>
         <P>
-          <strong className="text-stone-700">Astrological profile</strong> — Sun, Moon, and Rising signs, elemental and
+          <strong className="text-stone-700">Astrological profile</strong>: Sun, Moon, and Rising signs, elemental and
           modal scores, compatibility metrics, and personality traits derived from your birth data.
         </P>
         <P>
-          <strong className="text-stone-700">Usage data</strong> — swipes, likes, matches, profile views, interactions
+          <strong className="text-stone-700">Usage data</strong>: swipes, likes, matches, profile views, interactions
           with app features, and other activity within the service.
         </P>
         <P>
-          <strong className="text-stone-700">Session data</strong> — cookies and similar technologies used to
+          <strong className="text-stone-700">Session data</strong>: cookies and similar technologies used to
           authenticate users, maintain sessions, and improve service functionality. See our{" "}
           <Link href="/cookies" className="underline">Cookie Policy</Link> for additional details.
         </P>

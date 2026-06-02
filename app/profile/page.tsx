@@ -143,7 +143,7 @@ async function compressImage(file: File, maxDimension = 900, quality = 0.75): Pr
           if (blob) {
             resolve(new File([blob], `photo.webp`, { type: "image/webp" }));
           } else {
-            // WebP not supported — try JPEG
+            // WebP not supported, try JPEG
             canvas.toBlob(
               (jpegBlob) => {
                 if (jpegBlob) resolve(new File([jpegBlob], `photo.jpg`, { type: "image/jpeg" }));
@@ -193,7 +193,7 @@ function AvatarUpload({
         setUploadError(data.error ?? "Upload failed. Please try again.");
       }
     } catch {
-      setUploadError("Network error — please try again.");
+      setUploadError("Network error. please try again.");
     } finally {
       setUploading(false);
     }
@@ -270,7 +270,7 @@ function PhotosGrid({
         setUploadError(data.error ?? "Upload failed. Please try again.");
       }
     } catch {
-      setUploadError("Network error — please try again.");
+      setUploadError("Network error. please try again.");
     } finally {
       setUploading(false);
     }
@@ -384,7 +384,7 @@ function InterestsEditor({
       {/* Current interests */}
       <div className="flex flex-wrap gap-2">
         {interests.length === 0 && !editing && (
-          <p className="text-xs text-stone-400 italic">No interests added yet — tap Edit to add some.</p>
+          <p className="text-xs text-stone-400 italic">No interests added yet, tap Edit to add some.</p>
         )}
         {interests.map((tag) => (
           <motion.span
@@ -602,7 +602,7 @@ function ChartCarousel({ profile, astro }: { profile: ProfileData["profile"]; as
         </div>
       </div>
       <p className="text-xs text-stone-400 text-center bg-amber-50 border border-amber-100 rounded-xl px-4 py-2.5">
-        Rising sign accuracy improves with your exact birth time — edit your profile to add it.
+        Rising sign accuracy improves with your exact birth time, edit your profile to add it.
       </p>
     </div>,
 

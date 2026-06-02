@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ShootingStarLogo } from "@/components/ui/shooting-star-logo";
 
 export const metadata = {
-  title: "Cookie Policy — StarCross",
+  title: "Cookie Policy | StarCross",
   description: "How StarCross uses cookies and similar technologies.",
 };
 

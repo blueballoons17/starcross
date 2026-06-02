@@ -157,7 +157,7 @@ export function MatchCelebration({ open, onClose, match, mySunSign }: MatchCeleb
               <p className="text-stone-400 text-sm mt-1">The stars had this planned all along.</p>
             </motion.div>
 
-            {/* Avatars — two initials connected by a heart */}
+            {/* Avatars, two initials connected by a heart */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}

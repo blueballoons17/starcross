@@ -9,7 +9,7 @@ interface SessionUser {
   id?: string;
 }
 
-// GET /api/messages/[matchId] — fetch all messages for a match
+// GET /api/messages/[matchId], fetch all messages for a match
 export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ matchId: string }> }
@@ -45,7 +45,7 @@ export async function GET(
   return NextResponse.json({ messages });
 }
 
-// POST /api/messages/[matchId] — send a message
+// POST /api/messages/[matchId], send a message
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ matchId: string }> }
@@ -56,7 +56,7 @@ export async function POST(
 
   // Rate-limit: 30 messages per minute per user
   if (messageLimiter.isLimited(userId)) {
-    return NextResponse.json({ error: "Slow down — too many messages." }, { status: 429 });
+    return NextResponse.json({ error: "Slow down, too many messages." }, { status: 429 });
   }
 
   const { matchId } = await params;

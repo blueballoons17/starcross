@@ -19,7 +19,7 @@ const cinzel = Cinzel({
 });
 
 export const metadata: Metadata = {
-  title: "StarCross — Find Your Cosmic Counterpart",
+  title: "StarCross | Find Your Cosmic Counterpart",
   description: "An astrology-based compatibility platform. Discover meaningful connections through celestial alignment.",
 };
 

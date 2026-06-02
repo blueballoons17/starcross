@@ -131,7 +131,7 @@ export function MatchCard({ match, isPremium }: MatchCardProps) {
                 <ScoreMark score={match.matchScore} />
               </div>
 
-              {/* Signs — plain glyphs, no pills */}
+              {/* Signs, plain glyphs, no pills */}
               <p className="mt-2.5 text-[11px] text-stone-500 leading-none tracking-[0.02em]">
                 <span>☉ {match.otherAstro.sunSign}</span>
                 <span className="mx-2 opacity-25">·</span>
@@ -141,7 +141,7 @@ export function MatchCard({ match, isPremium }: MatchCardProps) {
                 <span>{match.otherAstro.risingSign}</span>
               </p>
 
-              {/* Strength — italic, editorial */}
+              {/* Strength, italic, editorial */}
               {match.strengths[0] && (
                 <p className="mt-2 text-[11px] text-stone-600 italic leading-relaxed line-clamp-1 group-hover/inner:text-stone-500 transition-colors duration-200">
                   {match.strengths[0]}
@@ -149,7 +149,7 @@ export function MatchCard({ match, isPremium }: MatchCardProps) {
               )}
             </button>
 
-            {/* Action row — text links, no buttons */}
+            {/* Action row, text links, no buttons */}
             <div className="mt-4 flex items-center gap-1">
               <button
                 onClick={handleMessage}
