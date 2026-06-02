@@ -95,7 +95,7 @@ export default function CookiesPage() {
             <li>Cross-site tracking technologies</li>
           </ul>
           <p>
-            Our infrastructure providers (Vercel) may set their own technical cookies for load balancing and security purposes. These are strictly functional and do not track your browsing across other sites.
+            Our infrastructure providers may set their own technical cookies for load balancing and security purposes. These are strictly functional and do not track your browsing across other sites.
           </p>
         </Section>
 

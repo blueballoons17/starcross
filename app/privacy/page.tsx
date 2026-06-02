@@ -96,7 +96,7 @@ export default function PrivacyPage() {
         </P>
         <P>
           <strong className="text-stone-700">Payment information</strong> — subscription and billing information
-          processed by Stripe. We do not store complete payment card numbers or banking information.
+          processed by our payment provider. We do not store complete payment card numbers or banking information.
         </P>
 
         <H3>Information Generated Automatically</H3>
@@ -130,7 +130,7 @@ export default function PrivacyPage() {
         <UL>
           <li>Create and maintain accounts.</li>
           <li>Authenticate users.</li>
-          <li>Process payments through Stripe.</li>
+          <li>Process subscription payments.</li>
           <li>Enforce subscription limits and account rules.</li>
         </UL>
 
@@ -188,16 +188,9 @@ export default function PrivacyPage() {
 
         <H3>With Service Providers</H3>
         <P>
-          We use third-party providers that process information on our behalf, including:
-        </P>
-        <UL>
-          <li><strong className="text-stone-700">Vercel</strong> — hosting infrastructure and file storage</li>
-          <li><strong className="text-stone-700">Turso (libSQL)</strong> — database services</li>
-          <li><strong className="text-stone-700">Stripe</strong> — payment processing</li>
-        </UL>
-        <P>
-          These providers process information on our behalf subject to contractual obligations and their applicable
-          privacy commitments.
+          We use third-party providers to support core platform functions such as hosting, database services, and
+          payment processing. These providers process information on our behalf subject to contractual obligations
+          and their applicable privacy commitments.
         </P>
 
         <H3>For Legal Reasons</H3>
