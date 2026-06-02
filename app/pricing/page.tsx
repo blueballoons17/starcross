@@ -4,10 +4,20 @@ import { Suspense, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Check } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { PageStars } from "@/components/PageStars";
 
-const FEATURES = [
+const FREE_FEATURES = [
+  { text: "5 suggested matches", included: true },
+  { text: "Message your matches", included: true },
+  { text: "Astrology chart", included: true },
+  { text: "Unlimited swipes", included: false },
+  { text: "See who liked you", included: false },
+  { text: "Priority profile visibility", included: false },
+  { text: "Full synastry breakdown", included: false },
+];
+
+const PAID_FEATURES = [
   "Unlimited swipes",
   "Message all your matches",
   "Full synastry chart with planetary web",
@@ -25,8 +35,6 @@ function PricingContent() {
 
   async function handleSubscribe() {
     setError("");
-
-    // Not logged in, send to signup, then back here
     if (status === "unauthenticated") {
       router.push("/signup?callbackUrl=/pricing");
       return;
@@ -53,11 +61,24 @@ function PricingContent() {
     }
   }
 
+  function handleFree() {
+    if (status === "unauthenticated") {
+      router.push("/signup");
+      return;
+    }
+    // Logged in — check if they have a profile
+    fetch("/api/profile")
+      .then((r) => r.json())
+      .then((data) => {
+        router.push(data?.profile ? "/discover" : "/onboarding");
+      })
+      .catch(() => router.push("/onboarding"));
+  }
+
   const upgraded = searchParams?.get("upgraded") === "true";
   const sessionId = searchParams?.get("session_id") ?? null;
   const [activating, setActivating] = useState(false);
 
-  // After Stripe redirects back: activate subscription immediately, then route correctly
   useEffect(() => {
     if (!upgraded || !sessionId) return;
     setActivating(true);
@@ -81,7 +102,6 @@ function PricingContent() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [upgraded, sessionId]);
 
-  // Show a loading screen while activating so there's no flash of the pricing UI
   if (activating) {
     return (
       <div className="min-h-screen bg-stone-950 flex items-center justify-center">
@@ -104,10 +124,7 @@ function PricingContent() {
       <header className="fixed top-0 left-0 right-0 z-40 border-b border-white/8 bg-stone-950/70 backdrop-blur-xl">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center group">
-            <span
-              className="text-[13px] font-normal text-white tracking-[0.32em]"
-              style={{ fontFamily: "var(--font-inter)" }}
-            >
+            <span className="text-[13px] font-normal text-white tracking-[0.32em]" style={{ fontFamily: "var(--font-inter)" }}>
               starcross
             </span>
           </Link>
@@ -117,8 +134,19 @@ function PricingContent() {
         </div>
       </header>
 
-      <main className="flex-1 flex items-center justify-center pt-16 pb-20 px-4">
-        <div className="w-full max-w-md">
+      <main className="flex-1 flex items-center justify-center pt-24 pb-20 px-4">
+        <div className="w-full max-w-2xl">
+
+          {/* Heading */}
+          <div className="text-center mb-10">
+            <p className="text-xs tracking-[0.22em] uppercase text-indigo-400 mb-3" style={{ fontFamily: "var(--font-cinzel)" }}>
+              Choose your path
+            </p>
+            <h1 className="text-3xl font-semibold text-white mb-3" style={{ fontFamily: "var(--font-cinzel)" }}>
+              Find your cosmic match
+            </h1>
+            <p className="text-stone-400 text-sm">Start free. Upgrade whenever you&apos;re ready.</p>
+          </div>
 
           {upgraded && (
             <div className="mb-8 rounded-2xl border border-indigo-500/30 bg-indigo-950/40 px-5 py-4 text-center">
@@ -127,67 +155,120 @@ function PricingContent() {
             </div>
           )}
 
-          {/* Card */}
-          <div className="rounded-3xl border border-indigo-500/30 bg-stone-900/60 backdrop-blur-md overflow-hidden">
+          {/* Plans */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-            {/* Header */}
-            <div className="px-8 pt-10 pb-8 text-center border-b border-white/[0.07]">
-              <p className="text-[10px] tracking-[0.24em] uppercase text-indigo-400 mb-3"
-                style={{ fontFamily: "var(--font-cinzel)" }}>
-                Full Access
-              </p>
-              <h1
-                className="text-4xl font-semibold text-white mb-2"
-                style={{ fontFamily: "var(--font-cinzel)" }}
-              >
-                StarCross+
-              </h1>
-              <p className="text-stone-400 text-sm leading-relaxed mb-6">
-                Map your birth chart. Find your cosmic match. Unlock every connection.
-              </p>
-              <div className="flex items-baseline justify-center gap-1.5">
-                <span className="text-5xl font-light text-white">$14.99</span>
-                <span className="text-stone-400 text-sm">/ month</span>
+            {/* Free plan */}
+            <div className="rounded-3xl border border-white/10 bg-stone-900/40 backdrop-blur-md overflow-hidden flex flex-col">
+              <div className="px-7 pt-8 pb-6 text-center border-b border-white/[0.06]">
+                <p className="text-[10px] tracking-[0.22em] uppercase text-stone-500 mb-3" style={{ fontFamily: "var(--font-cinzel)" }}>
+                  Free
+                </p>
+                <h2 className="text-2xl font-semibold text-white mb-2" style={{ fontFamily: "var(--font-cinzel)" }}>
+                  Starcross
+                </h2>
+                <p className="text-stone-500 text-xs leading-relaxed mb-4">
+                  Dip your toes in — no card required.
+                </p>
+                <div className="flex items-baseline justify-center gap-1">
+                  <span className="text-4xl font-light text-white">$0</span>
+                  <span className="text-stone-500 text-sm">/ forever</span>
+                </div>
               </div>
-              <p className="text-stone-600 text-xs mt-1">Cancel anytime</p>
+
+              <div className="px-7 py-5 flex-1">
+                <ul className="space-y-3">
+                  {FREE_FEATURES.map((f) => (
+                    <li key={f.text} className="flex items-center gap-3">
+                      <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
+                        f.included
+                          ? "bg-emerald-500/10 border border-emerald-500/30"
+                          : "bg-stone-800 border border-stone-700"
+                      }`}>
+                        {f.included
+                          ? <Check className="h-3 w-3 text-emerald-400" />
+                          : <X className="h-3 w-3 text-stone-600" />
+                        }
+                      </div>
+                      <span className={`text-sm ${f.included ? "text-stone-300" : "text-stone-600"}`}>
+                        {f.text}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="px-7 pb-7">
+                <button
+                  onClick={handleFree}
+                  className="w-full py-3.5 rounded-2xl border border-white/15 hover:border-white/30 text-stone-300 hover:text-white font-medium text-sm transition-all"
+                >
+                  Continue for free
+                </button>
+              </div>
             </div>
 
-            {/* Features */}
-            <div className="px-8 py-7">
-              <ul className="space-y-3.5">
-                {FEATURES.map((f) => (
-                  <li key={f} className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center shrink-0">
-                      <Check className="h-3 w-3 text-indigo-400" />
-                    </div>
-                    <span className="text-stone-200 text-sm">{f}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {/* Paid plan */}
+            <div className="rounded-3xl border border-indigo-500/40 bg-stone-900/60 backdrop-blur-md overflow-hidden flex flex-col relative">
+              {/* Recommended badge */}
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                <span className="bg-indigo-500 text-white text-[10px] font-semibold tracking-[0.1em] uppercase px-3 py-1 rounded-full">
+                  Most popular
+                </span>
+              </div>
 
-            {/* CTA */}
-            <div className="px-8 pb-8">
-              {error && (
-                <p className="text-red-400 text-xs text-center mb-3">{error}</p>
-              )}
-              <button
-                onClick={handleSubscribe}
-                disabled={loading || status === "loading"}
-                className="w-full py-4 rounded-2xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium text-sm transition-colors shadow-xl shadow-indigo-500/20 flex items-center justify-center gap-2"
-              >
-                {loading ? (
-                  <>
-                    <span className="w-4 h-4 rounded-full border-2 border-white/40 border-t-white animate-spin" />
-                    Redirecting to checkout…
-                  </>
-                ) : (
-                  <>Begin your journey, $14.99/mo</>
+              <div className="px-7 pt-10 pb-6 text-center border-b border-white/[0.07]">
+                <p className="text-[10px] tracking-[0.22em] uppercase text-indigo-400 mb-3" style={{ fontFamily: "var(--font-cinzel)" }}>
+                  Full access
+                </p>
+                <h2 className="text-2xl font-semibold text-white mb-2" style={{ fontFamily: "var(--font-cinzel)" }}>
+                  StarCross+
+                </h2>
+                <p className="text-stone-400 text-xs leading-relaxed mb-4">
+                  Unlock every connection the stars have written.
+                </p>
+                <div className="flex items-baseline justify-center gap-1">
+                  <span className="text-4xl font-light text-white">$14.99</span>
+                  <span className="text-stone-400 text-sm">/ month</span>
+                </div>
+                <p className="text-stone-600 text-xs mt-1">Cancel anytime</p>
+              </div>
+
+              <div className="px-7 py-5 flex-1">
+                <ul className="space-y-3">
+                  {PAID_FEATURES.map((f) => (
+                    <li key={f} className="flex items-center gap-3">
+                      <div className="w-5 h-5 rounded-full bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center shrink-0">
+                        <Check className="h-3 w-3 text-indigo-400" />
+                      </div>
+                      <span className="text-stone-200 text-sm">{f}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="px-7 pb-7">
+                {error && (
+                  <p className="text-red-400 text-xs text-center mb-3">{error}</p>
                 )}
-              </button>
-              <p className="text-center text-stone-600 text-xs mt-3">
-                Secure payment via Stripe · Cancel anytime
-              </p>
+                <button
+                  onClick={handleSubscribe}
+                  disabled={loading || status === "loading"}
+                  className="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium text-sm transition-colors shadow-xl shadow-indigo-500/20 flex items-center justify-center gap-2"
+                >
+                  {loading ? (
+                    <>
+                      <span className="w-4 h-4 rounded-full border-2 border-white/40 border-t-white animate-spin" />
+                      Redirecting to checkout…
+                    </>
+                  ) : (
+                    <>Begin your journey, $14.99/mo</>
+                  )}
+                </button>
+                <p className="text-center text-stone-600 text-xs mt-3">
+                  Secure payment via Stripe · Cancel anytime
+                </p>
+              </div>
             </div>
           </div>
 

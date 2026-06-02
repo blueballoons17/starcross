@@ -68,6 +68,7 @@ export default function DiscoverPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [candidates, setCandidates] = useState<Candidate[]>([]);
+  const [isSubscribed, setIsSubscribed] = useState(false);
   const [loading, setLoading] = useState(true);
   const [pendingMatch, setPendingMatch] = useState<PendingMatch | null>(null);
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
@@ -93,6 +94,7 @@ export default function DiscoverPage() {
     ])
       .then(([discoverData, profileData, statusData, likesData]) => {
         if (discoverData.candidates) setCandidates(discoverData.candidates);
+        setIsSubscribed(!!discoverData.isSubscribed);
         if (profileData?.astrologyProfile?.sunSign) {
           setCurrentUser({ sunSign: profileData.astrologyProfile.sunSign });
         }
@@ -304,6 +306,7 @@ export default function DiscoverPage() {
             candidates={candidates}
             onLike={handleLike}
             onPass={handlePass}
+            isSubscribed={isSubscribed}
           />
         </div>
       </main>

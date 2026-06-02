@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
-// Routes that require an active subscription
+// Routes that require login (but NOT a paid subscription — free tier can access these)
 const PROTECTED_ROUTES = ["/discover", "/matches", "/messages", "/astrology", "/profile", "/chat"];
 
 // Public routes that never redirect
@@ -16,24 +16,12 @@ function isPublic(pathname: string): boolean {
   return PUBLIC_ROUTES.some((r) => pathname === r || pathname.startsWith(r + "/") || pathname.startsWith(r));
 }
 
-function isSubscriptionActive(
-  status: string | null | undefined,
-  periodEnd: string | null | undefined
-): boolean {
-  if (!status) return false;
-  if (status === "active" || status === "trialing") return true;
-  if (status === "canceled" && periodEnd) {
-    return new Date(periodEnd) > new Date();
-  }
-  return false;
-}
-
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Let public routes and API routes through
   if (isPublic(pathname)) return NextResponse.next();
-  // Only apply subscription gate to protected app routes
+  // Only apply login gate to protected app routes
   if (!isProtected(pathname)) return NextResponse.next();
 
   const token = await getToken({
@@ -48,14 +36,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // Logged in but no active subscription → send to pricing
-  const subStatus = token.subscriptionStatus as string | null | undefined;
-  const subEnd = token.subscriptionCurrentPeriodEnd as string | null | undefined;
-
-  if (!isSubscriptionActive(subStatus, subEnd)) {
-    return NextResponse.redirect(new URL("/pricing", request.url));
-  }
-
+  // Logged in (free or paid) → let through; limits enforced at the API level
   return NextResponse.next();
 }
 

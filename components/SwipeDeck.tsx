@@ -36,6 +36,7 @@ interface SwipeDeckProps {
   candidates: Candidate[];
   onLike: (id: string) => Promise<void>;
   onPass: (id: string) => Promise<void>;
+  isSubscribed?: boolean;
 }
 
 function getAge(birthDateStr: string): number {
@@ -465,7 +466,7 @@ function ProfileCard({
   );
 }
 
-export function SwipeDeck({ candidates, onLike, onPass }: SwipeDeckProps) {
+export function SwipeDeck({ candidates, onLike, onPass, isSubscribed = false }: SwipeDeckProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [swiping, setSwiping] = useState(false);
   const [detailCandidate, setDetailCandidate] = useState<Candidate | null>(null);
@@ -491,6 +492,36 @@ export function SwipeDeck({ candidates, onLike, onPass }: SwipeDeckProps) {
   }
 
   if (remaining.length === 0) {
+    // Free-tier upgrade prompt
+    if (!isSubscribed) {
+      return (
+        <div className="flex flex-col items-center justify-center h-full text-center gap-5 py-16 px-6">
+          <div className="w-20 h-20 rounded-full bg-indigo-500/10 border border-indigo-400/30 flex items-center justify-center">
+            <Star className="h-10 w-10 text-indigo-300" />
+          </div>
+          <div>
+            <p className="text-xs tracking-[0.18em] uppercase text-indigo-400 mb-2" style={{ fontFamily: "var(--font-cinzel)" }}>
+              Free plan
+            </p>
+            <h3 className="text-xl font-semibold text-white mb-2">
+              You&apos;ve seen your 5 free matches
+            </h3>
+            <p className="text-white/60 text-sm max-w-xs mb-6">
+              Upgrade to StarCross+ to unlock unlimited suggestions, see who liked you, and find your cosmic match.
+            </p>
+            <a
+              href="/pricing"
+              className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium px-6 py-3 rounded-2xl transition-colors shadow-lg shadow-indigo-500/20"
+            >
+              <Star className="h-4 w-4" />
+              Upgrade to StarCross+
+            </a>
+          </div>
+        </div>
+      );
+    }
+
+    // Paid user — seen everyone
     return (
       <div className="flex flex-col items-center justify-center h-full text-center gap-4 py-20">
         <div className="w-20 h-20 rounded-full bg-stone-100 border border-stone-200 flex items-center justify-center">

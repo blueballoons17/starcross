@@ -26,7 +26,7 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Get current user's profile and astrology
+  // Get current user's profile, astrology, and subscription status
   const currentUser = await prisma.user.findUnique({
     where: { id: userId },
     include: {
@@ -34,7 +34,26 @@ export async function GET() {
       astrologyProfile: true,
       swipesGiven: { select: { toUserId: true } },
     },
+    // also grab subscription fields
   });
+
+  // Determine if user has an active paid subscription
+  const dbUser = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { subscriptionStatus: true, subscriptionCurrentPeriodEnd: true },
+  });
+  function isSubscriptionActive(status: string | null | undefined, periodEnd: Date | null | undefined) {
+    if (!status) return false;
+    if (status === "active" || status === "trialing") return true;
+    if (status === "canceled" && periodEnd) return periodEnd > new Date();
+    return false;
+  }
+  const isSubscribed = isSubscriptionActive(
+    dbUser?.subscriptionStatus,
+    dbUser?.subscriptionCurrentPeriodEnd ?? undefined
+  );
+  // Free tier: top 5 matches. Paid: top 20.
+  const CANDIDATE_LIMIT = isSubscribed ? 20 : 5;
 
   if (!currentUser?.profile || !currentUser.astrologyProfile) {
     return NextResponse.json({ error: "Profile not found." }, { status: 404 });
@@ -164,7 +183,7 @@ export async function GET() {
       };
     })
     .sort((a, b) => b.matchScore - a.matchScore)
-    .slice(0, 20);
+    .slice(0, CANDIDATE_LIMIT);
 
-  return NextResponse.json({ candidates: scored });
+  return NextResponse.json({ candidates: scored, isSubscribed });
 }
