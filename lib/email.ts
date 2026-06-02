@@ -1,11 +1,16 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM = process.env.EMAIL_FROM ?? "StarCross <hello@starcross.app>";
+
+function getResend() {
+  if (!process.env.RESEND_API_KEY) return null;
+  return new Resend(process.env.RESEND_API_KEY);
+}
 
 // ── Welcome email ─────────────────────────────────────────────────────────────
 export async function sendWelcomeEmail(to: string, name?: string) {
-  if (!process.env.RESEND_API_KEY) return; // no-op if not configured
+  const resend = getResend();
+  if (!resend) return; // no-op if not configured
 
   const firstName = name?.split(" ")[0] ?? "there";
   await resend.emails.send({
@@ -55,7 +60,8 @@ export async function sendMatchEmail(opts: {
   matchScore: number;
   matchId: string;
 }) {
-  if (!process.env.RESEND_API_KEY) return;
+  const resend = getResend();
+  if (!resend) return;
 
   const { toEmail, toName, matchName, matchScore, matchId } = opts;
   const firstName = toName.split(" ")[0];
