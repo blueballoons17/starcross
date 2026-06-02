@@ -6,7 +6,6 @@ import { ArrowRight, Heart, Sparkles, Moon } from "lucide-react";
 import { AnimatedHero } from "@/components/ui/animated-hero";
 import RadialOrbitalTimeline from "@/components/ui/radial-orbital-timeline";
 import { StarField } from "@/components/ui/star-field";
-import { ZodiacIcon } from "@/components/ui/zodiac-icon";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useRef, useEffect } from "react";
@@ -45,71 +44,6 @@ const HOW_IT_WORKS = [
   },
 ];
 
-const ELEMENTS = [
-  {
-    name: "Fire",
-    glyph: "△",
-    signs: ["Aries", "Leo", "Sagittarius"],
-    tagline: "Passion & Drive",
-    description:
-      "Magnetic, bold, and electric. Fire signs ignite every room they enter and love with fierce, undeniable intensity.",
-    accent: "#f59e0b",
-    bg: "#fffbeb",
-    border: "#fde68a",
-    textAccent: "#b45309",
-  },
-  {
-    name: "Earth",
-    glyph: "◻",
-    signs: ["Taurus", "Virgo", "Capricorn"],
-    tagline: "Stability & Loyalty",
-    description:
-      "Grounded, sensual, and enduring. Earth signs build lasting bonds with patience, presence, and quiet devotion.",
-    accent: "#78716c",
-    bg: "#fafaf9",
-    border: "#e7e5e4",
-    textAccent: "#44403c",
-  },
-  {
-    name: "Air",
-    glyph: "○",
-    signs: ["Gemini", "Libra", "Aquarius"],
-    tagline: "Curiosity & Connection",
-    description:
-      "Witty, communicative, and restlessly curious. Air signs need intellectual spark to truly fall, and stay, in love.",
-    accent: "#6366f1",
-    bg: "#eef2ff",
-    border: "#c7d2fe",
-    textAccent: "#4338ca",
-  },
-  {
-    name: "Water",
-    glyph: "▽",
-    signs: ["Cancer", "Scorpio", "Pisces"],
-    tagline: "Depth & Intuition",
-    description:
-      "Empathic, intuitive, and profoundly feeling. Water signs love with their whole soul and never forget a real connection.",
-    accent: "#0ea5e9",
-    bg: "#f0f9ff",
-    border: "#bae6fd",
-    textAccent: "#0369a1",
-  },
-];
-
-const FEATURES = [
-  {
-    symbol: "⊙", title: "Three-Sign Matching",
-    description: "Your Sun sign is just the beginning. We use your Sun, Moon, and Rising together, the way astrology was always meant to be read.",
-  },
-  {
-    symbol: "◈", title: "Elemental Harmony",
-    description: "Fire and air feed each other. Earth and water ground each other. We weight elemental affinity as the backbone of every compatibility score.",
-  },
-  {
-    symbol: "✦", title: "Human Explanations",
-    description: "Every match comes with a plain-language breakdown of what works, what to navigate, and which traits you share. No cryptic jargon.",
-  },
-];
 
 
 // ── Synastry aspect data ─────────────────────────────────────────────────────
@@ -278,7 +212,6 @@ function PhoneMockup() {
 // ── Section nav links ─────────────────────────────────────────────────────────
 const NAV_SECTIONS = [
   { id: "how-it-works", label: "How It Works" },
-  { id: "elements",     label: "Elements"     },
   { id: "astrology",    label: "Astrology"    },
   { id: "pricing-cta",  label: "Pricing"      },
 ];
@@ -452,7 +385,29 @@ export default function HomePage() {
       {/* ── App preview + How it works — side by side ────────────────────── */}
       <section id="app-preview" className="bg-[#FAF8F4] overflow-hidden shadow-[0_-24px_60px_rgba(0,0,0,0.5)] py-24 px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+          {/* Single centered heading above both columns */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <span className="text-xs tracking-widest uppercase text-stone-400 block mb-4">
+              The experience
+            </span>
+            <h2 className="font-serif text-4xl md:text-[3.2rem] font-semibold text-stone-900 leading-tight tracking-tight">
+              Your cosmic matches,{" "}
+              <span className="italic text-stone-500">beautifully surfaced</span>
+            </h2>
+            <p className="text-stone-500 text-base max-w-xl mx-auto mt-4 leading-relaxed">
+              Full synastry breakdown — planetary aspects, elemental harmony, and a compatibility score — for every person you meet.
+            </p>
+          </motion.div>
+
+          {/* Two columns — tops perfectly aligned */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
 
             {/* ── Left: phone mockup ─────────────────────────────── */}
             <motion.div
@@ -460,19 +415,8 @@ export default function HomePage() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              className="flex flex-col items-center gap-8"
+              className="flex flex-col items-center"
             >
-              <div className="text-center">
-                <span className="text-xs tracking-widest uppercase text-stone-400 block mb-3">The experience</span>
-                <h2 className="font-serif text-3xl md:text-4xl font-semibold text-stone-900 leading-tight tracking-tight">
-                  See why every match{" "}
-                  <span className="italic text-stone-500">is written in the stars</span>
-                </h2>
-                <p className="text-stone-500 text-sm max-w-sm mx-auto mt-3 leading-relaxed">
-                  Full synastry breakdown — planetary aspects, elemental harmony, and a compatibility score — for every person you meet.
-                </p>
-              </div>
-
               <PhoneMockup />
             </motion.div>
 
@@ -485,7 +429,7 @@ export default function HomePage() {
               transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
               className="flex flex-col"
             >
-              <div className="text-center mb-2">
+              <div className="text-center mb-1">
                 <span className="text-xs tracking-widest uppercase text-stone-400 block mb-3">The system</span>
                 <h2 className="font-serif text-3xl md:text-4xl font-semibold text-stone-900 tracking-tight">
                   How StarCross works
@@ -501,96 +445,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Features ─────────────────────────────────────────────────────── */}
-      {/* ── Astrology teaser ─────────────────────────────────────────────── */}
-      <section id="elements" className="py-32 px-6 bg-white relative overflow-hidden">
-        <div className="max-w-5xl mx-auto relative z-10">
-
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <span className="text-xs tracking-widest uppercase text-stone-400 block mb-4">
-              The foundations
-            </span>
-            <h2 className="font-serif text-4xl md:text-5xl font-semibold text-stone-900 tracking-tight">
-              More than your Sun sign.
-              <br />
-              <span className="italic text-stone-500">Much more.</span>
-            </h2>
-            <p className="text-stone-500 text-base max-w-lg mx-auto mt-6 leading-relaxed">
-              Most horoscopes only scratch the surface. StarCross reads your full elemental makeup, the four building blocks that shape how you love, communicate, and connect.
-            </p>
-          </motion.div>
-
-          {/* 4 Elements grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-14">
-            {ELEMENTS.map((el, i) => (
-              <motion.div
-                key={el.name}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.55, delay: i * 0.1 }}
-                whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                className="rounded-2xl border p-6 flex flex-col gap-4"
-                style={{ background: el.bg, borderColor: el.border }}
-              >
-                {/* Glyph + name */}
-                <div className="flex items-center gap-2.5">
-                  <span
-                    className="text-2xl leading-none"
-                    style={{ color: el.accent }}
-                  >
-                    {el.glyph}
-                  </span>
-                  <div>
-                    <p
-                      className="font-serif text-base font-semibold leading-tight"
-                      style={{ color: el.textAccent }}
-                    >
-                      {el.name}
-                    </p>
-                    <p
-                      className="text-[10px] uppercase tracking-[0.1em] mt-0.5"
-                      style={{ color: el.accent }}
-                    >
-                      {el.tagline}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Sign chips */}
-                <div className="flex flex-wrap gap-1.5">
-                  {el.signs.map((sign) => (
-                    <span
-                      key={sign}
-                      className="inline-flex items-center gap-1 text-[10px] font-medium rounded-full px-2 py-0.5 border"
-                      style={{
-                        background: `${el.accent}18`,
-                        color: el.textAccent,
-                        borderColor: `${el.accent}40`,
-                      }}
-                    >
-                      <ZodiacIcon sign={sign} size={12} />
-                      {sign}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Description */}
-                <p className="text-stone-500 text-xs leading-relaxed flex-1">
-                  {el.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-
-        </div>
-      </section>
 
       {/* ── How the matching works (astrology education) ─────────────────── */}
       <section id="astrology" className="py-32 px-6 text-white relative overflow-hidden" style={{ background: "#07091f" }}>

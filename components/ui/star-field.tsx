@@ -2,26 +2,25 @@
 import { useEffect, useRef } from "react";
 
 // Real diverse headshot photos — preloaded once at module level
-// randomuser.me serves CORS-safe 128×128 real face photos
+// pravatar.cc delivers CORS-safe real human face photos (Access-Control-Allow-Origin: *)
 const FACE_SRCS = [
-  // Women — varied ethnicities
-  "https://randomuser.me/api/portraits/women/2.jpg",   // blonde/light
-  "https://randomuser.me/api/portraits/women/7.jpg",   // brunette European
-  "https://randomuser.me/api/portraits/women/26.jpg",  // East Asian
-  "https://randomuser.me/api/portraits/women/33.jpg",  // South Asian
-  "https://randomuser.me/api/portraits/women/44.jpg",  // Latina/mixed
-  "https://randomuser.me/api/portraits/women/55.jpg",  // African
-  "https://randomuser.me/api/portraits/women/65.jpg",  // Middle Eastern
-  "https://randomuser.me/api/portraits/women/75.jpg",  // Nordic/light
-  // Men — varied ethnicities
-  "https://randomuser.me/api/portraits/men/3.jpg",     // dark hair European
-  "https://randomuser.me/api/portraits/men/22.jpg",    // East Asian
-  "https://randomuser.me/api/portraits/men/36.jpg",    // South Asian
-  "https://randomuser.me/api/portraits/men/48.jpg",    // African
-  "https://randomuser.me/api/portraits/men/62.jpg",    // Latino/mixed
-  "https://randomuser.me/api/portraits/men/71.jpg",    // Middle Eastern
-  "https://randomuser.me/api/portraits/men/80.jpg",    // blonde/Nordic
-  "https://randomuser.me/api/portraits/men/9.jpg",     // brunette Western
+  // Spread of 16 across the 1-70 pool for maximum diversity of gender + ethnicity
+  "https://i.pravatar.cc/80?img=1",
+  "https://i.pravatar.cc/80?img=5",
+  "https://i.pravatar.cc/80?img=8",
+  "https://i.pravatar.cc/80?img=12",
+  "https://i.pravatar.cc/80?img=16",
+  "https://i.pravatar.cc/80?img=20",
+  "https://i.pravatar.cc/80?img=25",
+  "https://i.pravatar.cc/80?img=29",
+  "https://i.pravatar.cc/80?img=33",
+  "https://i.pravatar.cc/80?img=38",
+  "https://i.pravatar.cc/80?img=43",
+  "https://i.pravatar.cc/80?img=47",
+  "https://i.pravatar.cc/80?img=52",
+  "https://i.pravatar.cc/80?img=57",
+  "https://i.pravatar.cc/80?img=62",
+  "https://i.pravatar.cc/80?img=68",
 ];
 
 const faceImages: HTMLImageElement[] =
@@ -295,8 +294,8 @@ export function StarField({
           ctx!.fill();
         }
 
-        // Circular face avatar
-        const faceSize = Math.max(8, s.r * 7);
+        // Circular face avatar — sized so even small stars show a face
+        const faceSize = Math.max(12, s.r * 9);
         const half = faceSize / 2;
         const img = faceImages[s.faceIdx];
         ctx!.save();
@@ -305,13 +304,26 @@ export function StarField({
         ctx!.arc(px, py, half, 0, Math.PI * 2);
         ctx!.clip();
         if (img && img.complete && img.naturalWidth > 0) {
-          ctx!.drawImage(img, px - half, py - half, faceSize, faceSize);
+          try {
+            ctx!.drawImage(img, px - half, py - half, faceSize, faceSize);
+          } catch {
+            // canvas taint fallback
+            ctx!.fillStyle = `rgba(${s.r_},${s.g_},${s.b_},1)`;
+            ctx!.fill();
+          }
         } else {
-          // Fallback dot while image loads
+          // Dot while loading
           ctx!.fillStyle = `rgba(${s.r_},${s.g_},${s.b_},1)`;
           ctx!.fill();
         }
         ctx!.restore();
+
+        // Thin white ring so each face reads clearly against dark sky
+        ctx!.beginPath();
+        ctx!.arc(px, py, half, 0, Math.PI * 2);
+        ctx!.strokeStyle = `rgba(255,255,255,${a * 0.55})`;
+        ctx!.lineWidth = 0.9;
+        ctx!.stroke();
       }
 
       // ── Shooting stars (larger, more frequent) ───────────────────────────
