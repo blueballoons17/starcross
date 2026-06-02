@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
 import { calculateCompatibility } from "@/lib/matching";
+import { sendMatchEmail } from "@/lib/email";
 import type { AstrologyResult } from "@/lib/astrology";
 import { checkAndIncrementSwipe } from "@/lib/subscription";
 
@@ -170,6 +171,25 @@ export async function POST(request: NextRequest) {
             },
           ],
         });
+
+        // Send match emails — fetch emails then fire-and-forget
+        Promise.all([
+          prisma.user.findUnique({ where: { id: userAId }, select: { email: true } }),
+          prisma.user.findUnique({ where: { id: userBId }, select: { email: true } }),
+        ]).then(([uA, uB]) => {
+          if (uA?.email) {
+            sendMatchEmail({
+              toEmail: uA.email, toName: nameA,
+              matchName: nameB, matchScore: compat.matchScore, matchId: match.id,
+            }).catch(() => {});
+          }
+          if (uB?.email) {
+            sendMatchEmail({
+              toEmail: uB.email, toName: nameB,
+              matchName: nameA, matchScore: compat.matchScore, matchId: match.id,
+            }).catch(() => {});
+          }
+        }).catch(() => {});
       }
     }
   }

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display, Cinzel } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "@/components/SessionProvider";
+import { PostHogProvider } from "@/components/PostHogProvider";
 import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -33,10 +34,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={`${inter.variable} ${playfair.variable} ${cinzel.variable} font-sans min-h-screen bg-[#080B18] text-stone-100 antialiased`}>
         <SessionProvider>
-          <div className="relative">
-            {children}
-          </div>
-          <Toaster />
+          <PostHogProvider>
+            <div className="relative">
+              {children}
+            </div>
+            <Toaster />
+          </PostHogProvider>
         </SessionProvider>
       </body>
     </html>

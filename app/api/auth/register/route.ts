@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth";
+import { sendWelcomeEmail } from "@/lib/email";
 
 // Simple in-memory rate limiter
 const ipCounts = new Map<string, { count: number; resetAt: number }>();
@@ -73,6 +74,9 @@ export async function POST(request: NextRequest) {
       passwordHash,
     },
   });
+
+  // Send welcome email — fire-and-forget, never block registration
+  sendWelcomeEmail(user.email).catch(() => {});
 
   return NextResponse.json({ success: true, userId: user.id }, { status: 201 });
 }
