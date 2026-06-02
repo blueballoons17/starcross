@@ -28,14 +28,14 @@ export async function GET() {
       reporter: {
         select: {
           email: true,
-          profile: { select: { name: true, birthdate: true } },
+          profile: { select: { name: true, birthDate: true } },
         },
       },
       reported: {
         select: {
           id: true,
           email: true,
-          profile: { select: { name: true, birthdate: true } },
+          profile: { select: { name: true, birthDate: true } },
         },
       },
     },
