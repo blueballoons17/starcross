@@ -37,7 +37,7 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
     const x = radius * Math.cos(radian);
     const y = radius * Math.sin(radian);
     const zIndex = Math.round(100 + 50 * Math.cos(radian));
-    const opacity = Math.max(0.4, Math.min(1, 0.4 + 0.6 * ((1 + Math.sin(radian)) / 2)));
+    const opacity = Math.max(0.65, Math.min(1, 0.65 + 0.35 * ((1 + Math.sin(radian)) / 2)));
     return { x, y, zIndex, opacity };
   }
 
@@ -64,8 +64,8 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
       {/* ── Orbital ring ─────────────────────────────────────────────────── */}
       <div className="relative w-full flex items-center justify-center" style={{ height: 420 }}>
         {/* Guide rings */}
-        <div className="absolute w-[360px] h-[360px] rounded-full border border-stone-200" />
-        <div className="absolute w-[300px] h-[300px] rounded-full border border-stone-100" />
+        <div className="absolute w-[360px] h-[360px] rounded-full border border-stone-400/60" />
+        <div className="absolute w-[300px] h-[300px] rounded-full border border-stone-300/50" />
 
         {/* Center orb */}
         <div className="relative z-10 w-16 h-16 rounded-full bg-gradient-to-br from-stone-800 to-stone-600 flex items-center justify-center shadow-lg">
@@ -97,7 +97,7 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
                   "border-2 transition-all duration-300 shadow-sm select-none",
                   isActive
                     ? "bg-stone-900 border-stone-900 scale-125 shadow-lg text-white"
-                    : "bg-white border-stone-200 hover:border-stone-400 hover:shadow-md",
+                    : "bg-stone-50 border-stone-400 hover:border-stone-700 hover:bg-white hover:shadow-md",
                 ].join(" ")}
               >
                 <span>{item.icon}</span>
@@ -108,7 +108,7 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
                 className={[
                   "absolute top-14 left-1/2 -translate-x-1/2 whitespace-nowrap",
                   "text-xs font-medium tracking-wide transition-all duration-300",
-                  isActive ? "text-stone-900 scale-110" : "text-stone-500",
+                  isActive ? "text-stone-900 scale-110" : "text-stone-700 font-semibold",
                 ].join(" ")}
               >
                 {item.title}

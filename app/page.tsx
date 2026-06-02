@@ -90,87 +90,166 @@ function CompatScore({ score }: { score: number }) {
   );
 }
 
+// ── Light cream synastry chart SVG ───────────────────────────────────────────
+function SynastryChartSVG() {
+  const cx = 68, cy = 68;
+  const outerR = 56, innerR = 40;
+
+  const planetsA = [
+    { sym: "☉", deg: 118, col: "#f59e0b" },
+    { sym: "☽", deg: 205, col: "#a5b4fc" },
+    { sym: "♀", deg: 72,  col: "#f472b6" },
+    { sym: "↑", deg: 330, col: "#34d399" },
+  ];
+  const planetsB = [
+    { sym: "☉", deg: 42,  col: "#f59e0b" },
+    { sym: "☽", deg: 162, col: "#a5b4fc" },
+    { sym: "♀", deg: 112, col: "#f472b6" },
+    { sym: "↑", deg: 288, col: "#34d399" },
+  ];
+  const toXY = (deg: number, r: number) => ({
+    x: cx + r * Math.cos((deg - 90) * Math.PI / 180),
+    y: cy + r * Math.sin((deg - 90) * Math.PI / 180),
+  });
+
+  return (
+    <svg width="136" height="136" viewBox="0 0 136 136">
+      {/* Cream fill + outer border */}
+      <circle cx={cx} cy={cy} r={outerR + 10} fill="#FAF7F0" stroke="#E2D9C8" strokeWidth="1.2" />
+      {/* Outer zodiac ring */}
+      <circle cx={cx} cy={cy} r={outerR} fill="none" stroke="#C8BEAB" strokeWidth="0.9" />
+      {/* Inner ring (dashed) */}
+      <circle cx={cx} cy={cy} r={innerR} fill="none" stroke="#C8BEAB" strokeWidth="0.6" strokeDasharray="2,3" />
+      {/* 12 zodiac dividers */}
+      {Array.from({ length: 12 }, (_, i) => {
+        const p1 = toXY(i * 30, innerR); const p2 = toXY(i * 30, outerR);
+        return <line key={i} x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y} stroke="#C4B99A" strokeWidth="0.5" opacity="0.5" />;
+      })}
+      {/* Aspect connection lines */}
+      {[0, 1, 2].map(i => {
+        const pa = toXY(planetsA[i].deg, innerR - 7);
+        const pb = toXY(planetsB[i].deg, outerR - 7);
+        return <line key={i} x1={pa.x} y1={pa.y} x2={pb.x} y2={pb.y}
+          stroke={planetsA[i].col} strokeWidth="0.9" opacity="0.45" strokeDasharray="2,2" />;
+      })}
+      {/* Center glyph */}
+      <text x={cx} y={cy + 4} textAnchor="middle" fontSize="11" fill="#9CA3AF" opacity="0.55">✦</text>
+      {/* Person A planets (inner ring) */}
+      {planetsA.map((p, i) => {
+        const pos = toXY(p.deg, innerR - 7);
+        return (
+          <g key={i}>
+            <circle cx={pos.x} cy={pos.y} r="5" fill={p.col} opacity="0.85" />
+            <text x={pos.x} y={pos.y + 1.5} textAnchor="middle" dominantBaseline="middle" fontSize="4.5" fill="white">{p.sym}</text>
+          </g>
+        );
+      })}
+      {/* Person B planets (outer ring) */}
+      {planetsB.map((p, i) => {
+        const pos = toXY(p.deg, outerR - 7);
+        return (
+          <g key={i}>
+            <circle cx={pos.x} cy={pos.y} r="4.5" fill={p.col} opacity="0.85" />
+            <text x={pos.x} y={pos.y + 1.5} textAnchor="middle" dominantBaseline="middle" fontSize="4" fill="white">{p.sym}</text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
 function AppPreview() {
   return (
-    <div className="h-full w-full flex flex-col overflow-hidden bg-[#07091f]">
+    <div className="h-full w-full flex flex-col overflow-hidden bg-[#07091f] pt-[22px]">
+      {/* pt-[22px] = dynamic island space */}
 
       {/* ── NavBar ───────────────────────────────────────────────── */}
-      <div className="shrink-0 flex items-center justify-between px-4 py-2.5 border-b border-indigo-400/20 bg-[#07091f]/90 backdrop-blur-md">
-        <span className="text-[8px] font-semibold text-white tracking-[0.28em]" style={{ fontFamily: "var(--font-inter)" }}>starcross</span>
-        <div className="flex items-center gap-3">
+      <div className="shrink-0 flex items-center justify-between px-3 py-2 border-b border-indigo-400/20 bg-[#07091f]/90 backdrop-blur-md">
+        <span className="text-[7px] font-semibold text-white tracking-[0.28em]" style={{ fontFamily: "var(--font-inter)" }}>starcross</span>
+        <div className="flex items-center gap-2.5">
           {["Discover","Matches","Astrology"].map((l, i) => (
-            <span key={l} className={cn("text-[7px] uppercase tracking-[0.1em]", i === 2 ? "text-indigo-300" : "text-stone-500")}>{l}</span>
+            <span key={l} className={cn("text-[6px] uppercase tracking-[0.1em]", i === 2 ? "text-indigo-300 font-medium" : "text-stone-500")}>{l}</span>
           ))}
         </div>
       </div>
 
-      {/* ── Two profiles + score ─────────────────────────────────── */}
-      <div className="shrink-0 px-4 pt-3 pb-2 flex items-center justify-between">
-        {/* Profile A */}
-        <div className="flex flex-col items-center gap-1">
-          <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-indigo-400/50">
+      {/* ── Cream synastry chart block ───────────────────────────── */}
+      <div
+        className="shrink-0 mx-2.5 mt-2.5 rounded-2xl overflow-hidden"
+        style={{ background: "#FAF7F0", border: "1px solid #E2D9C8" }}
+      >
+        {/* Profiles + chart row */}
+        <div className="flex items-center justify-between px-3 pt-3 pb-1">
+          {/* Person A */}
+          <div className="flex flex-col items-center gap-1 w-12 shrink-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Zara" className="w-full h-full object-cover" />
+            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Zara"
+              className="w-9 h-9 rounded-full object-cover border-2 border-indigo-300/60" />
+            <p className="text-[6px] text-stone-600 text-center leading-tight font-medium">Zara, 25</p>
+            <p className="text-[5.5px] text-stone-400">♉ Taurus</p>
           </div>
-          <p className="text-[7px] text-stone-300">Zara, 25</p>
-          <p className="text-[6px] text-indigo-300/70">♉ Taurus</p>
+
+          {/* SVG synastry chart — cream colored */}
+          <div className="flex flex-col items-center gap-0.5">
+            <SynastryChartSVG />
+          </div>
+
+          {/* Person B */}
+          <div className="flex flex-col items-center gap-1 w-12 shrink-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="https://randomuser.me/api/portraits/women/26.jpg" alt="Sofia"
+              className="w-9 h-9 rounded-full object-cover border-2 border-rose-300/60" />
+            <p className="text-[6px] text-stone-600 text-center leading-tight font-medium">Sofia, 27</p>
+            <p className="text-[5.5px] text-stone-400">♓ Pisces</p>
+          </div>
         </div>
 
-        {/* Compatibility ring + label */}
-        <div className="flex flex-col items-center gap-0.5">
-          <CompatScore score={94} />
-          <p className="text-[6px] uppercase tracking-[0.14em] text-indigo-300/80">Cosmic Match</p>
-        </div>
-
-        {/* Profile B */}
-        <div className="flex flex-col items-center gap-1">
-          <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-rose-400/50">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="https://randomuser.me/api/portraits/women/26.jpg" alt="Sofia" className="w-full h-full object-cover" />
-          </div>
-          <p className="text-[7px] text-stone-300">Sofia, 27</p>
-          <p className="text-[6px] text-rose-300/70">♓ Pisces</p>
+        {/* Score bar */}
+        <div className="flex items-center justify-center gap-2 pb-2.5">
+          <span className="text-[6px] text-stone-500 uppercase tracking-[0.12em]">Compatibility</span>
+          <span className="text-[13px] font-bold text-indigo-700 leading-none">94%</span>
+          <span className="text-[6px] text-stone-400 italic">Cosmic Match</span>
         </div>
       </div>
 
-      {/* ── Synastry aspects ─────────────────────────────────────── */}
-      <div className="flex-1 min-h-0 overflow-hidden flex flex-col px-4 gap-1.5">
-        <p className="text-[6px] uppercase tracking-[0.16em] text-indigo-400/70 shrink-0">Key Aspects</p>
-        <div className="flex-1 overflow-hidden bg-indigo-950/40 border border-indigo-400/15 rounded-[4px] px-2 divide-y divide-indigo-400/[0.08]">
+      {/* ── Key aspects ──────────────────────────────────────────── */}
+      <div className="flex-1 min-h-0 overflow-hidden flex flex-col px-2.5 pt-2 gap-1.5">
+        <p className="text-[5.5px] uppercase tracking-[0.16em] text-indigo-400/70 shrink-0">Key Aspects</p>
+        <div className="flex-1 overflow-hidden bg-indigo-950/50 border border-indigo-400/15 rounded-xl px-2 divide-y divide-indigo-400/[0.07]">
           {SYNASTRY_ASPECTS.map((a) => (
             <SynastryRow key={a.planet1 + a.planet2} {...a} />
           ))}
         </div>
 
-        {/* Elemental bars */}
-        <div className="shrink-0 bg-white/[0.03] border border-indigo-400/10 rounded-[4px] px-2.5 py-2">
-          <p className="text-[6px] uppercase tracking-[0.12em] text-indigo-400/60 mb-1.5">Elemental Harmony</p>
+        {/* ── Elemental bars ─────────────────────────────────────── */}
+        <div className="shrink-0 bg-white/[0.03] border border-indigo-400/10 rounded-xl px-2.5 py-2">
+          <p className="text-[5.5px] uppercase tracking-[0.12em] text-indigo-400/60 mb-1.5">Elemental Harmony</p>
           {[
             { label: "Fire",  pct: 72, col: "#f59e0b" },
             { label: "Water", pct: 88, col: "#6366f1" },
             { label: "Air",   pct: 55, col: "#38bdf8" },
           ].map(e => (
             <div key={e.label} className="flex items-center gap-1.5 mb-1 last:mb-0">
-              <span className="text-[6px] text-stone-400 w-7 shrink-0">{e.label}</span>
-              <div className="flex-1 h-1 bg-white/[0.06] rounded-full overflow-hidden">
-                <div className="h-full rounded-full transition-all" style={{ width: `${e.pct}%`, backgroundColor: e.col, opacity: 0.85 }} />
+              <span className="text-[5.5px] text-stone-400 w-6 shrink-0">{e.label}</span>
+              <div className="flex-1 h-1 bg-white/[0.05] rounded-full overflow-hidden">
+                <div className="h-full rounded-full" style={{ width: `${e.pct}%`, backgroundColor: e.col, opacity: 0.85 }} />
               </div>
-              <span className="text-[6px] text-stone-500 shrink-0">{e.pct}%</span>
+              <span className="text-[5.5px] text-stone-500 shrink-0">{e.pct}%</span>
             </div>
           ))}
         </div>
       </div>
 
       {/* ── Bottom nav ───────────────────────────────────────────── */}
-      <div className="shrink-0 border-t border-indigo-400/20 bg-[#07091f]/95 px-4 py-2 flex items-center justify-around">
+      <div className="shrink-0 border-t border-indigo-400/20 bg-[#0a0c22]/95 px-4 py-2.5 flex items-center justify-around">
         {[
           { icon: Heart,    label: "Discover",  active: false },
           { icon: Sparkles, label: "Matches",   active: false },
           { icon: Moon,     label: "Astrology", active: true  },
         ].map(({ icon: Icon, label, active }) => (
           <div key={label} className="flex flex-col items-center gap-0.5">
-            <Icon className={cn("h-3 w-3", active ? "text-indigo-400" : "text-stone-500")} />
-            <span className={cn("text-[7px] tracking-wide", active ? "text-indigo-300" : "text-stone-500")}>{label}</span>
+            <Icon className={cn("h-3.5 w-3.5", active ? "text-indigo-400" : "text-stone-600")} />
+            <span className={cn("text-[6px] tracking-wide", active ? "text-indigo-300 font-medium" : "text-stone-600")}>{label}</span>
           </div>
         ))}
       </div>
@@ -360,20 +439,6 @@ export default function HomePage() {
           </motion.div>
         </div>
 
-        {/* Scroll cue */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 0.6 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-stone-600 text-xs"
-        >
-          <span className="tracking-widest uppercase text-[10px]">Scroll to discover</span>
-          <motion.div
-            animate={{ y: [0, 7, 0] }}
-            transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-            className="w-px h-8 bg-gradient-to-b from-stone-600 to-transparent"
-          />
-        </motion.div>
       </section>
 
       {/* Spacer — pushes content below the fixed hero */}
@@ -576,48 +641,116 @@ export default function HomePage() {
       </section>
 
       {/* ── CTA ──────────────────────────────────────────────────────────── */}
-      <section id="pricing-cta" className="py-36 px-6 text-white text-center relative overflow-hidden" style={{ background: "#07091f" }}>
-        <StarField count={180} />
+      <section id="pricing-cta" className="py-28 px-6 text-white relative overflow-hidden" style={{ background: "#07091f" }}>
+        <StarField count={140} />
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          {[780, 540, 310].map((d) => (
-            <div
-              key={d}
-              className="absolute rounded-full border border-stone-800"
-              style={{ width: d, height: d }}
-            />
+          {[760, 520, 300].map((d) => (
+            <div key={d} className="absolute rounded-full border border-stone-800/50" style={{ width: d, height: d }} />
           ))}
         </div>
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="relative z-10 max-w-2xl mx-auto space-y-6"
+          className="relative z-10 max-w-3xl mx-auto"
         >
-          <div className="flex items-center justify-center mb-2">
-            <span
-              className="text-3xl font-light text-stone-300 tracking-[0.32em]"
-              style={{ fontFamily: "var(--font-cinzel)", textShadow: "0 0 40px rgba(120,140,255,0.3)" }}
-            >
-              starcross
-            </span>
+          {/* Heading */}
+          <div className="text-center mb-12">
+            <p className="text-xs tracking-[0.22em] uppercase text-indigo-400 mb-3" style={{ fontFamily: "var(--font-cinzel)" }}>
+              Choose your path
+            </p>
+            <h2 className="font-serif text-4xl md:text-5xl font-semibold leading-tight tracking-tight mb-3">
+              Find your cosmic match
+            </h2>
+            <p className="text-stone-400 text-base">Start free. Upgrade whenever you&apos;re ready.</p>
           </div>
-          <p className="font-serif text-sm italic text-stone-400">
-            Your chart is waiting
-          </p>
-          <h2 className="font-serif text-4xl md:text-5xl font-semibold leading-tight tracking-tight">
-            The stars have always
-            <br />
-            known your story.
-          </h2>
-          <p className="text-stone-400 text-base leading-relaxed max-w-md mx-auto">
-            Create your birth profile in two minutes. Discover who you&apos;re cosmically aligned with.
-          </p>
-          <div className="pt-2">
-            <Button size="lg" asChild className="bg-white text-stone-900 hover:bg-stone-100 rounded-full px-12 h-12">
-              <Link href="/pricing">
-                Begin your journey <ArrowRight className="h-4 w-4 ml-2" />
-              </Link>
-            </Button>
+
+          {/* Two-column pricing cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+            {/* Free */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.05 }}
+              className="rounded-3xl border border-white/10 bg-stone-900/40 backdrop-blur-md overflow-hidden flex flex-col"
+            >
+              <div className="px-7 pt-8 pb-6 text-center border-b border-white/[0.06]">
+                <p className="text-[10px] tracking-[0.22em] uppercase text-stone-500 mb-3" style={{ fontFamily: "var(--font-cinzel)" }}>Free</p>
+                <h3 className="text-2xl font-semibold text-white mb-2" style={{ fontFamily: "var(--font-cinzel)" }}>Starcross</h3>
+                <p className="text-stone-500 text-xs mb-4">Dip your toes in — no card required.</p>
+                <div className="flex items-baseline justify-center gap-1">
+                  <span className="text-4xl font-light text-white">$0</span>
+                  <span className="text-stone-500 text-sm">/ forever</span>
+                </div>
+              </div>
+              <div className="px-7 py-5 flex-1">
+                <ul className="space-y-3">
+                  {[
+                    { text: "5 suggested matches", on: true },
+                    { text: "Message your matches", on: true },
+                    { text: "Astrology chart", on: true },
+                    { text: "Unlimited swipes", on: false },
+                    { text: "See who liked you", on: false },
+                    { text: "Full synastry breakdown", on: false },
+                  ].map(f => (
+                    <li key={f.text} className="flex items-center gap-3">
+                      <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[10px] ${f.on ? "bg-emerald-500/10 border border-emerald-500/30 text-emerald-400" : "bg-stone-800 border border-stone-700 text-stone-600"}`}>
+                        {f.on ? "✓" : "✕"}
+                      </div>
+                      <span className={`text-sm ${f.on ? "text-stone-300" : "text-stone-600"}`}>{f.text}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="px-7 pb-7">
+                <Button variant="outline" asChild className="w-full rounded-2xl border-white/15 hover:border-white/30 text-stone-300 hover:text-white bg-transparent hover:bg-white/5 h-12">
+                  <Link href="/signup">Continue for free</Link>
+                </Button>
+              </div>
+            </motion.div>
+
+            {/* Paid */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.12 }}
+              className="rounded-3xl border border-indigo-500/40 bg-stone-900/60 backdrop-blur-md overflow-hidden flex flex-col relative"
+            >
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                <span className="bg-indigo-500 text-white text-[10px] font-semibold tracking-[0.1em] uppercase px-3 py-1 rounded-full">Most popular</span>
+              </div>
+              <div className="px-7 pt-10 pb-6 text-center border-b border-white/[0.07]">
+                <p className="text-[10px] tracking-[0.22em] uppercase text-indigo-400 mb-3" style={{ fontFamily: "var(--font-cinzel)" }}>Full access</p>
+                <h3 className="text-2xl font-semibold text-white mb-2" style={{ fontFamily: "var(--font-cinzel)" }}>StarCross+</h3>
+                <p className="text-stone-400 text-xs mb-4">Unlock every connection the stars have written.</p>
+                <div className="flex items-baseline justify-center gap-1">
+                  <span className="text-4xl font-light text-white">$14.99</span>
+                  <span className="text-stone-400 text-sm">/ month</span>
+                </div>
+                <p className="text-stone-600 text-xs mt-1">Cancel anytime</p>
+              </div>
+              <div className="px-7 py-5 flex-1">
+                <ul className="space-y-3">
+                  {["Unlimited swipes", "Message all your matches", "Full synastry chart with planetary web", "Deep compatibility breakdown", "See who liked you", "Priority profile visibility"].map(f => (
+                    <li key={f} className="flex items-center gap-3">
+                      <div className="w-5 h-5 rounded-full bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center shrink-0 text-[10px] text-indigo-400">✓</div>
+                      <span className="text-stone-200 text-sm">{f}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="px-7 pb-7">
+                <Button asChild className="w-full rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white h-12 shadow-xl shadow-indigo-500/20">
+                  <Link href="/pricing">Begin your journey, $14.99/mo <ArrowRight className="h-4 w-4 ml-2" /></Link>
+                </Button>
+                <p className="text-center text-stone-600 text-xs mt-3">Secure payment via Stripe · Cancel anytime</p>
+              </div>
+            </motion.div>
+
           </div>
         </motion.div>
       </section>
