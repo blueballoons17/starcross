@@ -350,12 +350,12 @@ export default function HomePage() {
 
       {/* ── Fixed header ─────────────────────────────────────────────────── */}
       <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.07] bg-[#07091f]/80 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto flex h-16 items-center gap-8 px-6">
+        <div className="max-w-7xl mx-auto flex h-20 items-center gap-10 px-8">
 
-          {/* Logo */}
+          {/* Logo — large */}
           <Link href="/" className="shrink-0">
             <span
-              className="text-[13px] font-normal text-white/90 tracking-[0.32em]"
+              className="text-4xl font-light text-white/90 tracking-[0.25em]"
               style={{ fontFamily: "var(--font-inter)" }}
             >
               starcross
@@ -386,7 +386,7 @@ export default function HomePage() {
                 <Button variant="ghost" size="sm" asChild className="text-white/70 hover:text-white hover:bg-white/10 rounded-full px-5">
                   <Link href="/login">Sign in</Link>
                 </Button>
-                <Button size="sm" asChild className="bg-white text-stone-900 hover:bg-stone-100 rounded-full px-5 font-medium">
+                <Button size="sm" asChild className="bg-white text-stone-900 hover:bg-stone-100 rounded-full px-6 font-medium">
                   <Link href="/pricing">Get started</Link>
                 </Button>
               </>
@@ -395,10 +395,10 @@ export default function HomePage() {
         </div>
       </header>
 
-      {/* ── Hero — sticky so content scrolls over it ─────────────────────── */}
+      {/* ── Hero — fixed behind everything, content slides over it ──────── */}
       <section
         id="hero"
-        className="sticky top-0 h-screen flex flex-col items-center justify-center px-6 overflow-hidden z-0"
+        className="fixed inset-0 flex flex-col items-center justify-center px-6 overflow-hidden z-0"
         style={{ background: "#07091f" }}
       >
         <StarField count={320} />
@@ -497,11 +497,14 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      {/* ── All content below slides over the sticky hero ────────────────── */}
+      {/* Spacer — pushes content below the fixed hero */}
+      <div className="h-screen" aria-hidden="true" />
+
+      {/* ── All content below slides over the fixed hero ─────────────────── */}
       <div className="relative z-10">
 
       {/* ── ContainerScroll: app preview ─────────────────────────────────── */}
-      <section id="app-preview" className="bg-[#FAF8F4] overflow-hidden">
+      <section id="app-preview" className="bg-[#FAF8F4] overflow-hidden shadow-[0_-24px_60px_rgba(0,0,0,0.5)]">
         <ContainerScroll
           titleComponent={
             <motion.div
