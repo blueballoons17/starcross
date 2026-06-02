@@ -57,6 +57,10 @@ export async function GET(
       birthCity:   other.profile!.birthCity,
       birthCountry: other.profile!.birthCountry,
       avatarUrl:   other.profile!.avatarUrl,
+      photos: (() => {
+        try { return JSON.parse(other.profile!.photos ?? "[]") as string[]; }
+        catch { return [] as string[]; }
+      })(),
     },
     otherAstro: {
       sunSign:    other.astrologyProfile!.sunSign,

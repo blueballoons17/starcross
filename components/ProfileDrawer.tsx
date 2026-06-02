@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, MessageCircle, Sparkles, AlertTriangle, Lock } from "lucide-react";
 import Link from "next/link";
@@ -28,6 +28,7 @@ export interface ProfileDrawerMatch {
     birthCity: string;
     birthCountry: string;
     avatarUrl?: string | null;
+    photos?: string[] | null;
   };
   otherAstro: {
     sunSign: string;
@@ -133,7 +134,14 @@ function BreakdownBar({
 
 export function ProfileDrawer({ open, onClose, match, isPremium }: ProfileDrawerProps) {
   const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [photoIdx, setPhotoIdx] = useState(0);
+  useEffect(() => { setPhotoIdx(0); }, [match?.id]);
   if (!match) return null;
+
+  const allPhotos = [
+    match.otherUser.avatarUrl,
+    ...(match.otherUser.photos ?? []),
+  ].filter((url): url is string => Boolean(url));
 
   const sunColor = getZodiacColor(match.otherAstro.sunSign);
   const moonColor = getZodiacColor(match.otherAstro.moonSign);
@@ -170,50 +178,81 @@ export function ProfileDrawer({ open, onClose, match, isPremium }: ProfileDrawer
           >
             {/* Scrollable content */}
             <div className="flex-1 overflow-y-auto">
-              {/* Header with gradient glow */}
-              <div
-                className="relative px-6 pt-10 pb-6 shrink-0"
-                style={{
-                  background: `radial-gradient(ellipse 130% 90% at 50% 0%, ${arcColor}1a 0%, transparent 65%)`,
-                }}
-              >
+              {/* Photo carousel */}
+              <div className="relative shrink-0 overflow-hidden" style={{ height: 300 }}>
+                {allPhotos.length > 0 ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={allPhotos[photoIdx]}
+                    alt={match.otherUser.name}
+                    className="w-full h-full object-cover object-top select-none"
+                    draggable={false}
+                  />
+                ) : (
+                  <div
+                    className={cn(
+                      "w-full h-full flex items-center justify-center text-6xl font-bold",
+                      sunColor.bg,
+                      sunColor.text
+                    )}
+                  >
+                    {getInitials(match.otherUser.name)}
+                  </div>
+                )}
+
+                {/* Top fade for indicators/close button legibility */}
+                <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-stone-950/60 to-transparent pointer-events-none" />
+                {/* Bottom fade for name legibility */}
+                <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-stone-950 via-stone-950/55 to-transparent pointer-events-none" />
+
+                {/* Close button */}
                 <button
                   onClick={onClose}
-                  className="absolute top-4 right-4 p-1.5 rounded-full bg-white/5 hover:bg-white/12 text-stone-400 hover:text-white transition-colors"
+                  className="absolute top-4 right-4 p-1.5 rounded-full bg-black/30 backdrop-blur-sm hover:bg-black/50 text-white/80 hover:text-white transition-colors"
                   aria-label="Close"
                 >
                   <X className="h-4 w-4" />
                 </button>
 
-                {/* Avatar */}
-                <div className="flex flex-col items-center gap-4">
-                  {match.otherUser.avatarUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={match.otherUser.avatarUrl}
-                      alt={match.otherUser.name}
-                      className="w-20 h-20 rounded-full object-cover ring-2 ring-white/20 shadow-xl"
-                    />
-                  ) : (
-                    <div
-                      className={cn(
-                        "w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold ring-2 ring-white/20 shadow-xl",
-                        sunColor.bg,
-                        sunColor.text
-                      )}
-                    >
-                      {getInitials(match.otherUser.name)}
-                    </div>
-                  )}
-
-                  <div className="text-center">
-                    <h2 className="font-serif text-2xl font-semibold text-white">
-                      {match.otherUser.name}, {age}
-                    </h2>
-                    <p className="text-stone-400 text-sm mt-0.5">
-                      {match.otherUser.birthCity}, {match.otherUser.birthCountry}
-                    </p>
+                {/* Story-style photo progress bars */}
+                {allPhotos.length > 1 && (
+                  <div className="absolute top-3 left-4 right-14 flex gap-1.5 pointer-events-none">
+                    {allPhotos.map((_, i) => (
+                      <div
+                        key={i}
+                        className={cn(
+                          "flex-1 h-[2px] rounded-full transition-colors duration-200",
+                          i === photoIdx ? "bg-white" : "bg-white/30"
+                        )}
+                      />
+                    ))}
                   </div>
+                )}
+
+                {/* Tap zones: left third = previous, right two-thirds = next */}
+                {allPhotos.length > 1 && (
+                  <>
+                    <button
+                      onClick={() => setPhotoIdx((p) => Math.max(0, p - 1))}
+                      className="absolute left-0 top-0 bottom-0 w-1/3"
+                      aria-label="Previous photo"
+                    />
+                    <button
+                      onClick={() => setPhotoIdx((p) => Math.min(allPhotos.length - 1, p + 1))}
+                      className="absolute right-0 top-0 bottom-0 w-2/3"
+                      aria-label="Next photo"
+                    />
+                  </>
+                )}
+
+                {/* Name / location overlay */}
+                <div className="absolute bottom-0 left-0 right-0 px-5 pb-4 pointer-events-none">
+                  <h2 className="font-serif text-2xl font-semibold text-white leading-tight">
+                    {match.otherUser.name}, {age}
+                  </h2>
+                  <p className="text-white/60 text-sm mt-0.5">
+                    {match.otherUser.birthCity}, {match.otherUser.birthCountry}
+                  </p>
                 </div>
               </div>
 

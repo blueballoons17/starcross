@@ -328,7 +328,7 @@ interface MatchDetail {
   id:string; matchScore:number;
   breakdown:{ elemental:number; emotional:number; communication:number; stability:number };
   explanation:string; strengths:string[]; frictionPoints:string[];
-  otherUser:{ name:string; birthDate:string; birthCity:string; birthCountry:string; avatarUrl?:string|null };
+  otherUser:{ name:string; birthDate:string; birthCity:string; birthCountry:string; avatarUrl?:string|null; photos?:string[]|null };
   otherAstro:ChartData; currentAstro:ChartData|null;
 }
 
