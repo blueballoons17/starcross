@@ -10,7 +10,7 @@ import { StarField } from "@/components/ui/star-field";
 import { ZodiacIcon } from "@/components/ui/zodiac-icon";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import { useSession } from "next-auth/react";
 
 const HERO_WORDS = [
@@ -329,60 +329,13 @@ function AppPreview() {
   );
 }
 
-// ── Section nav ──────────────────────────────────────────────────────────────
-const SECTIONS = [
-  { id: "hero",        label: "Home"         },
-  { id: "app-preview", label: "The App"      },
-  { id: "how-it-works",label: "How It Works" },
-  { id: "features",   label: "Features"     },
-  { id: "elements",   label: "Elements"     },
-  { id: "astrology",  label: "Astrology"    },
-  { id: "pricing-cta",label: "Get Started"  },
+// ── Section nav links ─────────────────────────────────────────────────────────
+const NAV_SECTIONS = [
+  { id: "how-it-works", label: "How It Works" },
+  { id: "elements",     label: "Elements"     },
+  { id: "astrology",    label: "Astrology"    },
+  { id: "pricing-cta",  label: "Pricing"      },
 ];
-
-function SectionNav() {
-  const [active, setActive] = useState("hero");
-
-  useEffect(() => {
-    const observers: IntersectionObserver[] = [];
-    SECTIONS.forEach(({ id }) => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      const obs = new IntersectionObserver(
-        ([entry]) => { if (entry.isIntersecting) setActive(id); },
-        { threshold: 0.35 }
-      );
-      obs.observe(el);
-      observers.push(obs);
-    });
-    return () => observers.forEach((o) => o.disconnect());
-  }, []);
-
-  return (
-    <div className="fixed right-5 top-1/2 -translate-y-1/2 z-50 hidden lg:flex flex-col gap-3 items-end">
-      {SECTIONS.map(({ id, label }) => (
-        <button
-          key={id}
-          onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })}
-          className="group flex items-center gap-2"
-        >
-          <span className={cn(
-            "text-[10px] tracking-[0.12em] uppercase transition-all duration-300 opacity-0 group-hover:opacity-100",
-            active === id ? "opacity-100 text-white" : "text-stone-500"
-          )}>
-            {label}
-          </span>
-          <div className={cn(
-            "rounded-full transition-all duration-300",
-            active === id
-              ? "w-2.5 h-2.5 bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]"
-              : "w-1.5 h-1.5 bg-stone-600 group-hover:bg-stone-400"
-          )} />
-        </button>
-      ))}
-    </div>
-  );
-}
 
 // ── Page ─────────────────────────────────────────────────────────────────────
 
@@ -401,30 +354,46 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#FAF8F4] overflow-x-hidden">
-      <SectionNav />
 
       {/* ── Fixed header ─────────────────────────────────────────────────── */}
-      <header className="fixed top-0 left-0 right-0 z-50">
-        <div className="max-w-5xl mx-auto flex h-16 items-center justify-between px-6">
-          <div className="flex items-center">
+      <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.07] bg-[#07091f]/80 backdrop-blur-md">
+        <div className="max-w-7xl mx-auto flex h-16 items-center gap-8 px-6">
+
+          {/* Logo */}
+          <Link href="/" className="shrink-0">
             <span
-              className="text-2xl font-light text-white/90 tracking-[0.28em]"
-              style={{ fontFamily: "var(--font-cinzel)" }}
+              className="text-[13px] font-normal text-white/90 tracking-[0.32em]"
+              style={{ fontFamily: "var(--font-inter)" }}
             >
               starcross
             </span>
-          </div>
-          <div className="flex items-center gap-2">
+          </Link>
+
+          {/* Section nav links — centre */}
+          <nav className="hidden md:flex items-center gap-1 flex-1">
+            {NAV_SECTIONS.map(({ id, label }) => (
+              <button
+                key={id}
+                onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })}
+                className="px-4 py-1.5 text-sm font-medium text-white/60 hover:text-white border-b-2 border-transparent hover:border-white/40 transition-all"
+              >
+                {label}
+              </button>
+            ))}
+          </nav>
+
+          {/* CTA buttons — right */}
+          <div className="flex items-center gap-2 ml-auto shrink-0">
             {isLoggedIn ? (
               <Button size="sm" asChild className="bg-white text-stone-900 hover:bg-stone-100 rounded-full px-5">
                 <Link href="/discover">Open app →</Link>
               </Button>
             ) : (
               <>
-                <Button variant="ghost" size="sm" asChild className="text-white/70 hover:text-white hover:bg-white/10">
+                <Button variant="ghost" size="sm" asChild className="text-white/70 hover:text-white hover:bg-white/10 rounded-full px-5">
                   <Link href="/login">Sign in</Link>
                 </Button>
-                <Button size="sm" asChild className="bg-white text-stone-900 hover:bg-stone-100 rounded-full px-5">
+                <Button size="sm" asChild className="bg-white text-stone-900 hover:bg-stone-100 rounded-full px-5 font-medium">
                   <Link href="/pricing">Get started</Link>
                 </Button>
               </>
@@ -472,25 +441,6 @@ export default function HomePage() {
           style={{ y: heroY, opacity: heroOpacity }}
           className="relative z-10 text-center max-w-3xl w-full"
         >
-          {/* ── Large wordmark ───────────────────────────────────────── */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.05 }}
-            className="mb-6"
-          >
-            <span
-              className="text-white/90 tracking-[0.35em] font-light"
-              style={{
-                fontFamily: "var(--font-cinzel)",
-                fontSize: "clamp(2.4rem, 6vw, 5rem)",
-                textShadow: "0 0 60px rgba(120,140,255,0.4)",
-              }}
-            >
-              starcross
-            </span>
-          </motion.div>
-
           {/* ── Static label "Find someone" ──────────────────────────── */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
