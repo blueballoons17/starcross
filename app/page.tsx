@@ -14,11 +14,6 @@ import { cn } from "@/lib/utils";
 import { useRef, useEffect } from "react";
 import { useSession } from "next-auth/react";
 
-const SIGNS = [
-  "Aries","Taurus","Gemini","Cancer","Leo","Virgo",
-  "Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces",
-];
-
 const HERO_WORDS = [
   "truly compatible", "written for you", "cosmically aligned",
   "deeply resonant", "meant to last",
@@ -571,50 +566,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Zodiac ticker strip ───────────────────────────────────────────── */}
-      <section className="py-14 bg-stone-50 border-y border-stone-100 overflow-hidden">
-        <div className="relative">
-          <motion.div
-            animate={{ x: ["0%", "-50%"] }}
-            transition={{ duration: 36, ease: "linear", repeat: Infinity }}
-            className="flex gap-5 whitespace-nowrap w-max"
-          >
-            {[...Array(2)].flatMap((_, rep) =>
-              SIGNS.map((sign, idx) => {
-                // Warm monochromatic palette — all amber/honey/stone family, progressively shaded
-                const warmPalette: { bg: string; text: string; border: string }[] = [
-                  { bg: "#fef9f0", text: "#a16207", border: "#fde68a" }, // Aries
-                  { bg: "#fef5e3", text: "#92400e", border: "#fcd34d" }, // Taurus
-                  { bg: "#fef1d4", text: "#b45309", border: "#fbbf24" }, // Gemini
-                  { bg: "#f5f3f0", text: "#57534e", border: "#d6d3d1" }, // Cancer
-                  { bg: "#fff1e0", text: "#9a3412", border: "#fdba74" }, // Leo
-                  { bg: "#fef7e8", text: "#78350f", border: "#fde68a" }, // Virgo
-                  { bg: "#faf0e2", text: "#854d0e", border: "#f5d49a" }, // Libra
-                  { bg: "#f4ede2", text: "#5c4033", border: "#e0c8a8" }, // Scorpio
-                  { bg: "#fef6e0", text: "#b45309", border: "#fde68a" }, // Sagittarius
-                  { bg: "#eeebe6", text: "#44403c", border: "#d0c8be" }, // Capricorn
-                  { bg: "#fef8ed", text: "#a16207", border: "#fde68a" }, // Aquarius
-                  { bg: "#fef4e0", text: "#92400e", border: "#fcd34d" }, // Pisces
-                ];
-                const c = warmPalette[idx % warmPalette.length];
-                return (
-                  <span
-                    key={`${sign}-${rep}`}
-                    className="inline-flex items-center gap-2 pl-2 pr-4 py-2 rounded-full border text-sm font-medium"
-                    style={{ background: c.bg, color: c.text, borderColor: c.border }}
-                  >
-                    <ZodiacIcon sign={sign} size={26} />
-                    {sign}
-                  </span>
-                );
-              })
-            )}
-          </motion.div>
-        </div>
-      </section>
-
       {/* ── Features ─────────────────────────────────────────────────────── */}
-      <section className="py-32 px-6 bg-[#FAF8F4] relative overflow-hidden">
+      <section className="py-32 px-6 bg-stone-950 relative overflow-hidden">
         <div className="max-w-5xl mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -622,13 +575,13 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-20"
           >
-            <span className="text-xs tracking-widest uppercase text-stone-400 block mb-4">
+            <span className="text-xs tracking-widest uppercase text-stone-500 block mb-4">
               The difference
             </span>
-            <h2 className="font-serif text-4xl md:text-5xl font-semibold text-stone-900 tracking-tight">
+            <h2 className="font-serif text-4xl md:text-5xl font-semibold text-white tracking-tight">
               Built for depth,
               <br />
-              <span className="italic text-stone-500">not novelty</span>
+              <span className="italic text-stone-400">not novelty</span>
             </h2>
           </motion.div>
 
@@ -641,13 +594,13 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: i * 0.12 }}
                 whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                className="bg-white rounded-2xl p-8 shadow-sm border border-stone-100 hover:shadow-md transition-shadow"
+                className="bg-stone-900/60 rounded-2xl p-8 border border-white/8 hover:border-white/15 transition-colors"
               >
-                <div className="w-12 h-12 rounded-full bg-stone-50 border border-stone-100 flex items-center justify-center text-xl mb-7">
+                <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-xl mb-7 text-stone-300">
                   {f.symbol}
                 </div>
-                <h3 className="font-serif text-lg font-semibold text-stone-900 mb-4">{f.title}</h3>
-                <p className="text-stone-500 text-sm leading-relaxed">{f.description}</p>
+                <h3 className="font-serif text-lg font-semibold text-white mb-4">{f.title}</h3>
+                <p className="text-stone-400 text-sm leading-relaxed">{f.description}</p>
               </motion.div>
             ))}
           </div>
