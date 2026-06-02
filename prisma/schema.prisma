@@ -30,6 +30,8 @@ model User {
   matchesB         Match[]         @relation("MatchUserB")
   messagesSent     Message[]       @relation("MessageSender")
   notifications    Notification[]
+  reportsFiled     Report[]       @relation("ReportsFiled")
+  reportsReceived  Report[]       @relation("ReportsReceived")
 }
 
 model Profile {
@@ -105,6 +107,19 @@ model Message {
 
   match  Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
   sender User  @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+}
+
+model Report {
+  id         String   @id @default(cuid())
+  reporterId String
+  reportedId String
+  reason     String   // "spam" | "harassment" | "fake_profile" | "inappropriate_content" | "underage" | "other"
+  details    String?  // optional free-text from reporter
+  createdAt  DateTime @default(now())
+  resolved   Boolean  @default(false)
+
+  reporter User @relation("ReportsFiled",    fields: [reporterId], references: [id], onDelete: Cascade)
+  reported User @relation("ReportsReceived", fields: [reportedId], references: [id], onDelete: Cascade)
 }
 
 model Notification {

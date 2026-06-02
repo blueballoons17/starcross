@@ -65,6 +65,7 @@ export async function GET() {
         strengths: breakdown.strengths ?? [],
         frictionPoints: breakdown.frictionPoints ?? [],
         otherUser: {
+          id: other.id,
           name: other.profile!.name,
           birthDate: other.profile!.birthDate.toISOString(),
           birthCity: other.profile!.birthCity,

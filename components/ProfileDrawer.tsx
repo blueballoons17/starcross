@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, MessageCircle, Sparkles, AlertTriangle, Lock } from "lucide-react";
+import { X, MessageCircle, Sparkles, AlertTriangle, Lock, Flag } from "lucide-react";
 import Link from "next/link";
 import { getZodiacColor } from "@/lib/zodiac-colors";
 import { ZodiacIcon } from "@/components/ui/zodiac-icon";
@@ -23,6 +23,7 @@ export interface ProfileDrawerMatch {
   strengths: string[];
   frictionPoints: string[];
   otherUser: {
+    id: string;
     name: string;
     birthDate: string;
     birthCity: string;
@@ -132,11 +133,54 @@ function BreakdownBar({
   );
 }
 
+const REPORT_REASONS = [
+  { value: "spam",                  label: "Spam or scam" },
+  { value: "harassment",            label: "Harassment or mean behavior" },
+  { value: "fake_profile",          label: "Fake or impersonation account" },
+  { value: "inappropriate_content", label: "Inappropriate photos or content" },
+  { value: "underage",              label: "Appears to be underage" },
+  { value: "other",                 label: "Other" },
+] as const;
+
+type ReportReason = typeof REPORT_REASONS[number]["value"];
+
 export function ProfileDrawer({ open, onClose, match, isPremium }: ProfileDrawerProps) {
   const [upgradeOpen, setUpgradeOpen] = useState(false);
   const [photoIdx, setPhotoIdx] = useState(0);
+
+  // Report state
+  const [reportOpen, setReportOpen]     = useState(false);
+  const [reportReason, setReportReason] = useState<ReportReason | "">("");
+  const [reportDetails, setReportDetails] = useState("");
+  const [reportStatus, setReportStatus] = useState<"idle" | "submitting" | "done" | "error">("idle");
+
   useEffect(() => { setPhotoIdx(0); }, [match?.id]);
+
+  // Reset report form when drawer opens a new profile
+  useEffect(() => {
+    if (!open) { setReportOpen(false); setReportReason(""); setReportDetails(""); setReportStatus("idle"); }
+  }, [open, match?.id]);
   if (!match) return null;
+
+  async function submitReport() {
+    if (!reportReason || !match) return;
+    setReportStatus("submitting");
+    try {
+      const res = await fetch("/api/report", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          reportedUserId: match.otherUser.id,
+          reason: reportReason,
+          details: reportDetails.trim() || undefined,
+        }),
+      });
+      if (!res.ok) throw new Error("Request failed");
+      setReportStatus("done");
+    } catch {
+      setReportStatus("error");
+    }
+  }
 
   const allPhotos = [
     match.otherUser.avatarUrl,
@@ -416,7 +460,7 @@ export function ProfileDrawer({ open, onClose, match, isPremium }: ProfileDrawer
 
               {/* Friction: StarCross+ only */}
               {isPremium !== false && match.frictionPoints.length > 0 && (
-                <div className="px-6 pb-8">
+                <div className="px-6 pb-5">
                   <h4 className="text-[10px] font-semibold text-stone-500 uppercase tracking-wider flex items-center gap-1.5 mb-3">
                     <AlertTriangle className="h-3 w-3 text-amber-400" />
                     Navigate With Awareness
@@ -434,6 +478,106 @@ export function ProfileDrawer({ open, onClose, match, isPremium }: ProfileDrawer
                   </div>
                 </div>
               )}
+
+              {/* ── Report section ─────────────────────────────────────────── */}
+              <div className="px-6 pb-8">
+                <div className="h-px bg-white/6 mb-5" />
+
+                {!reportOpen ? (
+                  /* Collapsed: just a small link */
+                  <button
+                    onClick={() => setReportOpen(true)}
+                    className="flex items-center gap-1.5 text-stone-600 hover:text-red-400 text-xs transition-colors"
+                  >
+                    <Flag className="h-3 w-3" />
+                    Report {match.otherUser.name}
+                  </button>
+                ) : reportStatus === "done" ? (
+                  /* Success state */
+                  <div className="rounded-xl bg-emerald-500/10 border border-emerald-500/20 px-4 py-3 text-center">
+                    <p className="text-emerald-400 text-sm font-medium">Report submitted</p>
+                    <p className="text-stone-500 text-xs mt-1">
+                      Thanks for letting us know. We review every report and will take action if needed.
+                    </p>
+                  </div>
+                ) : (
+                  /* Expanded form */
+                  <div className="rounded-xl border border-white/8 bg-white/3 overflow-hidden">
+                    {/* Header */}
+                    <div className="flex items-center justify-between px-4 py-3 border-b border-white/6">
+                      <div className="flex items-center gap-2">
+                        <Flag className="h-3.5 w-3.5 text-red-400" />
+                        <span className="text-sm font-medium text-stone-200">
+                          Report {match.otherUser.name}
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => setReportOpen(false)}
+                        className="text-stone-500 hover:text-stone-300 transition-colors"
+                        aria-label="Cancel report"
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+
+                    {/* Reason picker */}
+                    <div className="px-4 pt-3 pb-2">
+                      <p className="text-[10px] font-semibold uppercase tracking-wider text-stone-500 mb-2.5">
+                        Why are you reporting this account?
+                      </p>
+                      <div className="space-y-1">
+                        {REPORT_REASONS.map(({ value, label }) => (
+                          <button
+                            key={value}
+                            onClick={() => setReportReason(value)}
+                            className={cn(
+                              "w-full text-left px-3 py-2 rounded-lg text-xs transition-colors",
+                              reportReason === value
+                                ? "bg-red-500/15 text-red-300 border border-red-500/25"
+                                : "text-stone-400 hover:bg-white/5 hover:text-stone-200 border border-transparent"
+                            )}
+                          >
+                            {label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Optional details */}
+                    <div className="px-4 pb-3">
+                      <textarea
+                        rows={2}
+                        maxLength={500}
+                        placeholder="Add details (optional)"
+                        value={reportDetails}
+                        onChange={(e) => setReportDetails(e.target.value)}
+                        className="w-full mt-1.5 rounded-lg bg-white/5 border border-white/8 text-stone-300 placeholder-stone-600 text-xs px-3 py-2 resize-none focus:outline-none focus:border-white/20 transition-colors"
+                      />
+                    </div>
+
+                    {/* Submit */}
+                    <div className="px-4 pb-4">
+                      {reportStatus === "error" && (
+                        <p className="text-red-400 text-xs mb-2">
+                          Something went wrong — please try again.
+                        </p>
+                      )}
+                      <button
+                        onClick={submitReport}
+                        disabled={!reportReason || reportStatus === "submitting"}
+                        className={cn(
+                          "w-full py-2.5 rounded-lg text-xs font-semibold transition-colors",
+                          reportReason && reportStatus !== "submitting"
+                            ? "bg-red-600 hover:bg-red-500 text-white"
+                            : "bg-white/5 text-stone-600 cursor-not-allowed"
+                        )}
+                      >
+                        {reportStatus === "submitting" ? "Submitting…" : "Submit report"}
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Sticky CTA */}

@@ -52,6 +52,88 @@ export async function sendWelcomeEmail(to: string, name?: string) {
   }).catch((err) => console.error("[email] welcome send failed:", err));
 }
 
+// ── User report — admin notification ─────────────────────────────────────────
+export async function sendReportEmail(opts: {
+  reporterEmail: string;
+  reporterName: string;
+  reportedName: string;
+  reportedEmail: string;
+  reportedUserId: string;
+  reason: string;
+  details?: string | null;
+}) {
+  const resend = getResend();
+  if (!resend) return;
+
+  const adminEmail = process.env.ADMIN_EMAIL ?? process.env.EMAIL_FROM?.replace(/^.*<(.+)>$/, "$1") ?? "blueballoons17@gmail.com";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://starcross.app";
+
+  const reasonLabel: Record<string, string> = {
+    spam: "Spam or scam",
+    harassment: "Harassment or mean behavior",
+    fake_profile: "Fake or impersonation account",
+    inappropriate_content: "Inappropriate photos or content",
+    underage: "Appears to be underage",
+    other: "Other",
+  };
+
+  await resend.emails.send({
+    from: FROM,
+    to: adminEmail,
+    subject: `[StarCross] User report — ${opts.reportedName} (${opts.reason})`,
+    html: `
+<!DOCTYPE html>
+<html>
+<body style="margin:0;padding:0;background:#f5f5f5;font-family:system-ui,sans-serif;color:#1c1917;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:40px auto;padding:0 20px;">
+    <tr><td style="background:#fff;border:1px solid #e7e5e4;border-radius:12px;padding:32px 36px;">
+      <p style="margin:0 0 4px;font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#ef4444;">
+        User Report Received
+      </p>
+      <h1 style="margin:0 0 24px;font-size:22px;font-weight:700;color:#0c0a09;">
+        ${opts.reportedName} was reported
+      </h1>
+
+      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;">
+        <tr>
+          <td style="padding:10px 14px;background:#fef2f2;border-radius:8px 8px 0 0;border:1px solid #fecaca;">
+            <p style="margin:0;font-size:12px;font-weight:600;color:#991b1b;text-transform:uppercase;letter-spacing:0.08em;">Reported User</p>
+            <p style="margin:4px 0 0;font-size:15px;font-weight:600;color:#1c1917;">${opts.reportedName}</p>
+            <p style="margin:2px 0 0;font-size:13px;color:#78716c;">${opts.reportedEmail}</p>
+            <p style="margin:2px 0 0;font-size:12px;color:#a8a29e;font-family:monospace;">${opts.reportedUserId}</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:10px 14px;background:#f7f6f5;border-radius:0 0 8px 8px;border:1px solid #e7e5e4;border-top:0;">
+            <p style="margin:0;font-size:12px;font-weight:600;color:#57534e;text-transform:uppercase;letter-spacing:0.08em;">Reported By</p>
+            <p style="margin:4px 0 0;font-size:14px;color:#1c1917;">${opts.reporterName} — ${opts.reporterEmail}</p>
+          </td>
+        </tr>
+      </table>
+
+      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;">
+        <tr>
+          <td style="padding:12px 14px;background:#fff7ed;border-radius:8px;border:1px solid #fed7aa;">
+            <p style="margin:0;font-size:12px;font-weight:600;color:#9a3412;text-transform:uppercase;letter-spacing:0.08em;">Reason</p>
+            <p style="margin:6px 0 0;font-size:15px;font-weight:600;color:#1c1917;">${reasonLabel[opts.reason] ?? opts.reason}</p>
+            ${opts.details ? `<p style="margin:8px 0 0;font-size:14px;color:#57534e;line-height:1.6;white-space:pre-wrap;">${opts.details}</p>` : ""}
+          </td>
+        </tr>
+      </table>
+
+      <p style="margin:0;font-size:13px;color:#a8a29e;">
+        Review and take action from your admin dashboard, or reply to this email.
+      </p>
+    </td></tr>
+    <tr><td style="text-align:center;padding:20px 0 0;font-size:11px;color:#a8a29e;">
+      StarCross admin alert · <a href="${appUrl}" style="color:#a8a29e;">${appUrl}</a>
+    </td></tr>
+  </table>
+</body>
+</html>`,
+  }).catch((err) => console.error("[email] report send failed:", err));
+}
+
 // ── Match notification ────────────────────────────────────────────────────────
 export async function sendMatchEmail(opts: {
   toEmail: string;
