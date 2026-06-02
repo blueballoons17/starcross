@@ -71,7 +71,7 @@ const STEPS = ["About You", "Preferences", "Personality", "Photos", "Your Chart"
 
 // ─── Image compression ────────────────────────────────────────────────────
 
-async function compressImage(file: File, maxDimension = 900, quality = 0.75): Promise<File> {
+async function compressImage(file: File, maxDimension = 1600, quality = 0.92): Promise<File> {
   return new Promise((resolve, reject) => {
     const img = new Image();
     const objectUrl = URL.createObjectURL(file);
@@ -92,6 +92,9 @@ async function compressImage(file: File, maxDimension = 900, quality = 0.75): Pr
       canvas.height = height;
       const ctx = canvas.getContext("2d");
       if (!ctx) { reject(new Error("Canvas not available")); return; }
+      // High-quality downscaling (avoids the default "low" softness)
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
       ctx.drawImage(img, 0, 0, width, height);
       canvas.toBlob(
         (blob) => {
@@ -543,14 +546,14 @@ function PhotoStep({
 
   async function handleAvatarFile(file: File) {
     setAvatarUploading(true);
-    const url = await uploadFile(file, 800);
+    const url = await uploadFile(file, 1400);
     setAvatarUploading(false);
     if (url) onAvatarChange(url);
   }
 
   async function handleGalleryFile(file: File) {
     setGalleryUploading(true);
-    const url = await uploadFile(file, 900);
+    const url = await uploadFile(file, 1600);
     setGalleryUploading(false);
     if (url) onPhotosChange([...photos, url]);
   }

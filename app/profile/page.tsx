@@ -114,7 +114,7 @@ function SignBadge({ sign, size = "md" }: { sign: string; size?: "sm" | "md" | "
 
 // ─── Client-side image compression ────────────────────────────────────────
 
-async function compressImage(file: File, maxDimension = 900, quality = 0.75): Promise<File> {
+async function compressImage(file: File, maxDimension = 1600, quality = 0.92): Promise<File> {
   return new Promise((resolve, reject) => {
     const img = new Image();
     const objectUrl = URL.createObjectURL(file);
@@ -136,6 +136,9 @@ async function compressImage(file: File, maxDimension = 900, quality = 0.75): Pr
       canvas.height = height;
       const ctx = canvas.getContext("2d");
       if (!ctx) { reject(new Error("Canvas not available")); return; }
+      // High-quality downscaling (avoids the default "low" softness)
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
       ctx.drawImage(img, 0, 0, width, height);
       // Try WebP first (best compression), fall back to JPEG
       canvas.toBlob(
@@ -182,7 +185,7 @@ function AvatarUpload({
     setUploading(true);
     setUploadError(null);
     try {
-      const compressed = await compressImage(file, 800); // avatars: 800px max
+      const compressed = await compressImage(file, 1400); // avatars: 1400px max for retina clarity
       const fd = new FormData();
       fd.append("file", compressed);
       const res = await fetch("/api/upload", { method: "POST", body: fd });
@@ -259,7 +262,7 @@ function PhotosGrid({
     setUploading(true);
     setUploadError(null);
     try {
-      const compressed = await compressImage(file, 900); // gallery: 900px max
+      const compressed = await compressImage(file, 1600); // gallery: 1600px max for retina clarity
       const fd = new FormData();
       fd.append("file", compressed);
       const res = await fetch("/api/upload", { method: "POST", body: fd });
