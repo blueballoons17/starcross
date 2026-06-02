@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion";
-import { ArrowRight, Heart, Sparkles, Moon, ChevronDown } from "lucide-react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
+import { ArrowRight, Heart, Sparkles, Moon } from "lucide-react";
 import { AnimatedHero } from "@/components/ui/animated-hero";
 import RadialOrbitalTimeline from "@/components/ui/radial-orbital-timeline";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
@@ -342,15 +342,8 @@ const NAV_SECTIONS = [
 export default function HomePage() {
   const { data: session } = useSession();
   const isLoggedIn = !!session;
-  const heroRef = useRef<HTMLDivElement>(null);
   const heroCTARef = useRef<HTMLDivElement>(null);
   const heroCTAInView = useInView(heroCTARef, { margin: "0px 0px -40px 0px" });
-  const { scrollYProgress: heroScroll } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  });
-  const heroY       = useTransform(heroScroll, [0, 1], ["0%", "25%"]);
-  const heroOpacity = useTransform(heroScroll, [0, 0.55], [1, 0]);
 
   return (
     <div className="min-h-screen bg-[#FAF8F4] overflow-x-hidden">
@@ -402,26 +395,19 @@ export default function HomePage() {
         </div>
       </header>
 
-      {/* ── Hero ─────────────────────────────────────────────────────────── */}
+      {/* ── Hero — sticky so content scrolls over it ─────────────────────── */}
       <section
         id="hero"
-        ref={heroRef}
-        className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-20 pb-28 overflow-hidden"
+        className="sticky top-0 h-screen flex flex-col items-center justify-center px-6 overflow-hidden z-0"
         style={{ background: "#07091f" }}
       >
-        {/* Cursor-parallax star canvas */}
         <StarField count={320} />
 
-        {/* Radial glow at center */}
         <div
           className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(ellipse 65% 50% at 50% 42%, rgba(80,100,200,0.12) 0%, transparent 70%)",
-          }}
+          style={{ background: "radial-gradient(ellipse 65% 50% at 50% 42%, rgba(80,100,200,0.12) 0%, transparent 70%)" }}
         />
 
-        {/* Slowly-rotating orbital rings */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           {[680, 490, 310, 155].map((d, i) => (
             <div
@@ -436,28 +422,17 @@ export default function HomePage() {
           ))}
         </div>
 
-        {/* Hero text */}
-        <motion.div
-          style={{ y: heroY, opacity: heroOpacity }}
-          className="relative z-10 text-center max-w-3xl w-full"
-        >
-          {/* ── Static label "Find someone" ──────────────────────────── */}
+        <div className="relative z-10 text-center max-w-3xl w-full">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.15 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
             className="font-serif text-stone-500 font-medium tracking-wide mb-3"
             style={{ fontSize: "clamp(1.1rem, 2.6vw, 1.5rem)" }}
           >
             Find someone
           </motion.p>
 
-          {/*
-            ── Animated word ──────────────────────────────────────────
-            Container has a FIXED PIXEL height (clamp) so the layout
-            never collapses regardless of font metrics or word length.
-            overflow-hidden clips any sub-pixel bleed from italic glyphs.
-          */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -465,7 +440,6 @@ export default function HomePage() {
             className="w-full overflow-hidden mb-10"
             style={{ height: "clamp(4rem, 9.5vw, 6.8rem)" }}
           >
-            {/* Inner div centres the text inside the fixed-height slot */}
             <div
               className="w-full h-full flex items-center justify-center font-serif font-semibold text-stone-100 tracking-tight"
               style={{ fontSize: "clamp(3rem, 8vw, 5.8rem)" }}
@@ -474,7 +448,6 @@ export default function HomePage() {
             </div>
           </motion.div>
 
-          {/* ── Sub-headline, sits BELOW the reserved slot, never overlaps ── */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -484,7 +457,6 @@ export default function HomePage() {
             StarCross maps your birth chart into a compatibility fingerprint, then finds the people who match it most deeply.
           </motion.p>
 
-          {/* CTAs */}
           <motion.div
             ref={heroCTARef}
             initial={{ opacity: 0, y: 20 }}
@@ -494,16 +466,12 @@ export default function HomePage() {
           >
             {isLoggedIn ? (
               <Button size="lg" asChild className="bg-white text-stone-900 hover:bg-stone-100 px-10 rounded-full h-12 font-medium">
-                <Link href="/discover">
-                  Go to Discover <ArrowRight className="h-4 w-4 ml-2" />
-                </Link>
+                <Link href="/discover">Go to Discover <ArrowRight className="h-4 w-4 ml-2" /></Link>
               </Button>
             ) : (
               <>
                 <Button size="lg" asChild className="bg-white text-stone-900 hover:bg-stone-100 px-10 rounded-full h-12 font-medium">
-                  <Link href="/pricing">
-                    Begin your journey <ArrowRight className="h-4 w-4 ml-2" />
-                  </Link>
+                  <Link href="/pricing">Begin your journey <ArrowRight className="h-4 w-4 ml-2" /></Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild className="border-stone-700 text-stone-300 hover:bg-stone-800/50 rounded-full h-12 px-8">
                   <Link href="/login">Already a member</Link>
@@ -511,37 +479,13 @@ export default function HomePage() {
               </>
             )}
           </motion.div>
-        </motion.div>
-
-        {/* Section jump buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7, duration: 0.6 }}
-          className="relative z-10 flex flex-wrap items-center justify-center gap-2 mt-10"
-        >
-          {[
-            { id: "app-preview",  label: "See the app" },
-            { id: "how-it-works", label: "How it works" },
-            { id: "elements",     label: "The elements" },
-            { id: "pricing-cta",  label: "Get started" },
-          ].map(({ id, label }) => (
-            <button
-              key={id}
-              onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })}
-              className="flex items-center gap-1.5 text-xs text-stone-500 hover:text-stone-300 border border-stone-700/60 hover:border-stone-500/60 rounded-full px-4 py-1.5 transition-all backdrop-blur-sm"
-            >
-              {label}
-              <ChevronDown className="h-3 w-3 opacity-60" />
-            </button>
-          ))}
-        </motion.div>
+        </div>
 
         {/* Scroll cue */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.8, duration: 0.6 }}
+          transition={{ delay: 1.5, duration: 0.6 }}
           className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-stone-600 text-xs"
         >
           <span className="tracking-widest uppercase text-[10px]">Scroll to discover</span>
@@ -552,6 +496,9 @@ export default function HomePage() {
           />
         </motion.div>
       </section>
+
+      {/* ── All content below slides over the sticky hero ────────────────── */}
+      <div className="relative z-10">
 
       {/* ── ContainerScroll: app preview ─────────────────────────────────── */}
       <section id="app-preview" className="bg-[#FAF8F4] overflow-hidden">
@@ -921,6 +868,8 @@ export default function HomePage() {
           </div>
         </motion.div>
       </section>
+
+      </div>{/* end sticky-cover wrapper */}
 
       {/* ── Footer ───────────────────────────────────────────────────────── */}
       <footer className="py-10 px-6 text-stone-500 text-center text-sm border-t border-stone-800/60" style={{ background: "#07091f" }}>
