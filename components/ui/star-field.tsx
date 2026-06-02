@@ -246,10 +246,13 @@ export function StarField({
 
         const px = s.x + dx, py = s.y + dy;
 
-        if (s.r > 1.2 && isFinite(px) && isFinite(py)) {
-          const gr = s.r * 5.5;
+        if (!isFinite(px) || !isFinite(py)) continue;
+
+        // Soft glow halo behind each face
+        if (s.r > 1.2) {
+          const gr = s.r * 6;
           const grd = ctx!.createRadialGradient(px, py, 0, px, py, gr);
-          grd.addColorStop(0, `rgba(${s.r_},${s.g_},${s.b_},${a * 0.35})`);
+          grd.addColorStop(0, `rgba(${s.r_},${s.g_},${s.b_},${a * 0.28})`);
           grd.addColorStop(1, `rgba(${s.r_},${s.g_},${s.b_},0)`);
           ctx!.beginPath();
           ctx!.arc(px, py, gr, 0, Math.PI * 2);
@@ -257,23 +260,15 @@ export function StarField({
           ctx!.fill();
         }
 
-        ctx!.beginPath();
-        ctx!.arc(px, py, s.r, 0, Math.PI * 2);
-        ctx!.fillStyle = `rgba(${s.r_},${s.g_},${s.b_},${a})`;
-        ctx!.fill();
-
-        if (s.r > 1.8 && a > 0.65) {
-          const len = s.r * 4.5;
-          ctx!.save();
-          ctx!.globalAlpha = (a - 0.65) * 0.6;
-          ctx!.strokeStyle = `rgb(${s.r_},${s.g_},${s.b_})`;
-          ctx!.lineWidth = 0.7;
-          ctx!.beginPath();
-          ctx!.moveTo(px - len, py); ctx!.lineTo(px + len, py);
-          ctx!.moveTo(px, py - len); ctx!.lineTo(px, py + len);
-          ctx!.stroke();
-          ctx!.restore();
-        }
+        // Smiling face — size scales with star radius
+        const faceSize = Math.max(6, s.r * 6);
+        ctx!.save();
+        ctx!.globalAlpha = a;
+        ctx!.font = `${faceSize}px serif`;
+        ctx!.textAlign = "center";
+        ctx!.textBaseline = "middle";
+        ctx!.fillText("🙂", px, py);
+        ctx!.restore();
       }
 
       // ── Shooting stars (larger, more frequent) ───────────────────────────

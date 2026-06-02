@@ -160,8 +160,8 @@ function ConstellationCanvas() {
       const W = canvas.width, H = canvas.height;
 
       // Constellation lines
-      ctx.strokeStyle = "rgba(120,113,108,0.22)";
-      ctx.lineWidth = 0.7;
+      ctx.strokeStyle = "rgba(120,110,255,0.35)";
+      ctx.lineWidth = 0.8;
       edges.forEach(([a, b]) => {
         ctx.beginPath();
         ctx.moveTo(pts[a][0] * W, pts[a][1] * H);
@@ -172,18 +172,18 @@ function ConstellationCanvas() {
       // Constellation nodes
       pts.forEach(([px, py]) => {
         ctx.beginPath();
-        ctx.arc(px * W, py * H, 1.5, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(168,162,158,0.7)";
+        ctx.arc(px * W, py * H, 1.8, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(180,170,255,0.85)";
         ctx.fill();
       });
 
       // Twinkling stars
       stars.forEach((s) => {
         s.p += s.s;
-        const alpha = 0.18 + 0.32 * ((1 + Math.sin(s.p)) / 2);
+        const alpha = 0.3 + 0.5 * ((1 + Math.sin(s.p)) / 2);
         ctx.beginPath();
         ctx.arc(s.x * W, s.y * H, s.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(120,113,108,${alpha})`;
+        ctx.fillStyle = `rgba(180,170,255,${alpha})`;
         ctx.fill();
       });
 
@@ -204,17 +204,17 @@ function PreviewScoreMark({ score }: { score: number }) {
   const r = 13;
   const circ = 2 * Math.PI * r;
   const offset = circ - (score / 100) * circ;
-  const col = score >= 90 ? "#c9a86a" : score >= 80 ? "#9d8ec8" : "#4a4a52";
+  const col = score >= 90 ? "#f59e0b" : score >= 80 ? "#818cf8" : "#6366f1";
   return (
     <div className="relative w-8 h-8 flex items-center justify-center shrink-0">
       <svg width="30" height="30" className="-rotate-90">
-        <circle cx="15" cy="15" r={r} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+        <circle cx="15" cy="15" r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
         <circle cx="15" cy="15" r={r} fill="none" stroke={col} strokeWidth="1.5"
           strokeDasharray={circ} strokeDashoffset={offset} strokeLinecap="round" />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center leading-none">
-        <span className="text-[8px] text-stone-300">{score}</span>
-        <span className="text-[5px] text-stone-600 -mt-px">%</span>
+        <span className="text-[8px] text-white font-medium">{score}</span>
+        <span className="text-[5px] text-stone-400 -mt-px">%</span>
       </div>
     </div>
   );
@@ -230,18 +230,18 @@ function PreviewMatchCard({ match, delay }: { match: typeof PREVIEW_MATCHES[0]; 
       className="flex items-start gap-2.5 py-3"
     >
       {/* Avatar */}
-      <div className="w-8 h-8 rounded-full bg-stone-800/70 border border-white/[0.07] flex items-center justify-center text-[9px] font-medium text-stone-500 shrink-0">
+      <div className="w-8 h-8 rounded-full bg-indigo-900/70 border border-indigo-400/30 flex items-center justify-center text-[9px] font-semibold text-indigo-200 shrink-0">
         {match.name[0]}
       </div>
       {/* Info */}
       <div className="flex-1 min-w-0">
-        <p className="font-serif text-stone-100 text-[11px] leading-snug">
-          {match.name}<span className="text-stone-500 font-light">, {match.age}</span>
+        <p className="font-serif text-white text-[11px] leading-snug">
+          {match.name}<span className="text-stone-400 font-light">, {match.age}</span>
         </p>
-        <p className="text-[8px] uppercase tracking-[0.08em] text-stone-600 mt-0.5">{match.city}</p>
-        <p className="text-[9px] text-stone-500 mt-1 tracking-[0.02em]">
+        <p className="text-[8px] uppercase tracking-[0.08em] text-stone-400 mt-0.5">{match.city}</p>
+        <p className="text-[9px] text-stone-300 mt-1 tracking-[0.02em]">
           ☉ {match.sun}
-          <span className="mx-1.5 opacity-25">·</span>
+          <span className="mx-1.5 opacity-40">·</span>
           ☽ {match.moon}
         </p>
       </div>
@@ -252,19 +252,19 @@ function PreviewMatchCard({ match, delay }: { match: typeof PREVIEW_MATCHES[0]; 
 
 function AppPreview() {
   return (
-    <div className="h-full w-full flex flex-col overflow-hidden bg-stone-950">
+    <div className="h-full w-full flex flex-col overflow-hidden bg-[#07091f]">
 
       {/* ── NavBar ───────────────────────────────────────────────── */}
-      <div className="shrink-0 flex items-center justify-between px-4 py-2.5 border-b border-white/[0.07] bg-stone-950/80 backdrop-blur-md">
+      <div className="shrink-0 flex items-center justify-between px-4 py-2.5 border-b border-indigo-400/20 bg-[#07091f]/90 backdrop-blur-md">
         <div className="flex items-center">
           <span
-            className="text-[8px] font-normal text-stone-300 tracking-[0.28em]"
+            className="text-[8px] font-black text-white tracking-[0.28em]"
             style={{ fontFamily: "var(--font-inter)" }}
           >starcross</span>
         </div>
         <div className="flex items-center gap-3">
           {["Discover","Matches","Astrology"].map((l, i) => (
-            <span key={l} className={cn("text-[7px] uppercase tracking-[0.1em]", i === 1 ? "text-stone-200" : "text-stone-600")}>{l}</span>
+            <span key={l} className={cn("text-[7px] uppercase tracking-[0.1em]", i === 1 ? "text-indigo-300" : "text-stone-400")}>{l}</span>
           ))}
         </div>
       </div>
@@ -273,25 +273,25 @@ function AppPreview() {
       <div className="relative shrink-0 overflow-hidden" style={{ height: "30%" }}>
         <ConstellationCanvas />
         <div className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 70% 80% at 50% 50%, rgba(255,252,245,0.04) 0%, transparent 70%)" }}
+          style={{ background: "radial-gradient(ellipse 70% 80% at 50% 50%, rgba(100,80,255,0.12) 0%, transparent 70%)" }}
         />
         {[110, 76, 46].map((d, i) => (
-          <div key={d} className="absolute rounded-full border border-stone-700/20"
+          <div key={d} className="absolute rounded-full border border-indigo-500/25"
             style={{
               width: d, height: d, top: "50%", left: "50%",
               transform: "translate(-50%, -50%)",
-              opacity: 0.3 - i * 0.07,
+              opacity: 0.6 - i * 0.12,
               animation: `ring-spin ${38 + i * 14}s linear infinite ${i % 2 ? "reverse" : ""}`,
             }}
           />
         ))}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-6 h-6 rounded-full bg-stone-800/80 border border-white/10 flex items-center justify-center">
-          <span className="text-stone-400 text-[9px] select-none">✦</span>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-6 h-6 rounded-full bg-indigo-900/80 border border-indigo-400/40 flex items-center justify-center">
+          <span className="text-indigo-300 text-[9px] select-none">✦</span>
         </div>
         <div className="absolute bottom-0 inset-x-0 px-4 pb-2 z-20">
-          <p className="text-[7px] text-stone-600 uppercase tracking-[0.16em]">Your cosmic fingerprint</p>
-          <p className="text-[9px] text-stone-400 mt-0.5">
-            ☉ Leo <span className="opacity-30 mx-1">·</span> ☽ Aquarius <span className="opacity-30 mx-1">·</span> ↑ Gemini
+          <p className="text-[7px] text-indigo-400/70 uppercase tracking-[0.16em]">Your cosmic fingerprint</p>
+          <p className="text-[9px] text-stone-300 mt-0.5">
+            ☉ Leo <span className="opacity-40 mx-1">·</span> ☽ Aquarius <span className="opacity-40 mx-1">·</span> ↑ Gemini
           </p>
         </div>
       </div>
@@ -300,12 +300,12 @@ function AppPreview() {
       <div className="flex-1 min-h-0 overflow-hidden flex flex-col px-4 pt-3">
         {/* Header */}
         <div className="shrink-0 mb-1">
-          <p className="font-serif text-stone-200 text-sm font-light tracking-tight">Your Matches</p>
-          <p className="text-[7px] uppercase tracking-[0.14em] text-stone-600 mt-0.5">3 connections found</p>
-          <div className="mt-2 h-px bg-white/[0.06]" />
+          <p className="font-serif text-white text-sm font-light tracking-tight">Your Matches</p>
+          <p className="text-[7px] uppercase tracking-[0.14em] text-indigo-400/80 mt-0.5">3 connections found</p>
+          <div className="mt-2 h-px bg-indigo-500/20" />
         </div>
         {/* Glass panel */}
-        <div className="flex-1 overflow-hidden bg-stone-900/50 border border-white/[0.07] rounded-[4px] divide-y divide-white/[0.05] px-3">
+        <div className="flex-1 overflow-hidden bg-indigo-950/40 border border-indigo-400/15 rounded-[4px] divide-y divide-indigo-400/10 px-3">
           {PREVIEW_MATCHES.map((m, i) => (
             <PreviewMatchCard key={m.name} match={m} delay={0.1 + i * 0.09} />
           ))}
@@ -313,15 +313,15 @@ function AppPreview() {
       </div>
 
       {/* ── Bottom nav ───────────────────────────────────────────── */}
-      <div className="shrink-0 border-t border-white/[0.07] bg-stone-950/90 px-4 py-2 flex items-center justify-around">
+      <div className="shrink-0 border-t border-indigo-400/20 bg-[#07091f]/95 px-4 py-2 flex items-center justify-around">
         {[
           { icon: Heart,    label: "Discover", active: false },
           { icon: Sparkles, label: "Matches",  active: true  },
           { icon: Moon,     label: "Astrology",active: false },
         ].map(({ icon: Icon, label, active }) => (
           <div key={label} className="flex flex-col items-center gap-0.5">
-            <Icon className={cn("h-3 w-3", active ? "text-stone-300" : "text-stone-700")} />
-            <span className={cn("text-[7px] tracking-wide", active ? "text-stone-300" : "text-stone-700")}>{label}</span>
+            <Icon className={cn("h-3 w-3", active ? "text-indigo-400" : "text-stone-500")} />
+            <span className={cn("text-[7px] tracking-wide", active ? "text-indigo-300" : "text-stone-500")}>{label}</span>
           </div>
         ))}
       </div>
@@ -352,10 +352,10 @@ export default function HomePage() {
       <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.07] bg-[#07091f]/80 backdrop-blur-md">
         <div className="max-w-7xl mx-auto flex h-20 items-center gap-10 px-8">
 
-          {/* Logo — large */}
+          {/* Logo — large bold */}
           <Link href="/" className="shrink-0">
             <span
-              className="text-4xl font-light text-white/90 tracking-[0.25em]"
+              className="text-4xl font-black text-white tracking-[0.25em]"
               style={{ fontFamily: "var(--font-inter)" }}
             >
               starcross
@@ -565,47 +565,6 @@ export default function HomePage() {
       </section>
 
       {/* ── Features ─────────────────────────────────────────────────────── */}
-      <section id="features" className="py-32 px-6 relative overflow-hidden" style={{ background: "#07091f" }}>
-        <StarField count={220} />
-        <div className="max-w-5xl mx-auto relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-20"
-          >
-            <span className="text-xs tracking-widest uppercase text-stone-500 block mb-4">
-              The difference
-            </span>
-            <h2 className="font-serif text-4xl md:text-5xl font-semibold text-white tracking-tight">
-              Built for depth,
-              <br />
-              <span className="italic text-stone-400">not novelty</span>
-            </h2>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {FEATURES.map((f, i) => (
-              <motion.div
-                key={f.title}
-                initial={{ opacity: 0, y: 28 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: i * 0.12 }}
-                whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                className="bg-stone-900/60 rounded-2xl p-8 border border-white/8 hover:border-white/15 transition-colors"
-              >
-                <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-xl mb-7 text-stone-300">
-                  {f.symbol}
-                </div>
-                <h3 className="font-serif text-lg font-semibold text-white mb-4">{f.title}</h3>
-                <p className="text-stone-400 text-sm leading-relaxed">{f.description}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── Astrology teaser ─────────────────────────────────────────────── */}
       <section id="elements" className="py-32 px-6 bg-white relative overflow-hidden">
         <div className="max-w-5xl mx-auto relative z-10">
