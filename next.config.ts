@@ -13,23 +13,19 @@ const nextConfig: NextConfig = {
   experimental: {},
 };
 
-export default withSentryConfig(nextConfig, {
-  // Sentry organisation + project slugs (from sentry.io URL)
+// Only wrap with Sentry when the DSN is actually configured.
+// Without a DSN, Sentry.init() throws "TypeError: Invalid URL" at
+// module-evaluation time during Next.js static page generation.
+const sentryOptions = {
   org: process.env.SENTRY_ORG,
   project: process.env.SENTRY_PROJECT,
-
-  // Suppress the size warning banner in CI
   silent: !process.env.CI,
-
-  // Upload source maps for readable stack traces in Sentry
   widenClientFileUpload: true,
-
-  // Upload source maps but don't expose them in the final bundle
   sourcemaps: { disable: false },
-
-  // Tree-shake Sentry logger statements in production
   disableLogger: true,
-
-  // Automatically instrument Vercel Cron Monitors
   automaticVercelMonitors: true,
-});
+};
+
+export default process.env.NEXT_PUBLIC_SENTRY_DSN
+  ? withSentryConfig(nextConfig, sentryOptions)
+  : nextConfig;
