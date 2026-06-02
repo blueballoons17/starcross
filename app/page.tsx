@@ -355,12 +355,12 @@ export default function HomePage() {
     <div className="min-h-screen bg-[#FAF8F4] overflow-x-hidden">
 
       {/* ── Fixed header ─────────────────────────────────────────────────── */}
-      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-[#FAF8F4]/80 border-b border-stone-100/60">
+      <header className="fixed top-0 left-0 right-0 z-50">
         <div className="max-w-5xl mx-auto flex h-16 items-center justify-between px-6">
           <div className="flex items-center gap-2">
-            <ShootingStarLogo size={18} className="text-stone-800" />
+            <ShootingStarLogo size={18} className="text-white/80" />
             <span
-              className="text-[13px] font-medium text-stone-900 uppercase tracking-[0.18em]"
+              className="text-[13px] font-medium text-white/90 uppercase tracking-[0.18em]"
               style={{ fontFamily: "var(--font-cinzel)" }}
             >
               StarCross
@@ -368,15 +368,15 @@ export default function HomePage() {
           </div>
           <div className="flex items-center gap-2">
             {isLoggedIn ? (
-              <Button size="sm" asChild className="bg-stone-900 text-white hover:bg-stone-800 rounded-full px-5">
+              <Button size="sm" asChild className="bg-white text-stone-900 hover:bg-stone-100 rounded-full px-5">
                 <Link href="/discover">Open app →</Link>
               </Button>
             ) : (
               <>
-                <Button variant="ghost" size="sm" asChild className="text-stone-600 hover:text-stone-900">
+                <Button variant="ghost" size="sm" asChild className="text-white/70 hover:text-white hover:bg-white/10">
                   <Link href="/login">Sign in</Link>
                 </Button>
-                <Button size="sm" asChild className="bg-stone-900 text-white hover:bg-stone-800 rounded-full px-5">
+                <Button size="sm" asChild className="bg-white text-stone-900 hover:bg-stone-100 rounded-full px-5">
                   <Link href="/pricing">Get started</Link>
                 </Button>
               </>

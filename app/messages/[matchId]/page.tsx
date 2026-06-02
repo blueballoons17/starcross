@@ -4,12 +4,11 @@ import { useCallback, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
-import { ChevronLeft, Send, User, Video } from "lucide-react";
+import { ChevronLeft, Send, User, Phone, X } from "lucide-react";
 import { NavBar } from "@/components/NavBar";
 import { ConversationSidebar } from "@/components/ConversationSidebar";
 import { ProfileDrawer } from "@/components/ProfileDrawer";
 import type { ProfileDrawerMatch } from "@/components/ProfileDrawer";
-import { VideoCallModal } from "@/components/VideoCallModal";
 import { StarField } from "@/components/ui/star-field";
 import { getZodiacColor } from "@/lib/zodiac-colors";
 import { ZodiacIcon } from "@/components/ui/zodiac-icon";
@@ -55,9 +54,10 @@ export default function MessagesChatPage() {
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-  const [callOpen, setCallOpen] = useState(false);
   const [isPremium, setIsPremium] = useState<boolean | null>(null);
   const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [sharePhoneOpen, setSharePhoneOpen] = useState(false);
+  const [phoneInput, setPhoneInput] = useState("");
 
   const bottomRef = useCallback((el: HTMLDivElement | null) => {
     el?.scrollIntoView({ behavior: "smooth" });
@@ -167,6 +167,42 @@ export default function MessagesChatPage() {
     }
   }
 
+  async function handleSharePhone() {
+    const num = phoneInput.trim();
+    if (!num) return;
+    setSharePhoneOpen(false);
+    setPhoneInput("");
+    // Send as a regular message
+    const text = `📱 My number: ${num}`;
+    setSending(true);
+    const optimisticId = `opt-${Date.now()}`;
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: optimisticId,
+        content: text,
+        createdAt: new Date().toISOString(),
+        sender: { id: myId ?? "", profile: { name: "Me", avatarUrl: null } },
+      },
+    ]);
+    try {
+      const res = await fetch(`/api/messages/${matchId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: text }),
+      });
+      if (res.ok) {
+        await fetchMessages();
+      } else {
+        setMessages((prev) => prev.filter((m) => m.id !== optimisticId));
+      }
+    } catch {
+      setMessages((prev) => prev.filter((m) => m.id !== optimisticId));
+    } finally {
+      setSending(false);
+    }
+  }
+
   // Group messages by day
   const grouped: { day: string; msgs: MessageData[] }[] = [];
   for (const msg of messages) {
@@ -260,15 +296,6 @@ export default function MessagesChatPage() {
                       </div>
                     )}
                   </div>
-                </button>
-
-                {/* Video call button */}
-                <button
-                  onClick={() => setCallOpen(true)}
-                  className="p-2 rounded-xl hover:bg-white/8 text-stone-500 hover:text-indigo-300 transition-colors shrink-0"
-                  aria-label="Start video call"
-                >
-                  <Video className="h-4 w-4" />
                 </button>
 
                 {/* Profile button */}
@@ -421,28 +448,84 @@ export default function MessagesChatPage() {
 
             {/* Input bar */}
             <div className="shrink-0 bg-stone-950/55 backdrop-blur-md border-t border-white/8 px-4 py-3">
-              <div className="max-w-3xl mx-auto flex items-end gap-3">
-                <textarea
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder={`Message ${matchData?.otherUser.name ?? "your match"}…`}
-                  rows={1}
-                  className="flex-1 resize-none rounded-2xl border border-white/10 bg-white/6 px-4 py-3 text-sm text-stone-100 placeholder-stone-600 focus:outline-none focus:border-indigo-400/40 focus:bg-white/10 transition-all min-h-[44px] max-h-[120px]"
-                  style={{ fieldSizing: "content" } as React.CSSProperties}
-                />
-                <button
-                  onClick={handleSend}
-                  disabled={!input.trim() || sending}
-                  className={cn(
-                    "w-11 h-11 rounded-full flex items-center justify-center text-white transition-all shrink-0",
-                    input.trim() && !sending
-                      ? "bg-indigo-600 hover:bg-indigo-500 shadow-lg shadow-indigo-500/25"
-                      : "bg-white/8 opacity-40 cursor-not-allowed"
-                  )}
-                >
-                  <Send className="h-4 w-4" />
-                </button>
+              <div className="max-w-3xl mx-auto space-y-2">
+
+                {/* Phone share mini-form */}
+                {sharePhoneOpen && (
+                  <div className="flex items-center gap-2 bg-stone-900/80 border border-white/10 rounded-2xl px-3 py-2">
+                    <Phone className="h-3.5 w-3.5 text-stone-400 shrink-0" />
+                    <input
+                      type="tel"
+                      autoFocus
+                      value={phoneInput}
+                      onChange={(e) => setPhoneInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") handleSharePhone();
+                        if (e.key === "Escape") { setSharePhoneOpen(false); setPhoneInput(""); }
+                      }}
+                      placeholder="Your phone number…"
+                      className="flex-1 bg-transparent text-sm text-stone-100 placeholder-stone-600 focus:outline-none"
+                    />
+                    <button
+                      onClick={handleSharePhone}
+                      disabled={!phoneInput.trim()}
+                      className={cn(
+                        "text-[11px] font-medium px-3 py-1 rounded-full transition-all shrink-0",
+                        phoneInput.trim()
+                          ? "bg-indigo-600 hover:bg-indigo-500 text-white"
+                          : "bg-white/6 text-stone-600 cursor-not-allowed"
+                      )}
+                    >
+                      Send
+                    </button>
+                    <button
+                      onClick={() => { setSharePhoneOpen(false); setPhoneInput(""); }}
+                      className="p-0.5 text-stone-600 hover:text-stone-300 transition-colors shrink-0"
+                      aria-label="Cancel"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                )}
+
+                {/* Message row */}
+                <div className="flex items-end gap-2">
+                  {/* Share phone number button */}
+                  <button
+                    onClick={() => setSharePhoneOpen((v) => !v)}
+                    title="Share your phone number"
+                    className={cn(
+                      "w-10 h-10 rounded-full flex items-center justify-center transition-all shrink-0",
+                      sharePhoneOpen
+                        ? "bg-indigo-600/30 text-indigo-300 border border-indigo-500/40"
+                        : "bg-white/6 text-stone-500 hover:text-stone-200 hover:bg-white/10 border border-white/8"
+                    )}
+                  >
+                    <Phone className="h-4 w-4" />
+                  </button>
+
+                  <textarea
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder={`Message ${matchData?.otherUser.name ?? "your match"}…`}
+                    rows={1}
+                    className="flex-1 resize-none rounded-2xl border border-white/10 bg-white/6 px-4 py-3 text-sm text-stone-100 placeholder-stone-600 focus:outline-none focus:border-indigo-400/40 focus:bg-white/10 transition-all min-h-[44px] max-h-[120px]"
+                    style={{ fieldSizing: "content" } as React.CSSProperties}
+                  />
+                  <button
+                    onClick={handleSend}
+                    disabled={!input.trim() || sending}
+                    className={cn(
+                      "w-11 h-11 rounded-full flex items-center justify-center text-white transition-all shrink-0",
+                      input.trim() && !sending
+                        ? "bg-indigo-600 hover:bg-indigo-500 shadow-lg shadow-indigo-500/25"
+                        : "bg-white/8 opacity-40 cursor-not-allowed"
+                    )}
+                  >
+                    <Send className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -453,17 +536,6 @@ export default function MessagesChatPage() {
         open={profileOpen}
         onClose={() => setProfileOpen(false)}
         match={matchData}
-      />
-
-      {/* Video call */}
-      <VideoCallModal
-        open={callOpen}
-        onClose={() => setCallOpen(false)}
-        matchId={matchId}
-        matchName={matchData?.otherUser.name ?? "Your Match"}
-        matchSunSign={matchData?.otherAstro.sunSign}
-        matchAvatarUrl={matchData?.otherUser.avatarUrl}
-        matchScore={matchData?.matchScore}
       />
 
       {/* Messaging upgrade modal */}
