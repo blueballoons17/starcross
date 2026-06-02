@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ShootingStarLogo } from "@/components/ui/shooting-star-logo";
 import { NotificationBell } from "@/components/NotificationBell";
 import { cn } from "@/lib/utils";
 
@@ -26,13 +25,12 @@ export function NavBar() {
   return (
     <header className="fixed top-0 left-0 right-0 z-40 bg-stone-950/70 backdrop-blur-xl border-b border-white/8">
       <nav className="mx-auto max-w-5xl flex h-16 items-center justify-between px-4 sm:px-6">
-        <Link href="/" className="flex items-center gap-2 group">
-          <ShootingStarLogo size={18} className="text-indigo-300" />
+        <Link href="/" className="flex items-center group">
           <span
-            className="text-[13px] font-medium text-white uppercase tracking-[0.18em]"
-            style={{ fontFamily: "var(--font-cinzel)" }}
+            className="text-[13px] font-normal text-white tracking-[0.32em]"
+            style={{ fontFamily: "var(--font-inter)" }}
           >
-            StarCross
+            starcross
           </span>
         </Link>
 

@@ -7,7 +7,6 @@ import { AnimatedHero } from "@/components/ui/animated-hero";
 import RadialOrbitalTimeline from "@/components/ui/radial-orbital-timeline";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import { StarField } from "@/components/ui/star-field";
-import { ShootingStarLogo } from "@/components/ui/shooting-star-logo";
 import { ZodiacIcon } from "@/components/ui/zodiac-icon";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -257,12 +256,11 @@ function AppPreview() {
 
       {/* ── NavBar ───────────────────────────────────────────────── */}
       <div className="shrink-0 flex items-center justify-between px-4 py-2.5 border-b border-white/[0.07] bg-stone-950/80 backdrop-blur-md">
-        <div className="flex items-center gap-1.5">
-          <ShootingStarLogo size={11} className="text-stone-400" />
+        <div className="flex items-center">
           <span
-            className="text-[8px] font-medium text-stone-300 uppercase tracking-[0.18em]"
-            style={{ fontFamily: "var(--font-cinzel)" }}
-          >StarCross</span>
+            className="text-[8px] font-normal text-stone-300 tracking-[0.28em]"
+            style={{ fontFamily: "var(--font-inter)" }}
+          >starcross</span>
         </div>
         <div className="flex items-center gap-3">
           {["Discover","Matches","Astrology"].map((l, i) => (
@@ -352,13 +350,12 @@ export default function HomePage() {
       {/* ── Fixed header ─────────────────────────────────────────────────── */}
       <header className="fixed top-0 left-0 right-0 z-50">
         <div className="max-w-5xl mx-auto flex h-16 items-center justify-between px-6">
-          <div className="flex items-center gap-2">
-            <ShootingStarLogo size={18} className="text-white/80" />
+          <div className="flex items-center">
             <span
-              className="text-[13px] font-medium text-white/90 uppercase tracking-[0.18em]"
-              style={{ fontFamily: "var(--font-cinzel)" }}
+              className="text-[13px] font-normal text-white/90 tracking-[0.32em]"
+              style={{ fontFamily: "var(--font-inter)" }}
             >
-              StarCross
+              starcross
             </span>
           </div>
           <div className="flex items-center gap-2">
@@ -846,8 +843,13 @@ export default function HomePage() {
           viewport={{ once: true }}
           className="relative z-10 max-w-2xl mx-auto space-y-6"
         >
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <ShootingStarLogo size={22} className="text-stone-400" />
+          <div className="flex items-center justify-center mb-2">
+            <span
+              className="text-[14px] font-normal text-stone-400 tracking-[0.32em]"
+              style={{ fontFamily: "var(--font-inter)" }}
+            >
+              starcross
+            </span>
           </div>
           <p className="font-serif text-sm italic text-stone-400">
             Your chart is waiting
@@ -872,13 +874,12 @@ export default function HomePage() {
 
       {/* ── Footer ───────────────────────────────────────────────────────── */}
       <footer className="py-10 px-6 bg-stone-950 text-stone-500 text-center text-sm border-t border-stone-900">
-        <div className="flex items-center justify-center gap-2 mb-4">
-          <ShootingStarLogo size={16} className="text-stone-400" />
+        <div className="flex items-center justify-center mb-4">
           <span
-            className="text-[12px] font-normal text-stone-400 uppercase tracking-[0.18em]"
-            style={{ fontFamily: "var(--font-cinzel)" }}
+            className="text-[12px] font-normal text-stone-400 tracking-[0.32em]"
+            style={{ fontFamily: "var(--font-inter)" }}
           >
-            StarCross
+            starcross
           </span>
         </div>
         <div className="flex justify-center gap-6 text-xs mb-4">
