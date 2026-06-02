@@ -5,7 +5,6 @@ import { motion, useInView, AnimatePresence } from "framer-motion";
 import { ArrowRight, Heart, Sparkles, Moon } from "lucide-react";
 import { AnimatedHero } from "@/components/ui/animated-hero";
 import RadialOrbitalTimeline from "@/components/ui/radial-orbital-timeline";
-import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import { StarField } from "@/components/ui/star-field";
 import { ZodiacIcon } from "@/components/ui/zodiac-icon";
 import { Button } from "@/components/ui/button";
@@ -112,141 +111,48 @@ const FEATURES = [
   },
 ];
 
-const PREVIEW_MATCHES = [
-  { name: "Sofia",  age: 27, sun: "Pisces",   moon: "Cancer",  rising: "Libra",     score: 94, city: "New York" },
-  { name: "Amara",  age: 29, sun: "Scorpio",  moon: "Pisces",  rising: "Cancer",    score: 88, city: "London"   },
-  { name: "Zara",   age: 25, sun: "Taurus",   moon: "Virgo",   rising: "Capricorn", score: 82, city: "Paris"    },
+
+// ── Synastry aspect data ─────────────────────────────────────────────────────
+const SYNASTRY_ASPECTS = [
+  { planet1: "♀ Venus", aspect: "trine",   planet2: "☽ Moon",    label: "Harmonic", col: "#818cf8" },
+  { planet1: "☉ Sun",   aspect: "sextile", planet2: "♀ Venus",   label: "Flowing",  col: "#34d399" },
+  { planet1: "☽ Moon",  aspect: "conjunct",planet2: "☽ Moon",    label: "Deep bond", col: "#f472b6" },
+  { planet1: "↑ Rising",aspect: "trine",   planet2: "☉ Sun",     label: "Magnetic", col: "#f59e0b" },
 ];
 
-// ── Inline constellation canvas for the hero strip ──────────────────────────
-function ConstellationCanvas() {
-  const ref = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = ref.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const resize = () => {
-      canvas.width  = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-    };
-    resize();
-
-    // Fixed constellation points (normalised 0-1)
-    const pts = [
-      [0.08, 0.35], [0.18, 0.20], [0.28, 0.55], [0.38, 0.25],
-      [0.50, 0.45], [0.60, 0.18], [0.70, 0.55], [0.80, 0.30],
-      [0.90, 0.60], [0.95, 0.20],
-      [0.45, 0.75], [0.55, 0.82], [0.65, 0.72],
-      [0.15, 0.72], [0.25, 0.80], [0.35, 0.68],
-    ];
-    const edges = [
-      [0,1],[1,3],[3,2],[2,4],[4,5],[5,7],[7,9],[7,8],
-      [10,11],[11,12],[13,14],[14,15],
-    ];
-
-    // Scattered tiny stars
-    const stars = Array.from({ length: 55 }, () => ({
-      x: Math.random(), y: Math.random(),
-      r: Math.random() * 0.9 + 0.2,
-      a: Math.random(), s: Math.random() * 0.012 + 0.004, p: Math.random() * Math.PI * 2,
-    }));
-
-    let raf: number;
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const W = canvas.width, H = canvas.height;
-
-      // Constellation lines
-      ctx.strokeStyle = "rgba(120,110,255,0.35)";
-      ctx.lineWidth = 0.8;
-      edges.forEach(([a, b]) => {
-        ctx.beginPath();
-        ctx.moveTo(pts[a][0] * W, pts[a][1] * H);
-        ctx.lineTo(pts[b][0] * W, pts[b][1] * H);
-        ctx.stroke();
-      });
-
-      // Constellation nodes
-      pts.forEach(([px, py]) => {
-        ctx.beginPath();
-        ctx.arc(px * W, py * H, 1.8, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(180,170,255,0.85)";
-        ctx.fill();
-      });
-
-      // Twinkling stars
-      stars.forEach((s) => {
-        s.p += s.s;
-        const alpha = 0.3 + 0.5 * ((1 + Math.sin(s.p)) / 2);
-        ctx.beginPath();
-        ctx.arc(s.x * W, s.y * H, s.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(180,170,255,${alpha})`;
-        ctx.fill();
-      });
-
-      raf = requestAnimationFrame(draw);
-    };
-    draw();
-
-    const obs = new ResizeObserver(resize);
-    obs.observe(canvas);
-    return () => { cancelAnimationFrame(raf); obs.disconnect(); };
-  }, []);
-
-  return <canvas ref={ref} className="absolute inset-0 w-full h-full" />;
-}
-
-// Thin arc score, matches the real app's ScoreMark
-function PreviewScoreMark({ score }: { score: number }) {
-  const r = 13;
-  const circ = 2 * Math.PI * r;
-  const offset = circ - (score / 100) * circ;
-  const col = score >= 90 ? "#f59e0b" : score >= 80 ? "#818cf8" : "#6366f1";
+function SynastryRow({ planet1, aspect, planet2, label, col }: typeof SYNASTRY_ASPECTS[0]) {
   return (
-    <div className="relative w-8 h-8 flex items-center justify-center shrink-0">
-      <svg width="30" height="30" className="-rotate-90">
-        <circle cx="15" cy="15" r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-        <circle cx="15" cy="15" r={r} fill="none" stroke={col} strokeWidth="1.5"
-          strokeDasharray={circ} strokeDashoffset={offset} strokeLinecap="round" />
-      </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center leading-none">
-        <span className="text-[8px] text-white font-medium">{score}</span>
-        <span className="text-[5px] text-stone-400 -mt-px">%</span>
+    <div className="flex items-center gap-2 py-1.5">
+      <span className="text-[8px] text-stone-300 font-medium w-12 shrink-0">{planet1}</span>
+      <div className="flex items-center gap-1 shrink-0">
+        <div className="w-3 h-px" style={{ background: col }} />
+        <span className="text-[7px] uppercase tracking-[0.08em]" style={{ color: col }}>{aspect}</span>
+        <div className="w-3 h-px" style={{ background: col }} />
       </div>
+      <span className="text-[8px] text-stone-300 font-medium w-12 shrink-0">{planet2}</span>
+      <span className="ml-auto text-[6px] px-1.5 py-0.5 rounded-full border shrink-0"
+        style={{ color: col, borderColor: `${col}40`, background: `${col}15` }}>
+        {label}
+      </span>
     </div>
   );
 }
 
-// Editorial match row, mirrors the real MatchCard style
-function PreviewMatchCard({ match, delay }: { match: typeof PREVIEW_MATCHES[0]; delay: number }) {
+function CompatScore({ score }: { score: number }) {
+  const r = 18, circ = 2 * Math.PI * r;
+  const offset = circ - (score / 100) * circ;
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 6 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, delay, ease: [0.22, 1, 0.36, 1] }}
-      className="flex items-start gap-2.5 py-3"
-    >
-      {/* Avatar */}
-      <div className="w-8 h-8 rounded-full bg-indigo-900/70 border border-indigo-400/30 flex items-center justify-center text-[9px] font-semibold text-indigo-200 shrink-0">
-        {match.name[0]}
+    <div className="relative w-12 h-12 flex items-center justify-center">
+      <svg width="48" height="48" className="-rotate-90">
+        <circle cx="24" cy="24" r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="2" />
+        <circle cx="24" cy="24" r={r} fill="none" stroke="#818cf8" strokeWidth="2.5"
+          strokeDasharray={circ} strokeDashoffset={offset} strokeLinecap="round" />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center leading-none">
+        <span className="text-[11px] font-bold text-white">{score}</span>
+        <span className="text-[5px] text-indigo-300 -mt-px">%</span>
       </div>
-      {/* Info */}
-      <div className="flex-1 min-w-0">
-        <p className="font-serif text-white text-[11px] leading-snug">
-          {match.name}<span className="text-stone-400 font-light">, {match.age}</span>
-        </p>
-        <p className="text-[8px] uppercase tracking-[0.08em] text-stone-400 mt-0.5">{match.city}</p>
-        <p className="text-[9px] text-stone-300 mt-1 tracking-[0.02em]">
-          ☉ {match.sun}
-          <span className="mx-1.5 opacity-40">·</span>
-          ☽ {match.moon}
-        </p>
-      </div>
-      <PreviewScoreMark score={match.score} />
-    </motion.div>
+    </div>
   );
 }
 
@@ -256,58 +162,67 @@ function AppPreview() {
 
       {/* ── NavBar ───────────────────────────────────────────────── */}
       <div className="shrink-0 flex items-center justify-between px-4 py-2.5 border-b border-indigo-400/20 bg-[#07091f]/90 backdrop-blur-md">
-        <div className="flex items-center">
-          <span
-            className="text-[8px] font-black text-white tracking-[0.28em]"
-            style={{ fontFamily: "var(--font-inter)" }}
-          >starcross</span>
-        </div>
+        <span className="text-[8px] font-semibold text-white tracking-[0.28em]" style={{ fontFamily: "var(--font-inter)" }}>starcross</span>
         <div className="flex items-center gap-3">
           {["Discover","Matches","Astrology"].map((l, i) => (
-            <span key={l} className={cn("text-[7px] uppercase tracking-[0.1em]", i === 1 ? "text-indigo-300" : "text-stone-400")}>{l}</span>
+            <span key={l} className={cn("text-[7px] uppercase tracking-[0.1em]", i === 2 ? "text-indigo-300" : "text-stone-500")}>{l}</span>
           ))}
         </div>
       </div>
 
-      {/* ── Constellation strip ──────────────────────────────────── */}
-      <div className="relative shrink-0 overflow-hidden" style={{ height: "30%" }}>
-        <ConstellationCanvas />
-        <div className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 70% 80% at 50% 50%, rgba(100,80,255,0.12) 0%, transparent 70%)" }}
-        />
-        {[110, 76, 46].map((d, i) => (
-          <div key={d} className="absolute rounded-full border border-indigo-500/25"
-            style={{
-              width: d, height: d, top: "50%", left: "50%",
-              transform: "translate(-50%, -50%)",
-              opacity: 0.6 - i * 0.12,
-              animation: `ring-spin ${38 + i * 14}s linear infinite ${i % 2 ? "reverse" : ""}`,
-            }}
-          />
-        ))}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-6 h-6 rounded-full bg-indigo-900/80 border border-indigo-400/40 flex items-center justify-center">
-          <span className="text-indigo-300 text-[9px] select-none">✦</span>
+      {/* ── Two profiles + score ─────────────────────────────────── */}
+      <div className="shrink-0 px-4 pt-3 pb-2 flex items-center justify-between">
+        {/* Profile A */}
+        <div className="flex flex-col items-center gap-1">
+          <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-indigo-400/50">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="https://api.dicebear.com/9.x/adventurer/png?seed=Zara&skinColor=ae5d29&size=40" alt="Zara" className="w-full h-full object-cover" />
+          </div>
+          <p className="text-[7px] text-stone-300">Zara, 25</p>
+          <p className="text-[6px] text-indigo-300/70">♉ Taurus</p>
         </div>
-        <div className="absolute bottom-0 inset-x-0 px-4 pb-2 z-20">
-          <p className="text-[7px] text-indigo-400/70 uppercase tracking-[0.16em]">Your cosmic fingerprint</p>
-          <p className="text-[9px] text-stone-300 mt-0.5">
-            ☉ Leo <span className="opacity-40 mx-1">·</span> ☽ Aquarius <span className="opacity-40 mx-1">·</span> ↑ Gemini
-          </p>
+
+        {/* Compatibility ring + label */}
+        <div className="flex flex-col items-center gap-0.5">
+          <CompatScore score={94} />
+          <p className="text-[6px] uppercase tracking-[0.14em] text-indigo-300/80">Cosmic Match</p>
+        </div>
+
+        {/* Profile B */}
+        <div className="flex flex-col items-center gap-1">
+          <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-rose-400/50">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="https://api.dicebear.com/9.x/adventurer/png?seed=Sofia&skinColor=d08b5b&size=40" alt="Sofia" className="w-full h-full object-cover" />
+          </div>
+          <p className="text-[7px] text-stone-300">Sofia, 27</p>
+          <p className="text-[6px] text-rose-300/70">♓ Pisces</p>
         </div>
       </div>
 
-      {/* ── Matches list ─────────────────────────────────────────── */}
-      <div className="flex-1 min-h-0 overflow-hidden flex flex-col px-4 pt-3">
-        {/* Header */}
-        <div className="shrink-0 mb-1">
-          <p className="font-serif text-white text-sm font-light tracking-tight">Your Matches</p>
-          <p className="text-[7px] uppercase tracking-[0.14em] text-indigo-400/80 mt-0.5">3 connections found</p>
-          <div className="mt-2 h-px bg-indigo-500/20" />
+      {/* ── Synastry aspects ─────────────────────────────────────── */}
+      <div className="flex-1 min-h-0 overflow-hidden flex flex-col px-4 gap-1.5">
+        <p className="text-[6px] uppercase tracking-[0.16em] text-indigo-400/70 shrink-0">Key Aspects</p>
+        <div className="flex-1 overflow-hidden bg-indigo-950/40 border border-indigo-400/15 rounded-[4px] px-2 divide-y divide-indigo-400/[0.08]">
+          {SYNASTRY_ASPECTS.map((a) => (
+            <SynastryRow key={a.planet1 + a.planet2} {...a} />
+          ))}
         </div>
-        {/* Glass panel */}
-        <div className="flex-1 overflow-hidden bg-indigo-950/40 border border-indigo-400/15 rounded-[4px] divide-y divide-indigo-400/10 px-3">
-          {PREVIEW_MATCHES.map((m, i) => (
-            <PreviewMatchCard key={m.name} match={m} delay={0.1 + i * 0.09} />
+
+        {/* Elemental bars */}
+        <div className="shrink-0 bg-white/[0.03] border border-indigo-400/10 rounded-[4px] px-2.5 py-2">
+          <p className="text-[6px] uppercase tracking-[0.12em] text-indigo-400/60 mb-1.5">Elemental Harmony</p>
+          {[
+            { label: "Fire",  pct: 72, col: "#f59e0b" },
+            { label: "Water", pct: 88, col: "#6366f1" },
+            { label: "Air",   pct: 55, col: "#38bdf8" },
+          ].map(e => (
+            <div key={e.label} className="flex items-center gap-1.5 mb-1 last:mb-0">
+              <span className="text-[6px] text-stone-400 w-7 shrink-0">{e.label}</span>
+              <div className="flex-1 h-1 bg-white/[0.06] rounded-full overflow-hidden">
+                <div className="h-full rounded-full transition-all" style={{ width: `${e.pct}%`, backgroundColor: e.col, opacity: 0.85 }} />
+              </div>
+              <span className="text-[6px] text-stone-500 shrink-0">{e.pct}%</span>
+            </div>
           ))}
         </div>
       </div>
@@ -315,9 +230,9 @@ function AppPreview() {
       {/* ── Bottom nav ───────────────────────────────────────────── */}
       <div className="shrink-0 border-t border-indigo-400/20 bg-[#07091f]/95 px-4 py-2 flex items-center justify-around">
         {[
-          { icon: Heart,    label: "Discover", active: false },
-          { icon: Sparkles, label: "Matches",  active: true  },
-          { icon: Moon,     label: "Astrology",active: false },
+          { icon: Heart,    label: "Discover",  active: false },
+          { icon: Sparkles, label: "Matches",   active: false },
+          { icon: Moon,     label: "Astrology", active: true  },
         ].map(({ icon: Icon, label, active }) => (
           <div key={label} className="flex flex-col items-center gap-0.5">
             <Icon className={cn("h-3 w-3", active ? "text-indigo-400" : "text-stone-500")} />
@@ -355,7 +270,7 @@ export default function HomePage() {
           {/* Logo — large bold */}
           <Link href="/" className="shrink-0">
             <span
-              className="text-4xl font-black text-white tracking-[0.25em]"
+              className="text-4xl font-semibold text-white tracking-[0.25em]"
               style={{ fontFamily: "var(--font-inter)" }}
             >
               starcross
@@ -503,64 +418,63 @@ export default function HomePage() {
       {/* ── All content below slides over the fixed hero ─────────────────── */}
       <div className="relative z-10">
 
-      {/* ── ContainerScroll: app preview ─────────────────────────────────── */}
-      <section id="app-preview" className="bg-[#FAF8F4] overflow-hidden shadow-[0_-24px_60px_rgba(0,0,0,0.5)]">
-        <ContainerScroll
-          titleComponent={
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7 }}
-              className="space-y-5 pb-4"
-            >
-              <span className="text-xs tracking-widest uppercase text-stone-400 block">
-                The experience
-              </span>
-              <h2 className="font-serif text-4xl md:text-[3.5rem] font-semibold text-stone-900 leading-[1.1] tracking-tight">
-                Your cosmic matches,{" "}
-                <span className="italic text-stone-500">beautifully surfaced</span>
-              </h2>
-              <p className="text-stone-500 text-base max-w-md mx-auto leading-relaxed">
-                Every profile scored, every connection explained, using the full depth of your birth chart.
-              </p>
-            </motion.div>
-          }
-        >
-          <AppPreview />
-        </ContainerScroll>
-      </section>
+      {/* ── App preview + How it works — side by side ────────────────────── */}
+      <section id="app-preview" className="bg-[#FAF8F4] overflow-hidden shadow-[0_-24px_60px_rgba(0,0,0,0.5)] py-24 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
-      {/* ── How it works ─────────────────────────────────────────────────── */}
-      <section id="how-it-works" className="py-32 px-6 bg-white">
-        <div className="max-w-5xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-3"
-          >
-            <span className="text-xs tracking-widest uppercase text-stone-400">The system</span>
-          </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="font-serif text-4xl md:text-5xl font-semibold text-stone-900 text-center tracking-tight mb-4"
-          >
-            How StarCross works
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.15 }}
-            className="text-stone-500 text-center max-w-md mx-auto mb-4 text-base"
-          >
-            Click any node to explore each step. Watch the orbit to see how the pieces connect.
-          </motion.p>
-          <RadialOrbitalTimeline timelineData={HOW_IT_WORKS} />
+            {/* ── Left: phone mockup ─────────────────────────────── */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              className="flex flex-col items-center gap-8"
+            >
+              <div className="text-center">
+                <span className="text-xs tracking-widest uppercase text-stone-400 block mb-3">The experience</span>
+                <h2 className="font-serif text-3xl md:text-4xl font-semibold text-stone-900 leading-tight tracking-tight">
+                  See why every match{" "}
+                  <span className="italic text-stone-500">is written in the stars</span>
+                </h2>
+                <p className="text-stone-500 text-sm max-w-sm mx-auto mt-3 leading-relaxed">
+                  Full synastry breakdown — planetary aspects, elemental harmony, and a compatibility score — for every person you meet.
+                </p>
+              </div>
+
+              {/* Phone frame */}
+              <div
+                className="relative rounded-[2.2rem] border-[3px] border-stone-800 bg-stone-950 shadow-[0_32px_80px_rgba(0,0,0,0.55)] overflow-hidden w-[260px]"
+                style={{ height: "520px" }}
+              >
+                {/* Notch */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-20 h-5 bg-stone-950 rounded-b-xl z-20" />
+                <AppPreview />
+              </div>
+            </motion.div>
+
+            {/* ── Right: how it works ────────────────────────────── */}
+            <motion.div
+              id="how-it-works"
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+              className="flex flex-col"
+            >
+              <div className="text-center mb-2">
+                <span className="text-xs tracking-widest uppercase text-stone-400 block mb-3">The system</span>
+                <h2 className="font-serif text-3xl md:text-4xl font-semibold text-stone-900 tracking-tight">
+                  How StarCross works
+                </h2>
+                <p className="text-stone-500 text-sm max-w-xs mx-auto mt-3">
+                  Click any node to explore each step.
+                </p>
+              </div>
+              <RadialOrbitalTimeline timelineData={HOW_IT_WORKS} />
+            </motion.div>
+
+          </div>
         </div>
       </section>
 

@@ -1,12 +1,51 @@
 "use client";
 import { useEffect, useRef } from "react";
 
+// Diverse avatar faces — preloaded once at module level
+const FACE_SRCS = [
+  // Blonde / Northern European
+  "https://api.dicebear.com/9.x/adventurer/png?seed=Freya&skinColor=ffdbb4&hair=long20&hairColor=f9c23c&size=40",
+  // East Asian (Chinese)
+  "https://api.dicebear.com/9.x/adventurer/png?seed=Mei&skinColor=f2d3b1&hair=short07&hairColor=2c1b18&size=40",
+  // South Asian
+  "https://api.dicebear.com/9.x/adventurer/png?seed=Priya&skinColor=d08b5b&hair=long16&hairColor=2c1b18&size=40",
+  // African
+  "https://api.dicebear.com/9.x/adventurer/png?seed=Amara&skinColor=614335&hair=long01&hairColor=2c1b18&size=40",
+  // Mediterranean / Southern European
+  "https://api.dicebear.com/9.x/adventurer/png?seed=Sofia&skinColor=c68642&hair=long06&hairColor=724133&size=40",
+  // Brunette Western
+  "https://api.dicebear.com/9.x/adventurer/png?seed=Emma&skinColor=ffdbb4&hair=long04&hairColor=b58143&size=40",
+  // Japanese / East Asian
+  "https://api.dicebear.com/9.x/adventurer/png?seed=Kenji&skinColor=f2d3b1&hair=short06&hairColor=2c1b18&size=40",
+  // Latina
+  "https://api.dicebear.com/9.x/adventurer/png?seed=Maya&skinColor=ae5d29&hair=long09&hairColor=2c1b18&size=40",
+  // Middle Eastern
+  "https://api.dicebear.com/9.x/adventurer/png?seed=Layla&skinColor=c68642&hair=long13&hairColor=2c1b18&size=40",
+  // Blue-eyed / light features
+  "https://api.dicebear.com/9.x/adventurer/png?seed=Ingrid&skinColor=ffdbb4&hair=long21&hairColor=e8e1d4&size=40",
+  // Dark-skinned
+  "https://api.dicebear.com/9.x/adventurer/png?seed=Zara&skinColor=4a312c&hair=long14&hairColor=2c1b18&size=40",
+  // Red-haired
+  "https://api.dicebear.com/9.x/adventurer/png?seed=Saoirse&skinColor=ffdbb4&hair=long05&hairColor=d96c2b&size=40",
+];
+
+const faceImages: HTMLImageElement[] =
+  typeof window !== "undefined"
+    ? FACE_SRCS.map((src) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.src = src;
+        return img;
+      })
+    : [];
+
 interface Star {
   x: number; y: number; r: number;
   alpha: number; speed: number; phase: number;
   depth: number;
   r_: number; g_: number; b_: number;
   driftX: number; driftY: number; driftPhase: number;
+  faceIdx: number;
 }
 
 interface ConstellationLine { a: number; b: number; }
@@ -73,6 +112,7 @@ export function StarField({
           driftX: (Math.random() - 0.5) * 0.018, // slow drift
           driftY: (Math.random() - 0.5) * 0.012,
           driftPhase: Math.random() * Math.PI * 2,
+          faceIdx: Math.floor(Math.random() * FACE_SRCS.length),
         };
       });
 
@@ -260,14 +300,22 @@ export function StarField({
           ctx!.fill();
         }
 
-        // Smiling face — size scales with star radius
-        const faceSize = Math.max(6, s.r * 6);
+        // Circular face avatar
+        const faceSize = Math.max(8, s.r * 7);
+        const half = faceSize / 2;
+        const img = faceImages[s.faceIdx];
         ctx!.save();
         ctx!.globalAlpha = a;
-        ctx!.font = `${faceSize}px serif`;
-        ctx!.textAlign = "center";
-        ctx!.textBaseline = "middle";
-        ctx!.fillText("🙂", px, py);
+        ctx!.beginPath();
+        ctx!.arc(px, py, half, 0, Math.PI * 2);
+        ctx!.clip();
+        if (img && img.complete && img.naturalWidth > 0) {
+          ctx!.drawImage(img, px - half, py - half, faceSize, faceSize);
+        } else {
+          // Fallback dot while image loads
+          ctx!.fillStyle = `rgba(${s.r_},${s.g_},${s.b_},1)`;
+          ctx!.fill();
+        }
         ctx!.restore();
       }
 
