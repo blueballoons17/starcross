@@ -568,6 +568,8 @@ export default function HomePage() {
 
       {/* ── Features ─────────────────────────────────────────────────────── */}
       <section className="py-32 px-6 bg-stone-950 relative overflow-hidden">
+        {/* Interactive star field — same engine as the hero */}
+        <StarField count={180} />
         <div className="max-w-5xl mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
