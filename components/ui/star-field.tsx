@@ -5,7 +5,8 @@ interface Star {
   x: number; y: number; r: number;
   alpha: number; speed: number; phase: number;
   depth: number;
-  r_: number; g_: number; b_: number; // color channels
+  r_: number; g_: number; b_: number;
+  driftX: number; driftY: number; driftPhase: number;
 }
 
 interface ConstellationLine { a: number; b: number; }
@@ -13,10 +14,11 @@ interface Ripple { x: number; y: number; t: number; }
 interface Shooter {
   x: number; y: number; vx: number; vy: number;
   len: number; life: number; maxLife: number;
+  size: number;
 }
 
 export function StarField({
-  count = 220,
+  count = 280,
   className = "",
 }: {
   count?: number;
@@ -37,42 +39,43 @@ export function StarField({
     let shooters: Shooter[] = [];
     let nextShootAt = 0;
 
-    // cursor in canvas-local coords (-9999 = off screen)
     let mouseX = -9999, mouseY = -9999;
     let curOffX = 0, curOffY = 0;
     let tgtOffX = 0, tgtOffY = 0;
-    const MAX_PARALLAX = 32;
+    const MAX_PARALLAX = 52; // more movement
 
-    // ── Init ────────────────────────────────────────────────────────────────
     function init() {
       const w = canvas!.width, h = canvas!.height;
 
-      // Star color palettes (R,G,B) for dark sky
       const palettes = [
-        [200, 220, 255], // blue-white
-        [255, 252, 240], // warm white
-        [220, 225, 255], // cool white
-        [255, 238, 200], // golden
-        [180, 200, 255], // blue
-        [255, 255, 255], // pure white
+        [200, 220, 255],
+        [255, 252, 240],
+        [220, 225, 255],
+        [255, 238, 200],
+        [180, 200, 255],
+        [255, 255, 255],
+        [210, 230, 255],
+        [255, 245, 210],
       ];
 
       stars = Array.from({ length: count }, () => {
-        const r = Math.pow(Math.random(), 1.8) * 2.4 + 0.25;
+        const r = Math.pow(Math.random(), 1.5) * 3.2 + 0.3; // slightly bigger stars
         const pal = palettes[Math.floor(Math.random() * palettes.length)];
         return {
           x: Math.random() * w,
           y: Math.random() * h,
           r,
-          alpha: Math.random() * 0.55 + 0.2,
-          speed: Math.random() * 0.0012 + 0.0003,
+          alpha: Math.random() * 0.6 + 0.25,
+          speed: Math.random() * 0.0022 + 0.0006, // faster twinkle
           phase: Math.random() * Math.PI * 2,
-          depth: Math.pow((r - 0.25) / 2.4, 1.6),
+          depth: Math.pow((r - 0.3) / 3.2, 1.4),
           r_: pal[0], g_: pal[1], b_: pal[2],
+          driftX: (Math.random() - 0.5) * 0.018, // slow drift
+          driftY: (Math.random() - 0.5) * 0.012,
+          driftPhase: Math.random() * Math.PI * 2,
         };
       });
 
-      // Pre-compute sparse constellation backbone
       constLines = [];
       for (let i = 0; i < stars.length; i++) {
         let connections = 0;
@@ -80,76 +83,78 @@ export function StarField({
           if (connections >= 2) break;
           const dx = stars[i].x - stars[j].x;
           const dy = stars[i].y - stars[j].y;
-          if (dx * dx + dy * dy < 120 * 120 && Math.random() < 0.18) {
+          if (dx * dx + dy * dy < 130 * 130 && Math.random() < 0.18) {
             constLines.push({ a: i, b: j });
             connections++;
           }
         }
       }
 
-      nextShootAt = performance.now() + 2000 + Math.random() * 6000;
+      nextShootAt = performance.now() + 800 + Math.random() * 1500;
     }
 
-    // ── Spawn shooting star ──────────────────────────────────────────────────
     function spawnShooter(ts: number) {
       const w = canvas!.width, h = canvas!.height;
-      const angle = (Math.random() * Math.PI) / 4 + Math.PI / 6;
-      const speed = 5 + Math.random() * 6;
-      shooters.push({
-        x: Math.random() * w * 0.6,
-        y: Math.random() * h * 0.45,
-        vx: Math.cos(-angle) * speed,
-        vy: Math.sin(-angle) * speed,
-        len: 90 + Math.random() * 120,
-        life: 0,
-        maxLife: 55 + Math.random() * 35,
-      });
-      nextShootAt = ts + 7000 + Math.random() * 15000;
+      // Spawn 1-3 shooters at once for burst effect
+      const burst = Math.random() < 0.3 ? Math.floor(Math.random() * 2) + 2 : 1;
+      for (let b = 0; b < burst; b++) {
+        const angle = (Math.random() * Math.PI) / 3.5 + Math.PI / 7;
+        const speed = 9 + Math.random() * 10;
+        const size = 1.5 + Math.random() * 2.5; // variable size, much bigger
+        shooters.push({
+          x: Math.random() * w * 0.75,
+          y: Math.random() * h * 0.55,
+          vx: Math.cos(-angle) * speed,
+          vy: Math.sin(-angle) * speed,
+          len: 180 + Math.random() * 250, // longer tails
+          life: 0,
+          maxLife: 60 + Math.random() * 45,
+          size,
+        });
+      }
+      // Much more frequent — every 1.5 to 4 seconds
+      nextShootAt = ts + 1500 + Math.random() * 2500;
     }
 
-    // ── Resize ───────────────────────────────────────────────────────────────
     function resize() {
       canvas!.width = canvas!.offsetWidth;
       canvas!.height = canvas!.offsetHeight;
       init();
     }
 
-    // ── Draw ─────────────────────────────────────────────────────────────────
     function draw(ts: number) {
       const w = canvas!.width, h = canvas!.height;
       ctx!.clearRect(0, 0, w, h);
 
-      // Smooth parallax
-      curOffX += (tgtOffX - curOffX) * 0.055;
-      curOffY += (tgtOffY - curOffY) * 0.055;
+      curOffX += (tgtOffX - curOffX) * 0.045; // slightly slower, more fluid
+      curOffY += (tgtOffY - curOffY) * 0.045;
 
       if (ts > nextShootAt) spawnShooter(ts);
 
       const mouseNear = mouseX > -500;
-      const PULL_R = 170;
-      const PULL_STR = 12;
-      const GLOW_R = 140;
-      const LINE_R = 210;
+      const PULL_R = 200;
+      const PULL_STR = 18;
+      const GLOW_R = 160;
+      const LINE_R = 230;
 
-      // ── 1. Background constellation lines ────────────────────────────────
+      // ── Constellation lines ──────────────────────────────────────────────
       for (const { a, b } of constLines) {
         const sa = stars[a], sb = stars[b];
         const ax = sa.x + curOffX * sa.depth;
         const ay = sa.y + curOffY * sa.depth;
         const bx = sb.x + curOffX * sb.depth;
         const by = sb.y + curOffY * sb.depth;
-        const al = ((sa.alpha + sb.alpha) / 2) * 0.14;
+        const al = ((sa.alpha + sb.alpha) / 2) * 0.18;
         ctx!.beginPath();
         ctx!.moveTo(ax, ay);
         ctx!.lineTo(bx, by);
-        ctx!.strokeStyle = `rgba(100,130,220,${al})`;
-        ctx!.lineWidth = 0.45;
+        ctx!.strokeStyle = `rgba(120,150,240,${al})`;
+        ctx!.lineWidth = 0.5;
         ctx!.stroke();
       }
 
-      // ── 2. Cursor constellation lines + glow ─────────────────────────────
+      // ── Cursor constellation lines + glow ────────────────────────────────
       if (mouseNear) {
-        // Collect stars within LINE_R
         const near: { s: Star; d: number }[] = [];
         for (const s of stars) {
           const sx = s.x + curOffX * s.depth;
@@ -159,10 +164,10 @@ export function StarField({
         }
         near.sort((a, b) => a.d - b.d);
 
-        for (const { s, d } of near.slice(0, 7)) {
+        for (const { s, d } of near.slice(0, 8)) {
           const sx = s.x + curOffX * s.depth;
           const sy = s.y + curOffY * s.depth;
-          const op = Math.pow(1 - d / LINE_R, 1.4) * 0.75;
+          const op = Math.pow(1 - d / LINE_R, 1.4) * 0.8;
           const grad = ctx!.createLinearGradient(mouseX, mouseY, sx, sy);
           grad.addColorStop(0, `rgba(180,205,255,${op})`);
           grad.addColorStop(0.6, `rgba(160,185,255,${op * 0.4})`);
@@ -171,34 +176,30 @@ export function StarField({
           ctx!.moveTo(mouseX, mouseY);
           ctx!.lineTo(sx, sy);
           ctx!.strokeStyle = grad;
-          ctx!.lineWidth = 0.9;
+          ctx!.lineWidth = 1.0;
           ctx!.stroke();
         }
 
-        // Cursor outer glow halo
-        const halo = ctx!.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 18);
-        halo.addColorStop(0, "rgba(160,185,255,0.35)");
-        halo.addColorStop(0.4, "rgba(140,170,255,0.12)");
+        const halo = ctx!.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 22);
+        halo.addColorStop(0, "rgba(160,185,255,0.4)");
+        halo.addColorStop(0.4, "rgba(140,170,255,0.14)");
         halo.addColorStop(1, "rgba(140,170,255,0)");
         ctx!.beginPath();
-        ctx!.arc(mouseX, mouseY, 18, 0, Math.PI * 2);
+        ctx!.arc(mouseX, mouseY, 22, 0, Math.PI * 2);
         ctx!.fillStyle = halo;
         ctx!.fill();
 
-        // Cursor core dot
         ctx!.beginPath();
-        ctx!.arc(mouseX, mouseY, 2.2, 0, Math.PI * 2);
-        ctx!.fillStyle = "rgba(210,225,255,0.95)";
+        ctx!.arc(mouseX, mouseY, 2.5, 0, Math.PI * 2);
+        ctx!.fillStyle = "rgba(220,235,255,0.95)";
         ctx!.fill();
       }
 
-      // ── 3. Click / tap ripples ────────────────────────────────────────────
+      // ── Click ripples ────────────────────────────────────────────────────
       ripples = ripples.filter((r) => ts - r.t < 1000);
       for (const rp of ripples) {
-        const age = Math.max(0, ts - rp.t);   // guard: rAF ts can be ε < click ts
+        const age = Math.max(0, ts - rp.t);
         const p = Math.min(1, age / 1000);
-
-        // Outer ring
         const r1 = p * 240;
         const o1 = (1 - p) * 0.45;
         ctx!.beginPath();
@@ -206,8 +207,6 @@ export function StarField({
         ctx!.strokeStyle = `rgba(160,185,255,${o1})`;
         ctx!.lineWidth = 1.2 * (1 - p * 0.5);
         ctx!.stroke();
-
-        // Inner ring (faster, shorter)
         if (p < 0.7) {
           const r2 = (p / 0.7) * 130;
           const o2 = (1 - p / 0.7) * 0.3;
@@ -219,13 +218,16 @@ export function StarField({
         }
       }
 
-      // ── 4. Stars (with cursor pull + glow) ───────────────────────────────
+      // ── Stars ────────────────────────────────────────────────────────────
       for (const s of stars) {
-        const twinkle = Math.sin(ts * s.speed + s.phase) * 0.32;
+        // Bigger twinkle amplitude
+        const twinkle = Math.sin(ts * s.speed + s.phase) * 0.42;
         let a = Math.max(0.05, Math.min(0.98, s.alpha + twinkle));
 
-        let dx = curOffX * s.depth;
-        let dy = curOffY * s.depth;
+        // Drift offset — stars slowly float
+        const drift = Math.sin(ts * 0.00008 + s.driftPhase);
+        let dx = curOffX * s.depth + drift * s.driftX * 40;
+        let dy = curOffY * s.depth + drift * s.driftY * 40;
 
         if (mouseNear) {
           const sx = s.x + dx, sy = s.y + dy;
@@ -238,17 +240,16 @@ export function StarField({
             dy += (mdy / dist) * pull;
           }
           if (dist < GLOW_R) {
-            a = Math.min(1, a + (1 - dist / GLOW_R) * 0.65);
+            a = Math.min(1, a + (1 - dist / GLOW_R) * 0.7);
           }
         }
 
         const px = s.x + dx, py = s.y + dy;
 
-        // Glow halo for bigger stars
-        if (s.r > 1.1 && isFinite(px) && isFinite(py)) {
-          const gr = s.r * 4.5;
+        if (s.r > 1.2 && isFinite(px) && isFinite(py)) {
+          const gr = s.r * 5.5;
           const grd = ctx!.createRadialGradient(px, py, 0, px, py, gr);
-          grd.addColorStop(0, `rgba(${s.r_},${s.g_},${s.b_},${a * 0.28})`);
+          grd.addColorStop(0, `rgba(${s.r_},${s.g_},${s.b_},${a * 0.35})`);
           grd.addColorStop(1, `rgba(${s.r_},${s.g_},${s.b_},0)`);
           ctx!.beginPath();
           ctx!.arc(px, py, gr, 0, Math.PI * 2);
@@ -256,19 +257,17 @@ export function StarField({
           ctx!.fill();
         }
 
-        // Star core
         ctx!.beginPath();
         ctx!.arc(px, py, s.r, 0, Math.PI * 2);
         ctx!.fillStyle = `rgba(${s.r_},${s.g_},${s.b_},${a})`;
         ctx!.fill();
 
-        // Cross sparkle for the brightest stars
-        if (s.r > 1.7 && a > 0.7) {
-          const len = s.r * 3.5;
+        if (s.r > 1.8 && a > 0.65) {
+          const len = s.r * 4.5;
           ctx!.save();
-          ctx!.globalAlpha = (a - 0.7) * 0.5;
+          ctx!.globalAlpha = (a - 0.65) * 0.6;
           ctx!.strokeStyle = `rgb(${s.r_},${s.g_},${s.b_})`;
-          ctx!.lineWidth = 0.6;
+          ctx!.lineWidth = 0.7;
           ctx!.beginPath();
           ctx!.moveTo(px - len, py); ctx!.lineTo(px + len, py);
           ctx!.moveTo(px, py - len); ctx!.lineTo(px, py + len);
@@ -277,41 +276,43 @@ export function StarField({
         }
       }
 
-      // ── 5. Shooting stars ────────────────────────────────────────────────
+      // ── Shooting stars (larger, more frequent) ───────────────────────────
       shooters = shooters.filter((sh) => sh.life < sh.maxLife);
       for (const sh of shooters) {
         sh.life++;
         sh.x += sh.vx;
         sh.y += sh.vy;
         const p = sh.life / sh.maxLife;
-        const alpha = p < 0.15 ? p / 0.15 : 1 - (p - 0.15) / 0.85;
+        const alpha = p < 0.12 ? p / 0.12 : 1 - (p - 0.12) / 0.88;
         const speed = Math.hypot(sh.vx, sh.vy);
         const tailX = sh.x - (sh.vx / speed) * sh.len;
         const tailY = sh.y - (sh.vy / speed) * sh.len;
 
         const sGrad = ctx!.createLinearGradient(sh.x, sh.y, tailX, tailY);
         sGrad.addColorStop(0, `rgba(255,255,255,${alpha})`);
-        sGrad.addColorStop(0.25, `rgba(200,215,255,${alpha * 0.6})`);
-        sGrad.addColorStop(1, "rgba(180,200,255,0)");
+        sGrad.addColorStop(0.2, `rgba(220,235,255,${alpha * 0.7})`);
+        sGrad.addColorStop(0.55, `rgba(180,205,255,${alpha * 0.3})`);
+        sGrad.addColorStop(1, "rgba(160,190,255,0)");
         ctx!.beginPath();
         ctx!.moveTo(sh.x, sh.y);
         ctx!.lineTo(tailX, tailY);
         ctx!.strokeStyle = sGrad;
-        ctx!.lineWidth = 1.8 * (1 - p * 0.4);
+        ctx!.lineWidth = sh.size * (1 - p * 0.35); // thicker lines
         ctx!.stroke();
 
-        // Bright head
-        const hGrad = ctx!.createRadialGradient(sh.x, sh.y, 0, sh.x, sh.y, 4);
+        // Bright flaring head
+        const headR = sh.size * 2.8;
+        const hGrad = ctx!.createRadialGradient(sh.x, sh.y, 0, sh.x, sh.y, headR);
         hGrad.addColorStop(0, `rgba(255,255,255,${alpha})`);
-        hGrad.addColorStop(1, "rgba(255,255,255,0)");
+        hGrad.addColorStop(0.4, `rgba(200,220,255,${alpha * 0.6})`);
+        hGrad.addColorStop(1, "rgba(180,200,255,0)");
         ctx!.beginPath();
-        ctx!.arc(sh.x, sh.y, 4, 0, Math.PI * 2);
+        ctx!.arc(sh.x, sh.y, headR, 0, Math.PI * 2);
         ctx!.fillStyle = hGrad;
         ctx!.fill();
       }
     }
 
-    // ── Event handlers ───────────────────────────────────────────────────────
     function updateMouse(clientX: number, clientY: number) {
       const rect = canvas!.getBoundingClientRect();
       mouseX = clientX - rect.left;
@@ -322,41 +323,24 @@ export function StarField({
     }
 
     function onMouseMove(e: MouseEvent) { updateMouse(e.clientX, e.clientY); }
-
-    function onMouseLeave() {
-      mouseX = -9999; mouseY = -9999;
-      tgtOffX = 0; tgtOffY = 0;
-    }
-
-    function onTouchMove(e: TouchEvent) {
-      const t = e.touches[0];
-      updateMouse(t.clientX, t.clientY);
-    }
-
+    function onMouseLeave() { mouseX = -9999; mouseY = -9999; tgtOffX = 0; tgtOffY = 0; }
+    function onTouchMove(e: TouchEvent) { updateMouse(e.touches[0].clientX, e.touches[0].clientY); }
     function addRipple(clientX: number, clientY: number, ts: number) {
       const rect = canvas!.getBoundingClientRect();
       ripples.push({ x: clientX - rect.left, y: clientY - rect.top, t: ts });
     }
+    function onPointerDown(e: PointerEvent) { addRipple(e.clientX, e.clientY, performance.now()); }
 
-    function onPointerDown(e: PointerEvent) {
-      addRipple(e.clientX, e.clientY, performance.now());
-    }
-
-    // Attach to window so events fire even when cursor is over content divs
     window.addEventListener("mousemove", onMouseMove, { passive: true });
     window.addEventListener("touchmove", onTouchMove, { passive: true });
     window.addEventListener("pointerdown", onPointerDown, { passive: true });
-    // Track mouse leaving the viewport
     document.documentElement.addEventListener("mouseleave", onMouseLeave);
 
     const ro = new ResizeObserver(resize);
     ro.observe(canvas);
     resize();
 
-    function loop(ts: number) {
-      draw(ts);
-      animId = requestAnimationFrame(loop);
-    }
+    function loop(ts: number) { draw(ts); animId = requestAnimationFrame(loop); }
     animId = requestAnimationFrame(loop);
 
     return () => {

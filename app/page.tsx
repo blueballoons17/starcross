@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion";
-import { ArrowRight, Heart, Sparkles, Moon } from "lucide-react";
+import { ArrowRight, Heart, Sparkles, Moon, ChevronDown } from "lucide-react";
 import { AnimatedHero } from "@/components/ui/animated-hero";
 import RadialOrbitalTimeline from "@/components/ui/radial-orbital-timeline";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
@@ -10,7 +10,7 @@ import { StarField } from "@/components/ui/star-field";
 import { ZodiacIcon } from "@/components/ui/zodiac-icon";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
 const HERO_WORDS = [
@@ -329,6 +329,61 @@ function AppPreview() {
   );
 }
 
+// ── Section nav ──────────────────────────────────────────────────────────────
+const SECTIONS = [
+  { id: "hero",        label: "Home"         },
+  { id: "app-preview", label: "The App"      },
+  { id: "how-it-works",label: "How It Works" },
+  { id: "features",   label: "Features"     },
+  { id: "elements",   label: "Elements"     },
+  { id: "astrology",  label: "Astrology"    },
+  { id: "pricing-cta",label: "Get Started"  },
+];
+
+function SectionNav() {
+  const [active, setActive] = useState("hero");
+
+  useEffect(() => {
+    const observers: IntersectionObserver[] = [];
+    SECTIONS.forEach(({ id }) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) setActive(id); },
+        { threshold: 0.35 }
+      );
+      obs.observe(el);
+      observers.push(obs);
+    });
+    return () => observers.forEach((o) => o.disconnect());
+  }, []);
+
+  return (
+    <div className="fixed right-5 top-1/2 -translate-y-1/2 z-50 hidden lg:flex flex-col gap-3 items-end">
+      {SECTIONS.map(({ id, label }) => (
+        <button
+          key={id}
+          onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })}
+          className="group flex items-center gap-2"
+        >
+          <span className={cn(
+            "text-[10px] tracking-[0.12em] uppercase transition-all duration-300 opacity-0 group-hover:opacity-100",
+            active === id ? "opacity-100 text-white" : "text-stone-500"
+          )}>
+            {label}
+          </span>
+          <div className={cn(
+            "rounded-full transition-all duration-300",
+            active === id
+              ? "w-2.5 h-2.5 bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+              : "w-1.5 h-1.5 bg-stone-600 group-hover:bg-stone-400"
+          )} />
+        </button>
+      ))}
+    </div>
+  );
+}
+
 // ── Page ─────────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
@@ -346,14 +401,15 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#FAF8F4] overflow-x-hidden">
+      <SectionNav />
 
       {/* ── Fixed header ─────────────────────────────────────────────────── */}
       <header className="fixed top-0 left-0 right-0 z-50">
         <div className="max-w-5xl mx-auto flex h-16 items-center justify-between px-6">
           <div className="flex items-center">
             <span
-              className="text-[13px] font-normal text-white/90 tracking-[0.32em]"
-              style={{ fontFamily: "var(--font-inter)" }}
+              className="text-2xl font-light text-white/90 tracking-[0.28em]"
+              style={{ fontFamily: "var(--font-cinzel)" }}
             >
               starcross
             </span>
@@ -379,18 +435,20 @@ export default function HomePage() {
 
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section
+        id="hero"
         ref={heroRef}
-        className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-20 pb-28 overflow-hidden bg-stone-950"
+        className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-20 pb-28 overflow-hidden"
+        style={{ background: "#07091f" }}
       >
         {/* Cursor-parallax star canvas */}
-        <StarField count={230} />
+        <StarField count={320} />
 
         {/* Radial glow at center */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              "radial-gradient(ellipse 70% 55% at 50% 42%, rgba(255,252,245,0.055) 0%, transparent 70%)",
+              "radial-gradient(ellipse 65% 50% at 50% 42%, rgba(80,100,200,0.12) 0%, transparent 70%)",
           }}
         />
 
@@ -414,11 +472,30 @@ export default function HomePage() {
           style={{ y: heroY, opacity: heroOpacity }}
           className="relative z-10 text-center max-w-3xl w-full"
         >
+          {/* ── Large wordmark ───────────────────────────────────────── */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.05 }}
+            className="mb-6"
+          >
+            <span
+              className="text-white/90 tracking-[0.35em] font-light"
+              style={{
+                fontFamily: "var(--font-cinzel)",
+                fontSize: "clamp(2.4rem, 6vw, 5rem)",
+                textShadow: "0 0 60px rgba(120,140,255,0.4)",
+              }}
+            >
+              starcross
+            </span>
+          </motion.div>
+
           {/* ── Static label "Find someone" ──────────────────────────── */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
+            transition={{ duration: 0.8, delay: 0.15 }}
             className="font-serif text-stone-500 font-medium tracking-wide mb-3"
             style={{ fontSize: "clamp(1.1rem, 2.6vw, 1.5rem)" }}
           >
@@ -486,11 +563,35 @@ export default function HomePage() {
           </motion.div>
         </motion.div>
 
+        {/* Section jump buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7, duration: 0.6 }}
+          className="relative z-10 flex flex-wrap items-center justify-center gap-2 mt-10"
+        >
+          {[
+            { id: "app-preview",  label: "See the app" },
+            { id: "how-it-works", label: "How it works" },
+            { id: "elements",     label: "The elements" },
+            { id: "pricing-cta",  label: "Get started" },
+          ].map(({ id, label }) => (
+            <button
+              key={id}
+              onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })}
+              className="flex items-center gap-1.5 text-xs text-stone-500 hover:text-stone-300 border border-stone-700/60 hover:border-stone-500/60 rounded-full px-4 py-1.5 transition-all backdrop-blur-sm"
+            >
+              {label}
+              <ChevronDown className="h-3 w-3 opacity-60" />
+            </button>
+          ))}
+        </motion.div>
+
         {/* Scroll cue */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 0.6 }}
+          transition={{ delay: 1.8, duration: 0.6 }}
           className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-stone-600 text-xs"
         >
           <span className="tracking-widest uppercase text-[10px]">Scroll to discover</span>
@@ -503,7 +604,7 @@ export default function HomePage() {
       </section>
 
       {/* ── ContainerScroll: app preview ─────────────────────────────────── */}
-      <section className="bg-[#FAF8F4] overflow-hidden">
+      <section id="app-preview" className="bg-[#FAF8F4] overflow-hidden">
         <ContainerScroll
           titleComponent={
             <motion.div
@@ -531,7 +632,7 @@ export default function HomePage() {
       </section>
 
       {/* ── How it works ─────────────────────────────────────────────────── */}
-      <section className="py-32 px-6 bg-white">
+      <section id="how-it-works" className="py-32 px-6 bg-white">
         <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -564,9 +665,8 @@ export default function HomePage() {
       </section>
 
       {/* ── Features ─────────────────────────────────────────────────────── */}
-      <section className="py-32 px-6 bg-stone-950 relative overflow-hidden">
-        {/* Interactive star field, same engine as the hero */}
-        <StarField count={180} />
+      <section id="features" className="py-32 px-6 relative overflow-hidden" style={{ background: "#07091f" }}>
+        <StarField count={220} />
         <div className="max-w-5xl mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -607,7 +707,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Astrology teaser ─────────────────────────────────────────────── */}
-      <section className="py-32 px-6 bg-white relative overflow-hidden">
+      <section id="elements" className="py-32 px-6 bg-white relative overflow-hidden">
         <div className="max-w-5xl mx-auto relative z-10">
 
           {/* Header */}
@@ -697,8 +797,8 @@ export default function HomePage() {
       </section>
 
       {/* ── How the matching works (astrology education) ─────────────────── */}
-      <section className="py-32 px-6 bg-stone-950 text-white relative overflow-hidden">
-        <StarField count={70} />
+      <section id="astrology" className="py-32 px-6 text-white relative overflow-hidden" style={{ background: "#07091f" }}>
+        <StarField count={100} />
         <div className="max-w-5xl mx-auto relative z-10">
 
           {/* Header */}
@@ -826,8 +926,8 @@ export default function HomePage() {
       </section>
 
       {/* ── CTA ──────────────────────────────────────────────────────────── */}
-      <section className="py-36 px-6 bg-stone-950 text-white text-center relative overflow-hidden">
-        <StarField count={130} />
+      <section id="pricing-cta" className="py-36 px-6 text-white text-center relative overflow-hidden" style={{ background: "#07091f" }}>
+        <StarField count={180} />
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           {[780, 540, 310].map((d) => (
             <div
@@ -845,8 +945,8 @@ export default function HomePage() {
         >
           <div className="flex items-center justify-center mb-2">
             <span
-              className="text-[14px] font-normal text-stone-400 tracking-[0.32em]"
-              style={{ fontFamily: "var(--font-inter)" }}
+              className="text-3xl font-light text-stone-300 tracking-[0.32em]"
+              style={{ fontFamily: "var(--font-cinzel)", textShadow: "0 0 40px rgba(120,140,255,0.3)" }}
             >
               starcross
             </span>
@@ -873,11 +973,11 @@ export default function HomePage() {
       </section>
 
       {/* ── Footer ───────────────────────────────────────────────────────── */}
-      <footer className="py-10 px-6 bg-stone-950 text-stone-500 text-center text-sm border-t border-stone-900">
+      <footer className="py-10 px-6 text-stone-500 text-center text-sm border-t border-stone-800/60" style={{ background: "#07091f" }}>
         <div className="flex items-center justify-center mb-4">
           <span
-            className="text-[12px] font-normal text-stone-400 tracking-[0.32em]"
-            style={{ fontFamily: "var(--font-inter)" }}
+            className="text-xl font-light text-stone-400 tracking-[0.32em]"
+            style={{ fontFamily: "var(--font-cinzel)" }}
           >
             starcross
           </span>
