@@ -8,7 +8,7 @@ import RadialOrbitalTimeline from "@/components/ui/radial-orbital-timeline";
 import { StarField } from "@/components/ui/star-field";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
 const HERO_WORDS = [
@@ -300,8 +300,17 @@ const NAV_SECTIONS = [
 export default function HomePage() {
   const { data: session } = useSession();
   const isLoggedIn = !!session;
+  const [isPremium, setIsPremium] = useState(false);
   const heroCTARef = useRef<HTMLDivElement>(null);
   const heroCTAInView = useInView(heroCTARef, { margin: "0px 0px -40px 0px" });
+
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    fetch("/api/user/status")
+      .then((r) => r.json())
+      .then((d) => { if (d.isPremium) setIsPremium(true); })
+      .catch(() => {});
+  }, [isLoggedIn]);
 
   return (
     <div className="min-h-screen bg-[#FAF8F4] overflow-x-hidden">
@@ -322,7 +331,7 @@ export default function HomePage() {
 
           {/* Section nav links — centre */}
           <nav className="hidden md:flex items-center gap-1 flex-1">
-            {NAV_SECTIONS.map(({ id, label }) => (
+            {NAV_SECTIONS.filter(({ id }) => !(id === "pricing-cta" && isLoggedIn && isPremium)).map(({ id, label }) => (
               <button
                 key={id}
                 onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })}
@@ -641,7 +650,7 @@ export default function HomePage() {
       </section>
 
       {/* ── CTA ──────────────────────────────────────────────────────────── */}
-      <section id="pricing-cta" className="py-28 px-6 relative overflow-hidden" style={{ background: "#07091f" }}>
+      <section id="pricing-cta" className="pt-24 pb-16 px-6 relative overflow-hidden" style={{ background: "#07091f" }}>
         {/* Dense starfield — faster shooting stars (interval 600 ms) */}
         <StarField count={320} shootingInterval={600} />
 

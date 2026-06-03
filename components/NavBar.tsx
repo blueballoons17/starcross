@@ -6,6 +6,7 @@ import { signOut, useSession } from "next-auth/react";
 import { LogOut, Compass, Heart, MessageCircle, Sparkles, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { NotificationBell } from "@/components/NotificationBell";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
@@ -19,6 +20,15 @@ const NAV_LINKS = [
 export function NavBar() {
   const { data: session } = useSession();
   const pathname = usePathname();
+  const [isPremium, setIsPremium] = useState(false);
+
+  useEffect(() => {
+    if (!session) return;
+    fetch("/api/user/status")
+      .then((r) => r.json())
+      .then((d) => { if (d.isPremium) setIsPremium(true); })
+      .catch(() => {});
+  }, [session]);
 
   if (!session) return null;
 
@@ -45,7 +55,7 @@ export function NavBar() {
           {/* Wordmark */}
           <Link href="/" className="flex items-center group">
             <span
-              className="text-[13px] font-normal text-white tracking-[0.32em]"
+              className="text-xl font-semibold text-white tracking-[0.28em]"
               style={{ fontFamily: "var(--font-inter)" }}
             >
               starcross
@@ -70,13 +80,15 @@ export function NavBar() {
 
           {/* Actions */}
           <div className="flex items-center gap-1">
-            <Link
-              href="/pricing"
-              className="hidden sm:inline-flex items-center px-2.5 py-1 text-xs font-medium text-stone-500 hover:text-stone-200 transition-colors border border-stone-700/60 hover:border-stone-500/60 rounded-full"
-              style={{ fontFamily: "var(--font-cinzel)", letterSpacing: "0.08em" }}
-            >
-              +
-            </Link>
+            {!isPremium && (
+              <Link
+                href="/pricing"
+                className="hidden sm:inline-flex items-center px-2.5 py-1 text-xs font-medium text-stone-500 hover:text-stone-200 transition-colors border border-stone-700/60 hover:border-stone-500/60 rounded-full"
+                style={{ fontFamily: "var(--font-inter)", letterSpacing: "0.08em" }}
+              >
+                +
+              </Link>
+            )}
             <NotificationBell />
             <Button
               variant="ghost"
