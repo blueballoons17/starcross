@@ -77,7 +77,7 @@ export default function MessagesPage() {
   }
 
   return (
-    <>
+    <div style={{ background: "#07091f", minHeight: "100vh" }}>
       {/* Local star canvas, lives inside this page's stacking context */}
       <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }}>
         <StarField count={220} />
@@ -113,6 +113,6 @@ export default function MessagesPage() {
         </div>
       </div>
       <AppFooter />
-    </>
+    </div>
   );
 }

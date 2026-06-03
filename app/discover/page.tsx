@@ -206,7 +206,7 @@ export default function DiscoverPage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen" style={{ background: "#07091f" }}>
       <PageStars />
       <NavBar />
       <main className="pt-20 pb-24 md:pb-8 px-4">

@@ -859,7 +859,7 @@ export default function ProfilePage() {
   const age = getAge(profile.birthDate);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen" style={{ background: "#07091f" }}>
       <PageStars />
       <NavBar />
       <main className="pt-20 pb-12 px-4">

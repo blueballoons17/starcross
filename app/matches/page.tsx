@@ -45,7 +45,7 @@ export default function MatchesPage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen" style={{ background: "#07091f" }}>
       <PageStars />
       <NavBar />
       <main className="pt-20 pb-24 px-5">

@@ -128,7 +128,7 @@ export function LegalFooter() {
 
 export function AppFooter() {
   return (
-    <footer className="relative z-10 border-t border-white/[0.07] px-6 pt-12 pb-10 text-xs" style={{ background: "#07091f" }}>
+    <footer className="relative z-20 border-t border-white/[0.07] px-6 pt-12 pb-10 text-xs" style={{ background: "#07091f" }}>
       <div className="max-w-5xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-start gap-10 md:gap-16 mb-10">
           <div className="shrink-0">
