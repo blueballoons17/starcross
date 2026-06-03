@@ -97,7 +97,7 @@ export default function RadialOrbitalTimeline({ timelineData }: RadialOrbitalTim
                   "border-2 transition-all duration-300 shadow-sm select-none",
                   isActive
                     ? "bg-stone-900 border-stone-900 scale-125 shadow-lg text-white"
-                    : "bg-stone-50 border-stone-400 hover:border-stone-700 hover:bg-white hover:shadow-md",
+                    : "bg-stone-200 border-stone-400 text-stone-800 hover:border-stone-700 hover:bg-stone-100 hover:shadow-md",
                 ].join(" ")}
               >
                 <span>{item.icon}</span>

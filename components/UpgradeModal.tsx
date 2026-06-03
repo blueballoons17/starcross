@@ -137,7 +137,7 @@ export function UpgradeModal({ open, onClose, feature }: Props) {
                   ) : (
                     <span>
                       Upgrade to{" "}
-                      <span style={{ fontFamily: "var(--font-cinzel)" }}>
+                      <span style={{ fontFamily: "var(--font-inter)" }}>
                         StarCross+
                       </span>
                     </span>

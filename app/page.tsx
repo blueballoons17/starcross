@@ -290,7 +290,7 @@ function PhoneMockup() {
 
 // ── Section nav links ─────────────────────────────────────────────────────────
 const NAV_SECTIONS = [
-  { id: "how-it-works", label: "The Experience" },
+  { id: "app-preview",  label: "The Experience" },
   { id: "astrology",    label: "Astrology"      },
   { id: "pricing-cta",  label: "Pricing"        },
 ];
@@ -467,7 +467,7 @@ export default function HomePage() {
               <span className="italic text-stone-500">beautifully surfaced</span>
             </h2>
             <p className="text-stone-500 text-base max-w-xl mx-auto mt-4 leading-relaxed">
-              Full synastry breakdown — planetary aspects, elemental harmony, and a compatibility score — for every person you meet.
+              Full synastry breakdown: planetary aspects, elemental harmony, and a compatibility score for every person you meet.
             </p>
           </motion.div>
 
@@ -680,8 +680,8 @@ export default function HomePage() {
 
             {/* Price block */}
             <div className="px-8 pt-10 pb-6 text-center border-b border-stone-200">
-              <p className="text-[10px] tracking-[0.22em] uppercase text-indigo-500 mb-3" style={{ fontFamily: "var(--font-cinzel)" }}>Full access</p>
-              <h3 className="text-3xl font-semibold text-stone-900 mb-2" style={{ fontFamily: "var(--font-cinzel)" }}>StarCross+</h3>
+              <p className="text-[10px] tracking-[0.22em] uppercase text-indigo-500 mb-3" style={{ fontFamily: "var(--font-inter)" }}>Full access</p>
+              <h3 className="text-3xl font-semibold text-stone-900 mb-2" style={{ fontFamily: "var(--font-inter)" }}>StarCross+</h3>
               <p className="text-stone-500 text-sm mb-5">Cancel anytime. No hidden fees.</p>
               <div className="flex items-baseline justify-center gap-1">
                 <span className="text-5xl font-light text-stone-900">$14.99</span>
@@ -739,7 +739,7 @@ export default function HomePage() {
         <div className="flex items-center justify-center mb-4">
           <span
             className="text-xl font-light text-stone-400 tracking-[0.32em]"
-            style={{ fontFamily: "var(--font-cinzel)" }}
+            style={{ fontFamily: "var(--font-inter)" }}
           >
             starcross
           </span>

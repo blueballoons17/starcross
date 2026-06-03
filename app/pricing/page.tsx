@@ -164,7 +164,7 @@ function PricingContent() {
                 <p className="text-[10px] tracking-[0.22em] uppercase text-stone-500 mb-3" style={{ fontFamily: "var(--font-cinzel)" }}>
                   Free
                 </p>
-                <h2 className="text-2xl font-semibold text-white mb-2" style={{ fontFamily: "var(--font-cinzel)" }}>
+                <h2 className="text-2xl font-semibold text-white mb-2" style={{ fontFamily: "var(--font-inter)" }}>
                   Starcross
                 </h2>
                 <p className="text-stone-500 text-xs leading-relaxed mb-4">
@@ -218,10 +218,10 @@ function PricingContent() {
               </div>
 
               <div className="px-7 pt-10 pb-6 text-center border-b border-white/[0.07]">
-                <p className="text-[10px] tracking-[0.22em] uppercase text-indigo-400 mb-3" style={{ fontFamily: "var(--font-cinzel)" }}>
+                <p className="text-[10px] tracking-[0.22em] uppercase text-indigo-400 mb-3" style={{ fontFamily: "var(--font-inter)" }}>
                   Full access
                 </p>
-                <h2 className="text-2xl font-semibold text-white mb-2" style={{ fontFamily: "var(--font-cinzel)" }}>
+                <h2 className="text-2xl font-semibold text-white mb-2" style={{ fontFamily: "var(--font-inter)" }}>
                   StarCross+
                 </h2>
                 <p className="text-stone-400 text-xs leading-relaxed mb-4">

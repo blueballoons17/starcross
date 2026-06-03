@@ -82,7 +82,7 @@ function SignupForm() {
           <Star className="h-4 w-4 text-stone-700 fill-stone-700/30" />
           <span
             className="text-base font-medium text-stone-900 uppercase tracking-[0.18em]"
-            style={{ fontFamily: "var(--font-cinzel)" }}
+            style={{ fontFamily: "var(--font-inter)" }}
           >
             StarCross
           </span>

@@ -500,7 +500,7 @@ export function SwipeDeck({ candidates, onLike, onPass, isSubscribed = false }: 
             <Star className="h-10 w-10 text-indigo-300" />
           </div>
           <div>
-            <p className="text-xs tracking-[0.18em] uppercase text-indigo-400 mb-2" style={{ fontFamily: "var(--font-cinzel)" }}>
+            <p className="text-xs tracking-[0.18em] uppercase text-indigo-400 mb-2" style={{ fontFamily: "var(--font-inter)" }}>
               Free plan
             </p>
             <h3 className="text-xl font-semibold text-white mb-2">

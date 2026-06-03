@@ -40,7 +40,7 @@ export default function PrivacyPage() {
             <ShootingStarLogo size={16} className="text-stone-700" />
             <span
               className="text-xs font-medium text-stone-700 uppercase tracking-[0.18em]"
-              style={{ fontFamily: "var(--font-cinzel)" }}
+              style={{ fontFamily: "var(--font-inter)" }}
             >
               StarCross
             </span>

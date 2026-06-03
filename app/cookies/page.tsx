@@ -28,7 +28,7 @@ export default function CookiesPage() {
           <Link href="/" className="flex items-center gap-2">
             <ShootingStarLogo size={16} className="text-stone-700" />
             <span className="text-xs font-medium text-stone-700 uppercase tracking-[0.18em]"
-              style={{ fontFamily: "var(--font-cinzel)" }}>StarCross</span>
+              style={{ fontFamily: "var(--font-inter)" }}>StarCross</span>
           </Link>
           <Link href="/" className="text-xs text-stone-400 hover:text-stone-700 transition-colors">← Home</Link>
         </div>
