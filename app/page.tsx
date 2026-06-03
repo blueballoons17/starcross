@@ -732,8 +732,6 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      </div>{/* end sticky-cover wrapper */}
-
       {/* ── Footer ───────────────────────────────────────────────────────── */}
       <footer className="px-6 pt-14 pb-10 border-t border-stone-800/60 text-xs" style={{ background: "#07091f" }}>
         <div className="max-w-5xl mx-auto">
@@ -799,6 +797,8 @@ export default function HomePage() {
 
         </div>
       </footer>
+
+      </div>{/* end sticky-cover wrapper */}
 
       {/* ── Sticky floating CTA ──────────────────────────────────────────── */}
       <AnimatePresence>
