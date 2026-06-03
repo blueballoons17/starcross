@@ -53,9 +53,12 @@ interface Shooter {
 export function StarField({
   count = 280,
   className = "",
+  shootingInterval = 1500,
 }: {
   count?: number;
   className?: string;
+  /** ms between shooting-star bursts — lower = more frequent */
+  shootingInterval?: number;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -124,7 +127,7 @@ export function StarField({
         }
       }
 
-      nextShootAt = performance.now() + 800 + Math.random() * 1500;
+      nextShootAt = performance.now() + shootingInterval * 0.5;
     }
 
     function spawnShooter(ts: number) {
@@ -146,8 +149,7 @@ export function StarField({
           size,
         });
       }
-      // Much more frequent — every 1.5 to 4 seconds
-      nextShootAt = ts + 1500 + Math.random() * 2500;
+      nextShootAt = ts + shootingInterval * (0.4 + Math.random() * 0.8);
     }
 
     function resize() {
@@ -401,7 +403,7 @@ export function StarField({
       window.removeEventListener("pointerdown", onPointerDown);
       document.documentElement.removeEventListener("mouseleave", onMouseLeave);
     };
-  }, [count]);
+  }, [count, shootingInterval]);
 
   return (
     <canvas
