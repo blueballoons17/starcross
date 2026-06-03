@@ -670,7 +670,7 @@ export default function HomePage() {
           </div>
 
           {/* Single centered StarCross+ card */}
-          <div className="rounded-3xl border border-indigo-500/35 bg-stone-900/70 backdrop-blur-md overflow-visible relative shadow-[0_24px_60px_rgba(99,102,241,0.2)]">
+          <div className="rounded-3xl border border-stone-200 bg-[#FAF8F4] overflow-visible relative shadow-[0_24px_60px_rgba(0,0,0,0.4)]">
             {/* Badge */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
               <span className="bg-indigo-600 text-white text-[10px] font-semibold tracking-[0.12em] uppercase px-4 py-1.5 rounded-full shadow-lg">
@@ -679,13 +679,13 @@ export default function HomePage() {
             </div>
 
             {/* Price block */}
-            <div className="px-8 pt-10 pb-6 text-center border-b border-white/[0.07]">
-              <p className="text-[10px] tracking-[0.22em] uppercase text-indigo-400 mb-3" style={{ fontFamily: "var(--font-cinzel)" }}>Full access</p>
-              <h3 className="text-3xl font-semibold text-white mb-2" style={{ fontFamily: "var(--font-cinzel)" }}>StarCross+</h3>
-              <p className="text-stone-400 text-sm mb-5">Cancel anytime. No hidden fees.</p>
+            <div className="px-8 pt-10 pb-6 text-center border-b border-stone-200">
+              <p className="text-[10px] tracking-[0.22em] uppercase text-indigo-500 mb-3" style={{ fontFamily: "var(--font-cinzel)" }}>Full access</p>
+              <h3 className="text-3xl font-semibold text-stone-900 mb-2" style={{ fontFamily: "var(--font-cinzel)" }}>StarCross+</h3>
+              <p className="text-stone-500 text-sm mb-5">Cancel anytime. No hidden fees.</p>
               <div className="flex items-baseline justify-center gap-1">
-                <span className="text-5xl font-light text-white">$14.99</span>
-                <span className="text-stone-400 text-base">/ month</span>
+                <span className="text-5xl font-light text-stone-900">$14.99</span>
+                <span className="text-stone-500 text-base">/ month</span>
               </div>
             </div>
 
@@ -701,10 +701,10 @@ export default function HomePage() {
                   "Priority profile visibility",
                 ].map(f => (
                   <li key={f} className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center shrink-0">
-                      <span className="text-[10px] text-indigo-400">✓</span>
+                    <div className="w-5 h-5 rounded-full bg-indigo-50 border border-indigo-200 flex items-center justify-center shrink-0">
+                      <span className="text-[10px] text-indigo-600">✓</span>
                     </div>
-                    <span className="text-stone-200 text-sm">{f}</span>
+                    <span className="text-stone-700 text-sm">{f}</span>
                   </li>
                 ))}
               </ul>
@@ -712,12 +712,12 @@ export default function HomePage() {
 
             {/* CTA */}
             <div className="px-8 pb-8">
-              <Button asChild className="w-full rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white h-12 text-sm font-medium shadow-xl shadow-indigo-500/25">
+              <Button asChild className="w-full rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white h-12 text-sm font-medium shadow-lg shadow-indigo-200/60">
                 <Link href="/pricing">
                   Begin your journey <ArrowRight className="h-4 w-4 ml-2" />
                 </Link>
               </Button>
-              <p className="text-center text-stone-600 text-xs mt-3">Secure payment via Stripe · Cancel anytime</p>
+              <p className="text-center text-stone-400 text-xs mt-3">Secure payment via Stripe · Cancel anytime</p>
             </div>
           </div>
 
