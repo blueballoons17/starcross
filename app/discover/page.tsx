@@ -8,6 +8,7 @@ import { SwipeDeck } from "@/components/SwipeDeck";
 import { MatchCelebration } from "@/components/MatchCelebration";
 import { PageStars } from "@/components/PageStars";
 import { UpgradeModal } from "@/components/UpgradeModal";
+import { AppFooter } from "@/components/ui/legal-page-layout";
 import type { UpgradeFeature } from "@/components/UpgradeModal";
 
 interface Candidate {
@@ -327,6 +328,8 @@ export default function DiscoverPage() {
         onClose={() => setUpgradeOpen(false)}
         feature={upgradeFeature}
       />
+
+      <AppFooter />
     </div>
   );
 }

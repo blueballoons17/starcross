@@ -37,6 +37,7 @@ import {
 } from "@/lib/astrology";
 import { cn } from "@/lib/utils";
 import { PERSONALITY_QUESTIONS } from "@/lib/personality-questions";
+import { AppFooter } from "@/components/ui/legal-page-layout";
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 
@@ -957,6 +958,7 @@ export default function ProfilePage() {
           )}
         </div>
       </main>
+      <AppFooter />
     </div>
   );
 }

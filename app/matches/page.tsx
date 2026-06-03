@@ -7,6 +7,7 @@ import { NavBar } from "@/components/NavBar";
 import { MatchCard } from "@/components/MatchCard";
 import type { ProfileDrawerMatch } from "@/components/ProfileDrawer";
 import { PageStars } from "@/components/PageStars";
+import { AppFooter } from "@/components/ui/legal-page-layout";
 
 export default function MatchesPage() {
   const { status } = useSession();
@@ -179,6 +180,7 @@ export default function MatchesPage() {
           )}
         </div>
       </main>
+      <AppFooter />
     </div>
   );
 }

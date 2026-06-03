@@ -123,3 +123,53 @@ export function LegalFooter() {
     </footer>
   );
 }
+
+// ── Dark footer — for in-app pages with dark/navy backgrounds ────────────────
+
+export function AppFooter() {
+  return (
+    <footer className="relative z-10 border-t border-white/[0.07] px-6 pt-12 pb-10 text-xs" style={{ background: "#07091f" }}>
+      <div className="max-w-5xl mx-auto">
+        <div className="flex flex-col md:flex-row md:items-start gap-10 md:gap-16 mb-10">
+          <div className="shrink-0">
+            <Link
+              href="/"
+              className="text-sm font-medium text-stone-300 tracking-[0.28em] block mb-2"
+              style={{ fontFamily: "var(--font-inter)" }}
+            >
+              starcross
+            </Link>
+            <p className="text-stone-600 text-[11px] max-w-[160px] leading-relaxed">
+              Astrology-based compatibility. Find your cosmic counterpart.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-10 flex-1">
+            {Object.entries(FOOTER_LINKS).map(([col, links]) => (
+              <div key={col}>
+                <p className="text-stone-500 font-semibold uppercase tracking-[0.14em] mb-3">{col}</p>
+                <ul className="space-y-2.5">
+                  {links.map(({ href, label }) => (
+                    <li key={href}>
+                      <Link
+                        href={href}
+                        className="text-stone-500 hover:text-stone-300 transition-colors"
+                      >
+                        {label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="border-t border-white/[0.06] pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-stone-600 text-[11px]">
+          <p>&copy; {new Date().getFullYear()} StarCross. Written in the stars.</p>
+          <p>Made with care for the cosmically curious.</p>
+        </div>
+      </div>
+    </footer>
+  );
+}

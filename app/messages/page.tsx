@@ -8,6 +8,7 @@ import { NavBar } from "@/components/NavBar";
 import { ConversationSidebar } from "@/components/ConversationSidebar";
 import { StarField } from "@/components/ui/star-field";
 import { UpgradeModal } from "@/components/UpgradeModal";
+import { AppFooter } from "@/components/ui/legal-page-layout";
 
 export default function MessagesPage() {
   const { status } = useSession();
@@ -111,6 +112,7 @@ export default function MessagesPage() {
           </div>
         </div>
       </div>
+      <AppFooter />
     </>
   );
 }

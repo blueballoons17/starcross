@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Sun, Moon, ArrowUp, MessageSquare } from "lucide-react";
 import { NavBar } from "@/components/NavBar";
 import { PageStars } from "@/components/PageStars";
+import { AppFooter } from "@/components/ui/legal-page-layout";
 import { ZODIAC_PATHS } from "@/components/ui/zodiac-icon";
 import { cn } from "@/lib/utils";
 
@@ -620,7 +621,7 @@ export default function AstrologyPage() {
   }, [status]);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen" style={{ background: "#07091f" }}>
       <PageStars count={260} />
       <NavBar />
 
@@ -962,6 +963,7 @@ export default function AstrologyPage() {
 
         </div>
       </main>
+      <AppFooter />
     </div>
   );
 }
