@@ -735,21 +735,69 @@ export default function HomePage() {
       </div>{/* end sticky-cover wrapper */}
 
       {/* ── Footer ───────────────────────────────────────────────────────── */}
-      <footer className="py-10 px-6 text-stone-500 text-center text-sm border-t border-stone-800/60" style={{ background: "#07091f" }}>
-        <div className="flex items-center justify-center mb-4">
-          <span
-            className="text-xl font-light text-stone-400 tracking-[0.32em]"
-            style={{ fontFamily: "var(--font-inter)" }}
-          >
-            starcross
-          </span>
+      <footer className="px-6 pt-14 pb-10 border-t border-stone-800/60 text-xs" style={{ background: "#07091f" }}>
+        <div className="max-w-5xl mx-auto">
+
+          {/* Top row: logo + columns */}
+          <div className="flex flex-col md:flex-row md:items-start gap-10 md:gap-16 mb-12">
+
+            {/* Brand */}
+            <div className="shrink-0">
+              <span
+                className="text-lg font-light text-stone-300 tracking-[0.32em] block mb-2"
+                style={{ fontFamily: "var(--font-inter)" }}
+              >
+                starcross
+              </span>
+              <p className="text-stone-600 text-[11px] max-w-[180px] leading-relaxed">
+                Astrology-based compatibility. Find your cosmic counterpart.
+              </p>
+            </div>
+
+            {/* Link columns */}
+            <div className="flex flex-wrap gap-10 flex-1">
+
+              {/* Legal */}
+              <div>
+                <p className="text-stone-500 font-semibold uppercase tracking-[0.14em] mb-3">Legal</p>
+                <ul className="space-y-2.5">
+                  <li><Link href="/privacy" className="text-stone-500 hover:text-stone-300 transition-colors">Privacy Policy</Link></li>
+                  <li><Link href="/terms" className="text-stone-500 hover:text-stone-300 transition-colors">Terms of Service</Link></li>
+                  <li><Link href="/cookies" className="text-stone-500 hover:text-stone-300 transition-colors">Cookie Policy</Link></li>
+                </ul>
+              </div>
+
+              {/* Safety */}
+              <div>
+                <p className="text-stone-500 font-semibold uppercase tracking-[0.14em] mb-3">Safety</p>
+                <ul className="space-y-2.5">
+                  <li><Link href="/safety" className="text-stone-500 hover:text-stone-300 transition-colors">Safety Tips</Link></li>
+                  <li><Link href="/safety/resources" className="text-stone-500 hover:text-stone-300 transition-colors">Safety Resources</Link></li>
+                  <li><Link href="/safety/features" className="text-stone-500 hover:text-stone-300 transition-colors">Safety Features</Link></li>
+                  <li><Link href="/safety/reporting" className="text-stone-500 hover:text-stone-300 transition-colors">Reporting</Link></li>
+                </ul>
+              </div>
+
+              {/* Company */}
+              <div>
+                <p className="text-stone-500 font-semibold uppercase tracking-[0.14em] mb-3">Company</p>
+                <ul className="space-y-2.5">
+                  <li><Link href="/pricing" className="text-stone-500 hover:text-stone-300 transition-colors">Pricing</Link></li>
+                  <li><a href="mailto:hello@starcross.app" className="text-stone-500 hover:text-stone-300 transition-colors">Contact</a></li>
+                  <li><a href="mailto:safety@starcross.app" className="text-stone-500 hover:text-stone-300 transition-colors">Safety team</a></li>
+                </ul>
+              </div>
+
+            </div>
+          </div>
+
+          {/* Bottom bar */}
+          <div className="border-t border-stone-800/60 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-stone-600 text-[11px]">
+            <p>&copy; {new Date().getFullYear()} StarCross. Written in the stars.</p>
+            <p>Made with ♡ for the cosmically curious.</p>
+          </div>
+
         </div>
-        <div className="flex justify-center gap-6 text-xs mb-4">
-          <Link href="/privacy" className="text-stone-500 hover:text-stone-300 transition-colors">Privacy Policy</Link>
-          <Link href="/terms" className="text-stone-500 hover:text-stone-300 transition-colors">Terms of Service</Link>
-          <Link href="/cookies" className="text-stone-500 hover:text-stone-300 transition-colors">Cookie Policy</Link>
-        </div>
-        <p className="text-xs">&copy; {new Date().getFullYear()} StarCross. Written in the stars.</p>
       </footer>
 
       {/* ── Sticky floating CTA ──────────────────────────────────────────── */}
