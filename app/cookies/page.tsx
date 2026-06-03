@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ShootingStarLogo } from "@/components/ui/shooting-star-logo";
+import { LegalHeader, LegalFooter } from "@/components/ui/legal-page-layout";
 
 export const metadata = {
   title: "Cookie Policy | StarCross",
@@ -22,17 +22,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 export default function CookiesPage() {
   return (
     <div className="min-h-screen bg-[#faf8f4]">
-      {/* Header */}
-      <header className="bg-[#faf8f4]/95 backdrop-blur border-b border-stone-100 sticky top-0 z-10">
-        <div className="max-w-3xl mx-auto px-6 h-14 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <ShootingStarLogo size={16} className="text-stone-700" />
-            <span className="text-xs font-medium text-stone-700 uppercase tracking-[0.18em]"
-              style={{ fontFamily: "var(--font-inter)" }}>StarCross</span>
-          </Link>
-          <Link href="/" className="text-xs text-stone-400 hover:text-stone-700 transition-colors">← Home</Link>
-        </div>
-      </header>
+      <LegalHeader />
 
       <main className="max-w-3xl mx-auto px-6 py-16">
         <div className="mb-12">
@@ -131,14 +121,7 @@ export default function CookiesPage() {
         </Section>
       </main>
 
-      <footer className="border-t border-stone-100 py-8 px-6 text-center text-xs text-stone-400">
-        <div className="flex justify-center gap-6 mb-3">
-          <Link href="/privacy" className="hover:text-stone-700 transition-colors">Privacy</Link>
-          <Link href="/terms" className="hover:text-stone-700 transition-colors">Terms</Link>
-          <Link href="/cookies" className="hover:text-stone-700 transition-colors font-medium text-stone-600">Cookies</Link>
-        </div>
-        <p>© {new Date().getFullYear()} StarCross. Written in the stars.</p>
-      </footer>
+      <LegalFooter />
     </div>
   );
 }

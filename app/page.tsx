@@ -751,7 +751,7 @@ export default function HomePage() {
             {/* Brand */}
             <div className="shrink-0">
               <span
-                className="text-lg font-light text-stone-300 tracking-[0.32em] block mb-2"
+                className="text-sm font-medium text-stone-300 tracking-[0.28em] block mb-2"
                 style={{ fontFamily: "var(--font-inter)" }}
               >
                 starcross
@@ -791,7 +791,6 @@ export default function HomePage() {
                 <ul className="space-y-2.5">
                   <li><Link href="/pricing" className="text-stone-500 hover:text-stone-300 transition-colors">Pricing</Link></li>
                   <li><a href="mailto:hello@starcross.app" className="text-stone-500 hover:text-stone-300 transition-colors">Contact</a></li>
-                  <li><a href="mailto:safety@starcross.app" className="text-stone-500 hover:text-stone-300 transition-colors">Safety team</a></li>
                 </ul>
               </div>
 

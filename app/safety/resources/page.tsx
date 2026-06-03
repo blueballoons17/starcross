@@ -1,135 +1,135 @@
 import Link from "next/link";
+import { LegalHeader, LegalFooter, H2, H3, P } from "@/components/ui/legal-page-layout";
 
 export const metadata = {
   title: "Safety Resources | StarCross",
-  description: "External organisations and helplines for support and safety.",
+  description: "External organisations and helplines for safety and support.",
 };
 
-const RESOURCES = [
-  {
-    category: "Crisis & Emergency",
-    items: [
-      { name: "Emergency Services", desc: "Immediate danger — call 911 (US) or your local emergency number.", url: null, cta: "Call 911" },
-      { name: "Crisis Text Line", desc: "Text HOME to 741741 to reach a trained crisis counselor, 24/7.", url: "https://www.crisistextline.org", cta: "crisistextline.org" },
-      { name: "988 Suicide & Crisis Lifeline", desc: "Call or text 988 for free, confidential support for people in distress.", url: "https://988lifeline.org", cta: "988lifeline.org" },
-    ],
-  },
-  {
-    category: "Domestic Violence & Abuse",
-    items: [
-      { name: "National Domestic Violence Hotline", desc: "24/7 confidential support for survivors of domestic violence. Call 1-800-799-7233.", url: "https://www.thehotline.org", cta: "thehotline.org" },
-      { name: "RAINN", desc: "Nation's largest anti-sexual violence organisation. Call 1-800-656-4673.", url: "https://www.rainn.org", cta: "rainn.org" },
-      { name: "Love Is Respect", desc: "Resources for teens and young adults experiencing dating abuse.", url: "https://www.loveisrespect.org", cta: "loveisrespect.org" },
-    ],
-  },
-  {
-    category: "Online Safety & Cybercrime",
-    items: [
-      { name: "Internet Crime Complaint Center (IC3)", desc: "Report online fraud and romance scams to the FBI.", url: "https://www.ic3.gov", cta: "ic3.gov" },
-      { name: "FTC Scam Alerts", desc: "Learn about the latest scams and how to report them to the Federal Trade Commission.", url: "https://consumer.ftc.gov/scams", cta: "consumer.ftc.gov/scams" },
-      { name: "Cyber Civil Rights Initiative", desc: "Support and resources for victims of non-consensual image sharing.", url: "https://cybercivilrights.org", cta: "cybercivilrights.org" },
-    ],
-  },
-  {
-    category: "Mental Health",
-    items: [
-      { name: "NAMI Helpline", desc: "National Alliance on Mental Illness — call 1-800-950-6264 for support.", url: "https://www.nami.org", cta: "nami.org" },
-      { name: "Psychology Today Therapist Finder", desc: "Find a licensed therapist or counselor near you.", url: "https://www.psychologytoday.com/us/therapists", cta: "Find a therapist" },
-      { name: "Open Path Collective", desc: "Affordable therapy options for those with financial constraints.", url: "https://openpathcollective.org", cta: "openpathcollective.org" },
-    ],
-  },
+const SAFETY_NAV = [
+  { href: "/safety",           label: "Safety Tips",      active: false },
+  { href: "/safety/resources", label: "Safety Resources", active: true  },
+  { href: "/safety/features",  label: "Safety Features",  active: false },
+  { href: "/safety/reporting", label: "Reporting",        active: false },
 ];
-
-function SafetyNav({ active }: { active: string }) {
-  const links = [
-    { href: "/safety", label: "Safety Tips" },
-    { href: "/safety/resources", label: "Safety Resources" },
-    { href: "/safety/features", label: "Safety Features" },
-    { href: "/safety/reporting", label: "Reporting" },
-  ];
-  return (
-    <div className="flex flex-wrap gap-2 mb-10">
-      {links.map(({ href, label }) => (
-        <Link
-          key={href}
-          href={href}
-          className={`text-xs px-4 py-2 rounded-full border transition-colors ${
-            href === active
-              ? "bg-stone-900 text-white border-stone-900"
-              : "border-stone-300 text-stone-500 hover:border-stone-500 hover:text-stone-700"
-          }`}
-        >
-          {label}
-        </Link>
-      ))}
-    </div>
-  );
-}
 
 export default function SafetyResourcesPage() {
   return (
     <div className="min-h-screen bg-[#faf8f4]">
-      <header className="bg-[#faf8f4]/95 backdrop-blur border-b border-stone-100 sticky top-0 z-10">
-        <div className="max-w-3xl mx-auto px-6 h-14 flex items-center justify-between">
-          <Link href="/" className="text-[13px] font-normal text-stone-700 tracking-[0.32em]" style={{ fontFamily: "var(--font-inter)" }}>
-            starcross
-          </Link>
-          <Link href="/" className="text-xs text-stone-400 hover:text-stone-700 transition-colors">← Home</Link>
-        </div>
-      </header>
+      <LegalHeader />
 
       <main className="max-w-3xl mx-auto px-6 py-16">
-        <div className="mb-12">
+        <div className="mb-10">
           <p className="text-xs uppercase tracking-widest text-stone-400 mb-3">Safety</p>
           <h1 className="font-serif text-4xl font-semibold text-stone-900 mb-3">Safety Resources</h1>
-          <p className="text-stone-400 text-sm">External organisations, hotlines, and tools to keep you safe and supported.</p>
+          <p className="text-stone-400 text-sm">External organisations, helplines, and tools provided for informational purposes. If you are in immediate danger, call 911 or your local emergency number.</p>
         </div>
 
-        <SafetyNav active="/safety/resources" />
-
-        <div className="bg-amber-50 border border-amber-200 rounded-xl px-5 py-4 mb-10 text-sm text-amber-800">
-          <strong>In immediate danger?</strong> Call <strong>911</strong> (US) or your local emergency number right away. Do not wait.
+        {/* Section nav */}
+        <div className="flex flex-wrap gap-2 mb-12 pb-8 border-b border-stone-100">
+          {SAFETY_NAV.map(({ href, label, active }) => (
+            <Link
+              key={href}
+              href={href}
+              className={`text-xs px-4 py-2 rounded-full border transition-colors ${
+                active
+                  ? "bg-stone-900 text-white border-stone-900"
+                  : "border-stone-300 text-stone-500 hover:border-stone-600 hover:text-stone-700"
+              }`}
+            >
+              {label}
+            </Link>
+          ))}
         </div>
 
-        {RESOURCES.map(({ category, items }) => (
-          <div key={category} className="mb-10">
-            <h2 className="font-serif text-xl font-semibold text-stone-900 mt-8 mb-4 pb-2 border-b border-stone-100">
-              {category}
-            </h2>
-            <div className="space-y-4">
-              {items.map(({ name, desc, url, cta }) => (
-                <div key={name} className="flex items-start justify-between gap-4 py-3 border-b border-stone-50">
-                  <div className="flex-1">
-                    <p className="font-semibold text-stone-800 text-sm mb-0.5">{name}</p>
-                    <p className="text-stone-500 text-sm leading-relaxed">{desc}</p>
-                  </div>
-                  {url && (
-                    <a
-                      href={url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="shrink-0 text-xs text-stone-900 border border-stone-300 px-3 py-1.5 rounded-full hover:bg-stone-100 transition-colors mt-0.5"
-                    >
-                      {cta} ↗
-                    </a>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
+        <H2>Crisis and Emergency</H2>
 
-        <div className="mt-12 rounded-2xl border border-stone-200 bg-white p-6 text-sm text-stone-500 leading-relaxed">
-          StarCross does not endorse or operate these external resources. They are provided for informational purposes. If you have experienced something on StarCross, please{" "}
+        <H3>Emergency Services</H3>
+        <P>If you are in immediate danger, call 911 (United States) or your local emergency number. Do not wait.</P>
+
+        <H3>Crisis Text Line</H3>
+        <P>
+          Text HOME to 741741 to connect with a trained crisis counselor, available 24 hours a day, seven days a week.{" "}
+          <a href="https://www.crisistextline.org" target="_blank" rel="noopener noreferrer" className="text-stone-700 underline underline-offset-2 hover:text-stone-900">crisistextline.org</a>
+        </P>
+
+        <H3>988 Suicide and Crisis Lifeline</H3>
+        <P>
+          Call or text 988 for free, confidential mental health crisis support.{" "}
+          <a href="https://988lifeline.org" target="_blank" rel="noopener noreferrer" className="text-stone-700 underline underline-offset-2 hover:text-stone-900">988lifeline.org</a>
+        </P>
+
+        <H2>Domestic Violence and Abuse</H2>
+
+        <H3>National Domestic Violence Hotline</H3>
+        <P>
+          Available 24 hours a day. Call 1-800-799-7233 or visit{" "}
+          <a href="https://www.thehotline.org" target="_blank" rel="noopener noreferrer" className="text-stone-700 underline underline-offset-2 hover:text-stone-900">thehotline.org</a>{" "}
+          for confidential support for survivors of domestic violence.
+        </P>
+
+        <H3>RAINN</H3>
+        <P>
+          The nation&apos;s largest anti-sexual violence organisation. Call 1-800-656-4673 or visit{" "}
+          <a href="https://www.rainn.org" target="_blank" rel="noopener noreferrer" className="text-stone-700 underline underline-offset-2 hover:text-stone-900">rainn.org</a>.
+        </P>
+
+        <H3>Love Is Respect</H3>
+        <P>
+          Resources and support for people experiencing dating abuse, including resources tailored to young adults.{" "}
+          <a href="https://www.loveisrespect.org" target="_blank" rel="noopener noreferrer" className="text-stone-700 underline underline-offset-2 hover:text-stone-900">loveisrespect.org</a>
+        </P>
+
+        <H2>Online Safety and Cybercrime</H2>
+
+        <H3>Internet Crime Complaint Center (IC3)</H3>
+        <P>
+          Report online fraud and romance scams to the FBI.{" "}
+          <a href="https://www.ic3.gov" target="_blank" rel="noopener noreferrer" className="text-stone-700 underline underline-offset-2 hover:text-stone-900">ic3.gov</a>
+        </P>
+
+        <H3>Federal Trade Commission — Scam Alerts</H3>
+        <P>
+          Learn about current scam tactics and how to report them.{" "}
+          <a href="https://consumer.ftc.gov/scams" target="_blank" rel="noopener noreferrer" className="text-stone-700 underline underline-offset-2 hover:text-stone-900">consumer.ftc.gov/scams</a>
+        </P>
+
+        <H3>Cyber Civil Rights Initiative</H3>
+        <P>
+          Support and resources for victims of non-consensual image sharing.{" "}
+          <a href="https://cybercivilrights.org" target="_blank" rel="noopener noreferrer" className="text-stone-700 underline underline-offset-2 hover:text-stone-900">cybercivilrights.org</a>
+        </P>
+
+        <H2>Mental Health</H2>
+
+        <H3>NAMI Helpline</H3>
+        <P>
+          The National Alliance on Mental Illness helpline. Call 1-800-950-6264 for information and referrals.{" "}
+          <a href="https://www.nami.org" target="_blank" rel="noopener noreferrer" className="text-stone-700 underline underline-offset-2 hover:text-stone-900">nami.org</a>
+        </P>
+
+        <H3>Psychology Today Therapist Finder</H3>
+        <P>
+          A directory for finding licensed therapists and counselors near you.{" "}
+          <a href="https://www.psychologytoday.com/us/therapists" target="_blank" rel="noopener noreferrer" className="text-stone-700 underline underline-offset-2 hover:text-stone-900">psychologytoday.com</a>
+        </P>
+
+        <H3>Open Path Collective</H3>
+        <P>
+          Affordable therapy options for those with financial constraints.{" "}
+          <a href="https://openpathcollective.org" target="_blank" rel="noopener noreferrer" className="text-stone-700 underline underline-offset-2 hover:text-stone-900">openpathcollective.org</a>
+        </P>
+
+        <H2>Disclaimer</H2>
+        <P>
+          StarCross does not operate, endorse, or have an affiliation with any of the external organisations listed on this page. These resources are provided for informational purposes only. If you have experienced something on StarCross specifically, please{" "}
           <Link href="/safety/reporting" className="text-stone-700 underline underline-offset-2 hover:text-stone-900">
             report it to us directly
           </Link>.
-        </div>
+        </P>
       </main>
 
-      <footer className="border-t border-stone-100 py-8 px-6 text-center">
-        <p className="text-xs text-stone-400">&copy; {new Date().getFullYear()} StarCross. Written in the stars.</p>
-      </footer>
+      <LegalFooter />
     </div>
   );
 }

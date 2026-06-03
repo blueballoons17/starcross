@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { LegalHeader, LegalFooter, H2, H3, P, UL } from "@/components/ui/legal-page-layout";
 
 export const metadata = {
   title: "Terms of Service | StarCross",
@@ -6,62 +6,12 @@ export const metadata = {
 };
 
 const LAST_UPDATED = "June 2, 2026";
-
-function H2({ children }: { children: React.ReactNode }) {
-  return (
-    <h2 className="font-serif text-xl font-semibold text-stone-900 mt-12 mb-4 pb-2 border-b border-stone-100">
-      {children}
-    </h2>
-  );
-}
-
-function H3({ children }: { children: React.ReactNode }) {
-  return (
-    <h3 className="font-semibold text-stone-700 text-sm mt-6 mb-2">{children}</h3>
-  );
-}
-
-function P({ children }: { children: React.ReactNode }) {
-  return <p className="text-stone-600 text-sm leading-relaxed mb-3">{children}</p>;
-}
-
-function UL({ children }: { children: React.ReactNode }) {
-  return (
-    <ul className="list-disc pl-5 space-y-1 text-stone-600 text-sm leading-relaxed mb-3">
-      {children}
-    </ul>
-  );
-}
-
-function Callout({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="bg-stone-50 border border-stone-200 rounded-xl px-5 py-4 text-xs text-stone-600 leading-relaxed uppercase tracking-wide font-medium mb-3">
-      {children}
-    </div>
-  );
-}
-
 const EMAIL = "blueballoons17@gmail.com";
 
 export default function TermsPage() {
   return (
     <div className="min-h-screen bg-[#faf8f4]">
-      {/* Header */}
-      <header className="bg-[#faf8f4]/95 backdrop-blur border-b border-stone-100 sticky top-0 z-10">
-        <div className="max-w-3xl mx-auto px-6 h-14 flex items-center justify-between">
-          <Link href="/" className="flex items-center">
-            <span
-              className="text-[13px] font-normal text-stone-700 tracking-[0.32em]"
-              style={{ fontFamily: "var(--font-inter)" }}
-            >
-              starcross
-            </span>
-          </Link>
-          <Link href="/" className="text-xs text-stone-400 hover:text-stone-700 transition-colors">
-            ← Home
-          </Link>
-        </div>
-      </header>
+      <LegalHeader />
 
       <main className="max-w-3xl mx-auto px-6 py-16">
         {/* Title block */}
@@ -71,19 +21,9 @@ export default function TermsPage() {
           <p className="text-stone-400 text-sm">Last updated: {LAST_UPDATED}</p>
         </div>
 
-        {/* Astrology notice — prominent banner */}
-        <div className="mb-10 rounded-2xl border border-amber-200 bg-amber-50 px-6 py-5">
-          <p className="text-xs font-semibold uppercase tracking-widest text-amber-700 mb-2">
-            Important — Astrological Content
-          </p>
-          <p className="text-sm text-amber-900 leading-relaxed">
-            StarCross uses astrology as a fun and meaningful framework for exploring compatibility — not as a
-            scientifically validated method. Compatibility scores, birth-chart interpretations, and planetary
-            insights on this platform are <strong>for entertainment and self-reflection purposes only</strong>.
-            They are not guaranteed to be accurate, complete, or predictive of any real-world relationship
-            outcome. Please do not make important life decisions based solely on the astrological content provided here.
-          </p>
-        </div>
+        <P>
+          StarCross uses astrology as a framework for exploring compatibility. Compatibility scores, birth-chart interpretations, and planetary insights are provided for entertainment and self-reflection purposes only. They are not scientifically validated and should not be relied upon for important life decisions.
+        </P>
 
         {/* 1 */}
         <H2>1. Agreement to These Terms</H2>
@@ -302,14 +242,14 @@ export default function TermsPage() {
 
         {/* 12 */}
         <H2>12. Disclaimer of Warranties</H2>
-        <Callout>
+        <P>
           The service is provided &ldquo;as is&rdquo; and &ldquo;as available.&rdquo; To the maximum extent permitted
           by law, StarCross disclaims all warranties, whether express, implied, statutory, or otherwise, including
           warranties of merchantability, fitness for a particular purpose, title, non-infringement, and quiet
           enjoyment. We do not guarantee continuous availability, error-free operation, successful matches,
           compatibility with any user, or accuracy of astrological interpretations. Astrological content is
           provided for entertainment only and is not scientifically validated.
-        </Callout>
+        </P>
         <P>
           Astrological insights, compatibility scores, and chart readings are provided for entertainment and
           personal reflection purposes only. They do not constitute professional advice and are not guaranteed to
@@ -318,13 +258,13 @@ export default function TermsPage() {
 
         {/* 13 */}
         <H2>13. Limitation of Liability</H2>
-        <Callout>
+        <P>
           To the maximum extent permitted by law, StarCross shall not be liable for any indirect, incidental, special,
           consequential, exemplary, or punitive damages arising from or related to your use of the service. Our total
           liability for any claim arising from or related to the service shall not exceed the greater of: (a) the
           amount you paid to StarCross during the twelve (12) months preceding the event giving rise to the claim; or
           (b) one hundred U.S. dollars (US $100).
-        </Callout>
+        </P>
         <P>
           Some jurisdictions do not allow certain liability limitations, so some of these limitations may not apply to
           you.
@@ -405,14 +345,7 @@ export default function TermsPage() {
         </p>
       </main>
 
-      <footer className="border-t border-stone-100 py-8 px-6 text-center text-xs text-stone-400">
-        <div className="flex justify-center gap-6 mb-3">
-          <Link href="/privacy" className="hover:text-stone-700 transition-colors">Privacy</Link>
-          <Link href="/terms" className="hover:text-stone-700 transition-colors font-medium text-stone-600">Terms</Link>
-          <Link href="/cookies" className="hover:text-stone-700 transition-colors">Cookies</Link>
-        </div>
-        <p>© {new Date().getFullYear()} StarCross. Written in the stars.</p>
-      </footer>
+      <LegalFooter />
     </div>
   );
 }

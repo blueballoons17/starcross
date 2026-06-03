@@ -16,7 +16,7 @@ import {
 interface ReportUser {
   id: string;
   email: string;
-  profile: { name: string | null; birthdate: string | null } | null;
+  profile: { name: string | null; birthDate: string | null } | null;
 }
 
 interface Report {

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ShootingStarLogo } from "@/components/ui/shooting-star-logo";
+import { LegalHeader, LegalFooter, H2, H3, P, UL } from "@/components/ui/legal-page-layout";
 
 export const metadata = {
   title: "Privacy Policy | StarCross",
@@ -8,48 +8,10 @@ export const metadata = {
 
 const LAST_UPDATED = "May 30, 2026";
 
-function H2({ children }: { children: React.ReactNode }) {
-  return (
-    <h2 className="font-serif text-xl font-semibold text-stone-900 mt-12 mb-4 pb-2 border-b border-stone-100">
-      {children}
-    </h2>
-  );
-}
-
-function H3({ children }: { children: React.ReactNode }) {
-  return (
-    <h3 className="font-semibold text-stone-700 text-sm mt-6 mb-2">{children}</h3>
-  );
-}
-
-function P({ children }: { children: React.ReactNode }) {
-  return <p className="text-stone-600 text-sm leading-relaxed mb-3">{children}</p>;
-}
-
-function UL({ children }: { children: React.ReactNode }) {
-  return <ul className="list-disc pl-5 space-y-1 text-stone-600 text-sm leading-relaxed mb-3">{children}</ul>;
-}
-
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-[#faf8f4]">
-      {/* Header */}
-      <header className="bg-[#faf8f4]/95 backdrop-blur border-b border-stone-100 sticky top-0 z-10">
-        <div className="max-w-3xl mx-auto px-6 h-14 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <ShootingStarLogo size={16} className="text-stone-700" />
-            <span
-              className="text-xs font-medium text-stone-700 uppercase tracking-[0.18em]"
-              style={{ fontFamily: "var(--font-inter)" }}
-            >
-              StarCross
-            </span>
-          </Link>
-          <Link href="/" className="text-xs text-stone-400 hover:text-stone-700 transition-colors">
-            ← Home
-          </Link>
-        </div>
-      </header>
+      <LegalHeader />
 
       <main className="max-w-3xl mx-auto px-6 py-16">
         {/* Title block */}
@@ -411,14 +373,7 @@ export default function PrivacyPage() {
         </P>
       </main>
 
-      <footer className="border-t border-stone-100 py-8 px-6 text-center text-xs text-stone-400">
-        <div className="flex justify-center gap-6 mb-3">
-          <Link href="/privacy" className="hover:text-stone-700 transition-colors font-medium text-stone-600">Privacy</Link>
-          <Link href="/terms" className="hover:text-stone-700 transition-colors">Terms</Link>
-          <Link href="/cookies" className="hover:text-stone-700 transition-colors">Cookies</Link>
-        </div>
-        <p>© {new Date().getFullYear()} StarCross. Written in the stars.</p>
-      </footer>
+      <LegalFooter />
     </div>
   );
 }

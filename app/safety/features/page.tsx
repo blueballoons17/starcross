@@ -1,148 +1,126 @@
 import Link from "next/link";
+import { LegalHeader, LegalFooter, H2, H3, P } from "@/components/ui/legal-page-layout";
 
 export const metadata = {
   title: "Safety Features | StarCross",
-  description: "The tools and features StarCross provides to keep you safe.",
+  description: "The tools and controls StarCross provides to keep you safe.",
 };
 
-function Feature({ icon, title, children }: { icon: string; title: string; children: React.ReactNode }) {
-  return (
-    <div className="flex gap-4 py-5 border-b border-stone-100 last:border-0">
-      <div className="w-10 h-10 rounded-xl bg-stone-900 flex items-center justify-center text-lg shrink-0 mt-0.5">
-        {icon}
-      </div>
-      <div>
-        <h3 className="font-semibold text-stone-900 text-sm mb-1.5">{title}</h3>
-        <p className="text-stone-500 text-sm leading-relaxed">{children}</p>
-      </div>
-    </div>
-  );
-}
-
-function SafetyNav({ active }: { active: string }) {
-  const links = [
-    { href: "/safety", label: "Safety Tips" },
-    { href: "/safety/resources", label: "Safety Resources" },
-    { href: "/safety/features", label: "Safety Features" },
-    { href: "/safety/reporting", label: "Reporting" },
-  ];
-  return (
-    <div className="flex flex-wrap gap-2 mb-10">
-      {links.map(({ href, label }) => (
-        <Link
-          key={href}
-          href={href}
-          className={`text-xs px-4 py-2 rounded-full border transition-colors ${
-            href === active
-              ? "bg-stone-900 text-white border-stone-900"
-              : "border-stone-300 text-stone-500 hover:border-stone-500 hover:text-stone-700"
-          }`}
-        >
-          {label}
-        </Link>
-      ))}
-    </div>
-  );
-}
+const SAFETY_NAV = [
+  { href: "/safety",           label: "Safety Tips",      active: false },
+  { href: "/safety/resources", label: "Safety Resources", active: false },
+  { href: "/safety/features",  label: "Safety Features",  active: true  },
+  { href: "/safety/reporting", label: "Reporting",        active: false },
+];
 
 export default function SafetyFeaturesPage() {
   return (
     <div className="min-h-screen bg-[#faf8f4]">
-      <header className="bg-[#faf8f4]/95 backdrop-blur border-b border-stone-100 sticky top-0 z-10">
-        <div className="max-w-3xl mx-auto px-6 h-14 flex items-center justify-between">
-          <Link href="/" className="text-[13px] font-normal text-stone-700 tracking-[0.32em]" style={{ fontFamily: "var(--font-inter)" }}>
-            starcross
-          </Link>
-          <Link href="/" className="text-xs text-stone-400 hover:text-stone-700 transition-colors">← Home</Link>
-        </div>
-      </header>
+      <LegalHeader />
 
       <main className="max-w-3xl mx-auto px-6 py-16">
-        <div className="mb-12">
+        <div className="mb-10">
           <p className="text-xs uppercase tracking-widest text-stone-400 mb-3">Safety</p>
           <h1 className="font-serif text-4xl font-semibold text-stone-900 mb-3">Safety Features</h1>
-          <p className="text-stone-400 text-sm">The tools we build to protect you — and how to use them.</p>
+          <p className="text-stone-400 text-sm">The tools and controls we build into StarCross to protect you — and how to use them.</p>
         </div>
 
-        <SafetyNav active="/safety/features" />
-
-        <div className="mb-12">
-          <h2 className="font-serif text-xl font-semibold text-stone-900 mt-8 mb-4 pb-2 border-b border-stone-100">
-            Protecting Your Privacy
-          </h2>
-          <Feature icon="🙈" title="Location privacy">
-            StarCross never shares or displays your exact location. We use city-level proximity only, and only when you explicitly enable it. Your precise GPS coordinates are never stored or shared.
-          </Feature>
-          <Feature icon="📸" title="Photo control">
-            You control which photos appear on your profile and can remove them at any time. We do not allow screenshots within the app on supported devices.
-          </Feature>
-          <Feature icon="🔕" title="Match visibility controls">
-            You choose who can see your profile. Pause your profile at any time to temporarily become invisible to new people without losing your existing matches.
-          </Feature>
+        {/* Section nav */}
+        <div className="flex flex-wrap gap-2 mb-12 pb-8 border-b border-stone-100">
+          {SAFETY_NAV.map(({ href, label, active }) => (
+            <Link
+              key={href}
+              href={href}
+              className={`text-xs px-4 py-2 rounded-full border transition-colors ${
+                active
+                  ? "bg-stone-900 text-white border-stone-900"
+                  : "border-stone-300 text-stone-500 hover:border-stone-600 hover:text-stone-700"
+              }`}
+            >
+              {label}
+            </Link>
+          ))}
         </div>
 
-        <div className="mb-12">
-          <h2 className="font-serif text-xl font-semibold text-stone-900 mt-8 mb-4 pb-2 border-b border-stone-100">
-            Blocking & Reporting
-          </h2>
-          <Feature icon="🚫" title="Block instantly">
-            Block any user from their profile with one tap. Once blocked, they cannot see your profile, send messages, or find you through search. Blocking is permanent unless you undo it.
-          </Feature>
-          <Feature icon="🚩" title="Report in seconds">
-            Report inappropriate profiles, messages, or behaviour directly from any conversation or profile view. Reports are reviewed by our Trust & Safety team within 24 hours.
-          </Feature>
-          <Feature icon="👻" title="Unmatch & disappear">
-            Unmatching with someone removes the conversation and prevents future contact. They will not be notified. Your profile disappears from their matches list.
-          </Feature>
-        </div>
+        <H2>Privacy Controls</H2>
 
-        <div className="mb-12">
-          <h2 className="font-serif text-xl font-semibold text-stone-900 mt-8 mb-4 pb-2 border-b border-stone-100">
-            Account Security
-          </h2>
-          <Feature icon="🔐" title="Secure authentication">
-            StarCross uses industry-standard authentication. We never store your passwords in plain text. You can sign in securely using your existing Google or Apple account.
-          </Feature>
-          <Feature icon="📧" title="Email verification">
-            All accounts must be verified with a valid email address before accessing the platform. This helps prevent fake and bot accounts.
-          </Feature>
-          <Feature icon="🗑️" title="Delete your account anytime">
-            You have the right to permanently delete your account and all associated data at any time from your profile settings. Deletion is immediate and irreversible.
-          </Feature>
-        </div>
+        <H3>Location privacy</H3>
+        <P>
+          StarCross never displays or stores your exact GPS coordinates. Proximity is shown at city level only, and only when you have enabled location features. You may disable location-based discovery at any time from your profile settings.
+        </P>
 
-        <div className="mb-12">
-          <h2 className="font-serif text-xl font-semibold text-stone-900 mt-8 mb-4 pb-2 border-b border-stone-100">
-            Our Moderation Commitment
-          </h2>
-          <Feature icon="🛡️" title="Human review">
-            Our Trust & Safety team personally reviews every report. We do not rely on automated systems alone. Real people investigate real concerns.
-          </Feature>
-          <Feature icon="⚡" title="Fast action">
-            We aim to action all reports within 24 hours. Severe violations — including threats, explicit content, or harassment — are escalated immediately.
-          </Feature>
-          <Feature icon="🔄" title="Continuous improvement">
-            We update our policies and features regularly based on user feedback and emerging safety research. Safety is not a one-time effort — it is an ongoing commitment.
-          </Feature>
-        </div>
+        <H3>Photo control</H3>
+        <P>
+          You control which photos appear on your profile. Photos can be added or removed at any time. On supported devices, we prevent in-app screenshots of profile images.
+        </P>
 
-        <div className="mt-12 bg-stone-900 rounded-2xl p-8 text-center">
-          <p className="text-white font-semibold text-base mb-2">See something? Say something.</p>
-          <p className="text-stone-400 text-sm mb-5">
-            Our safety features only work when you use them. If something feels wrong, report it.
-          </p>
-          <Link
-            href="/safety/reporting"
-            className="inline-flex items-center gap-2 bg-white text-stone-900 text-sm font-medium px-5 py-2.5 rounded-full hover:bg-stone-100 transition-colors"
-          >
-            How to report →
-          </Link>
-        </div>
+        <H3>Profile visibility</H3>
+        <P>
+          You may pause your profile at any time. While paused, your profile is not shown to new users. Existing matches and conversations are not affected.
+        </P>
+
+        <H2>Blocking and Reporting</H2>
+
+        <H3>Block a user</H3>
+        <P>
+          You may block any user from their profile at any time. Once blocked, they cannot view your profile, contact you, or find you through discovery. Blocking is immediate and the other user is not notified.
+        </P>
+
+        <H3>Report a user</H3>
+        <P>
+          You may report a profile or a conversation from within the app at any time. Reports are reviewed by our Trust and Safety team. See our{" "}
+          <Link href="/safety/reporting" className="text-stone-700 underline underline-offset-2 hover:text-stone-900">
+            Reporting page
+          </Link>{" "}
+          for full details on what happens after you submit a report.
+        </P>
+
+        <H3>Unmatch</H3>
+        <P>
+          Unmatching removes a conversation and prevents future contact. The other person is not notified, and your profile is removed from their match list.
+        </P>
+
+        <H2>Account Security</H2>
+
+        <H3>Authentication</H3>
+        <P>
+          StarCross uses industry-standard authentication practices. Passwords are hashed using bcrypt and are never stored in plain text. You may also sign in using your Google or Apple account.
+        </P>
+
+        <H3>Email verification</H3>
+        <P>
+          All accounts must be verified with a valid email address before accessing the platform. This reduces the presence of fake and automated accounts.
+        </P>
+
+        <H3>Account deletion</H3>
+        <P>
+          You may permanently delete your account and all associated data at any time from your profile settings. Deletion is irreversible and processed immediately.
+        </P>
+
+        <H2>Moderation</H2>
+
+        <H3>Human review</H3>
+        <P>
+          Our Trust and Safety team personally reviews every report submitted through the platform. We do not rely exclusively on automated moderation systems.
+        </P>
+
+        <H3>Response time</H3>
+        <P>
+          We aim to review all reports within 24 hours of submission. Reports involving threats of violence, content depicting minors, or other urgent matters are escalated and acted upon as quickly as possible.
+        </P>
+
+        <H3>Outcomes</H3>
+        <P>
+          Depending on the nature and severity of a violation, outcomes may include a formal warning, temporary suspension, or permanent removal from the platform. In cases involving illegal conduct, we may share relevant information with law enforcement.
+        </P>
+
+        <H3>Ongoing improvement</H3>
+        <P>
+          We review and update our safety policies and features regularly. Safety on our platform is an ongoing commitment, not a one-time consideration.
+        </P>
       </main>
 
-      <footer className="border-t border-stone-100 py-8 px-6 text-center">
-        <p className="text-xs text-stone-400">&copy; {new Date().getFullYear()} StarCross. Written in the stars.</p>
-      </footer>
+      <LegalFooter />
     </div>
   );
 }
