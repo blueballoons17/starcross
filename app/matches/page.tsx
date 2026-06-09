@@ -130,7 +130,7 @@ export default function MatchesPage() {
               </p>
               <p className="text-stone-500 text-sm leading-relaxed max-w-xs mb-8">
                 The moment we find someone whose chart resonates with yours, we&rsquo;ll send you
-                an email — so keep an eye on your inbox.
+                an email, so keep an eye on your inbox.
               </p>
 
               {/* Subtle CTA row */}

@@ -22,7 +22,7 @@ export default function SafetyFeaturesPage() {
         <div className="mb-10">
           <p className="text-xs uppercase tracking-widest text-stone-400 mb-3">Safety</p>
           <h1 className="font-serif text-4xl font-semibold text-stone-900 mb-3">Safety Features</h1>
-          <p className="text-stone-400 text-sm">The tools and controls we build into Kindred Stars to protect you — and how to use them.</p>
+          <p className="text-stone-400 text-sm">The tools and controls we build into Kindred Stars to protect you, and how to use them.</p>
         </div>
 
         {/* Section nav */}

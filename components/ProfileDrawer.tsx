@@ -587,7 +587,7 @@ export function ProfileDrawer({ open, onClose, match, isPremium }: ProfileDrawer
                     {reviews.comments.map((c, i) => (
                       <div key={i} className="bg-white/4 rounded-xl px-3 py-2.5 border border-white/6">
                         <p className="text-stone-300 text-xs leading-relaxed">&ldquo;{c}&rdquo;</p>
-                        <p className="text-stone-600 text-[10px] mt-1.5">— Kindred Stars user</p>
+                        <p className="text-stone-600 text-[10px] mt-1.5">Kindred Stars user</p>
                       </div>
                     ))}
                   </div>
@@ -643,7 +643,7 @@ export function ProfileDrawer({ open, onClose, match, isPremium }: ProfileDrawer
                       <textarea
                         rows={2}
                         maxLength={300}
-                        placeholder={`Optional — e.g. "Very kind and easy to talk to" (public, anonymous)`}
+                        placeholder={`Optional, e.g. "Very kind and easy to talk to" (public, anonymous)`}
                         value={reviewComment}
                         onChange={(e) => setReviewComment(e.target.value)}
                         className="w-full rounded-lg bg-white/5 border border-white/8 text-stone-300 placeholder-stone-600 text-xs px-3 py-2 resize-none focus:outline-none focus:border-white/20 transition-colors"
@@ -655,7 +655,7 @@ export function ProfileDrawer({ open, onClose, match, isPremium }: ProfileDrawer
 
                     <div className="px-4 pb-4">
                       {reviewStatus === "error" && (
-                        <p className="text-red-400 text-xs mb-2">Something went wrong — please try again.</p>
+                        <p className="text-red-400 text-xs mb-2">Something went wrong. Please try again.</p>
                       )}
                       <button
                         onClick={submitReview}
@@ -796,7 +796,7 @@ export function ProfileDrawer({ open, onClose, match, isPremium }: ProfileDrawer
                     <div className="px-4 pb-4">
                       {reportStatus === "error" && (
                         <p className="text-red-400 text-xs mb-2">
-                          Something went wrong — please try again.
+                          Something went wrong. Please try again.
                         </p>
                       )}
                       <button

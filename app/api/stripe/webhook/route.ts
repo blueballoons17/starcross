@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
 import Stripe from "stripe";
+import { sendSubscriptionConfirmationEmail } from "@/lib/email";
 
 export const runtime = "nodejs";
 
@@ -80,14 +81,18 @@ export async function POST(request: NextRequest) {
           );
           const userId = sub.metadata?.userId;
           if (userId) {
-            await prisma.user.update({
+            const user = await prisma.user.update({
               where: { id: userId },
               data: {
                 stripeSubscriptionId: sub.id,
                 subscriptionStatus: sub.status,
                 subscriptionCurrentPeriodEnd: getPeriodEnd(sub),
               },
+              select: { email: true, name: true },
             });
+
+            // Send subscription confirmation email
+            sendSubscriptionConfirmationEmail(user.email, user.name ?? undefined).catch(() => {});
 
             // ── Referral tracking ────────────────────────────────────────
             // Check if this user was referred by someone and hasn't yet paid

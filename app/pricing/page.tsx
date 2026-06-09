@@ -216,7 +216,7 @@ function PricingContent() {
                 onClick={handleFree}
                 className="text-stone-500 hover:text-stone-300 text-sm transition-colors underline underline-offset-4"
               >
-                Continue for free — 5 matches, no card required
+                Continue for free, 5 matches, no card required
               </button>
               <p className="text-stone-700 text-xs">
                 Already have an account?{" "}

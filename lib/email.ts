@@ -52,7 +52,55 @@ export async function sendWelcomeEmail(to: string, name?: string) {
   }).catch((err) => console.error("[email] welcome send failed:", err));
 }
 
-// ── User report — admin notification ─────────────────────────────────────────
+// ── Subscription confirmation ─────────────────────────────────────────────────
+export async function sendSubscriptionConfirmationEmail(to: string, name?: string) {
+  const resend = getResend();
+  if (!resend) return;
+
+  const firstName = name?.split(" ")[0] ?? "there";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://kindredstars.org";
+
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: "You're now a Kindred Stars+ member ✦",
+    html: `
+<!DOCTYPE html>
+<html>
+<body style="margin:0;padding:0;background:#080B18;font-family:'Georgia',serif;color:#e7e5e4;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:40px auto;padding:0 20px;">
+    <tr><td style="text-align:center;padding-bottom:32px;">
+      <span style="font-size:28px;letter-spacing:0.18em;text-transform:uppercase;color:#fff;">
+        ✦ Kindred Stars
+      </span>
+    </td></tr>
+    <tr><td style="background:#0f1220;border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:40px 36px;">
+      <p style="margin:0 0 8px;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#6366f1;">Kindred Stars+</p>
+      <h1 style="margin:0 0 16px;font-size:26px;font-weight:600;color:#fff;line-height:1.2;">
+        Welcome to the full experience, ${firstName}.
+      </h1>
+      <p style="margin:0 0 20px;font-size:15px;line-height:1.7;color:#a8a29e;">
+        Your subscription is active. You now have unlimited matches, full synastry reports for every profile, and priority placement in the feed.
+      </p>
+      <p style="margin:0 0 32px;font-size:15px;line-height:1.7;color:#a8a29e;">
+        The stars have a lot more to show you.
+      </p>
+      <a href="${appUrl}/matches"
+         style="display:inline-block;background:#4f46e5;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:14px 32px;border-radius:999px;">
+        See your matches
+      </a>
+    </td></tr>
+    <tr><td style="text-align:center;padding:28px 0 0;color:#44403c;font-size:12px;line-height:1.6;">
+      You're receiving this because you subscribed to Kindred Stars+.<br/>
+      <a href="${appUrl}/privacy" style="color:#57534e;text-decoration:underline;">Privacy policy</a>
+    </td></tr>
+  </table>
+</body>
+</html>`,
+  }).catch((err) => console.error("[email] subscription confirmation send failed:", err));
+}
+
+// ── User report: admin notification ──────────────────────────────────────────
 export async function sendReportEmail(opts: {
   reporterEmail: string;
   reporterName: string;

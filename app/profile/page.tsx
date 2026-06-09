@@ -583,7 +583,7 @@ function ReferralCard() {
       </div>
 
       <p className="text-[11px] text-stone-400 leading-relaxed">
-        Share your link. When a friend signs up and subscribes, it counts toward your free month. No limit — keep referring and keep earning.
+        Share your link. When a friend signs up and subscribes, it counts toward your free month. No limit, keep referring and keep earning.
       </p>
     </div>
   );

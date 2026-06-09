@@ -961,7 +961,7 @@ export default function OnboardingPage() {
                   </Label>
                   <Input id="birthTime" type="time" value={form.birthTime} onChange={(e) => update("birthTime", e.target.value)} className="h-11" />
                   <p className="text-xs text-stone-500 leading-relaxed">
-                    Don&apos;t know your exact time? Leave it blank — we&apos;ll use noon and your chart will still be highly accurate. You can find your birth time on your birth certificate or by asking a parent.
+                    Don&apos;t know your exact time? Leave it blank; we&apos;ll use noon and your chart will still be highly accurate. You can find your birth time on your birth certificate or by asking a parent.
                   </p>
                 </div>
 

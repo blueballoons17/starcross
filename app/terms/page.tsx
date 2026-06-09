@@ -176,10 +176,10 @@ export default function TermsPage() {
         <P>If you encounter unsafe behavior, please report it immediately.</P>
 
         {/* 9 */}
-        <H2>9. Astrological Content — Entertainment Only</H2>
+        <H2>9. Astrological Content: Entertainment Only</H2>
         <P>
-          Kindred Stars incorporates astrology — including sun signs, moon signs, rising signs, synastry charts, and
-          planetary compatibility scores — as a creative lens for meeting people. You acknowledge and agree to the
+          Kindred Stars incorporates astrology, including sun signs, moon signs, rising signs, synastry charts, and
+          planetary compatibility scores, as a creative lens for meeting people. You acknowledge and agree to the
           following:
         </P>
 
@@ -193,8 +193,8 @@ export default function TermsPage() {
 
         <H3>Entertainment and Self-Reflection Only</H3>
         <P>
-          All astrological content on Kindred Stars — including but not limited to compatibility percentages,
-          elemental analysis, aspect interpretations, and match recommendations — is provided for{" "}
+          All astrological content on Kindred Stars, including but not limited to compatibility percentages,
+          elemental analysis, aspect interpretations, and match recommendations, is provided for{" "}
           <strong>entertainment and personal reflection purposes only</strong>. It should not be treated as
           professional advice of any kind (psychological, medical, financial, romantic, or otherwise).
         </P>
@@ -208,8 +208,8 @@ export default function TermsPage() {
 
         <H3>Your Own Judgment</H3>
         <P>
-          You agree to rely on your own judgment, common sense, and personal values — not on astrological
-          scores or chart readings — when deciding whether to pursue a connection with another user or to meet
+          You agree to rely on your own judgment, common sense, and personal values, not on astrological
+          scores or chart readings, when deciding whether to pursue a connection with another user or to meet
           someone in person.
         </P>
 

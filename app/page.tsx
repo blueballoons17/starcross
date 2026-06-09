@@ -421,7 +421,7 @@ export default function HomePage() {
             transition={{ duration: 0.8, delay: 0.32 }}
             className="text-base sm:text-lg text-stone-300 max-w-lg mx-auto leading-relaxed mb-4"
           >
-            Kindred Stars maps your full birth chart — 10 planets, 12 houses, 5 major aspects — into a 0–100 compatibility score, then surfaces the people who match it most deeply.
+            Kindred Stars maps your full birth chart: 10 planets, 12 houses, 5 major aspects, into a 0–100 compatibility score, then surfaces the people who match it most deeply.
           </motion.p>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -690,7 +690,7 @@ export default function HomePage() {
                 detail: "Austin TX · Met his match after 3 weeks",
               },
               {
-                quote: "I've been doing astrology for years and manually running synastry on every person I date. This is the first app that actually understands what I'm looking for — not just sun signs.",
+                quote: "I've been doing astrology for years and manually running synastry on every person I date. This is the first app that actually understands what I'm looking for, not just sun signs.",
                 name: "Priya, 24",
                 detail: "Los Angeles · Scorpio Moon",
               },
@@ -732,7 +732,7 @@ export default function HomePage() {
               This is what you see<br />
               <span className="italic text-stone-500">before the first date</span>
             </h2>
-            <p className="text-stone-500 text-base mt-4 max-w-md mx-auto">Every match comes with a full compatibility breakdown. No algorithm black box — you see exactly why two charts connect.</p>
+            <p className="text-stone-500 text-base mt-4 max-w-md mx-auto">Every match comes with a full compatibility breakdown. No algorithm black box. You see exactly why two charts connect.</p>
           </motion.div>
 
           <motion.div
@@ -771,9 +771,9 @@ export default function HomePage() {
               <p className="text-[10px] font-semibold uppercase tracking-widest text-stone-400 mb-4">What&apos;s working</p>
               <div className="space-y-4">
                 {[
-                  { aspect: "Venus trine Moon", col: "#818cf8", meaning: "Deep emotional understanding flows naturally. One of the strongest bonds in a synastry chart — each person feels genuinely seen by the other." },
+                  { aspect: "Venus trine Moon", col: "#818cf8", meaning: "Deep emotional understanding flows naturally. One of the strongest bonds in a synastry chart. Each person feels genuinely seen by the other." },
                   { aspect: "Sun sextile Venus", col: "#34d399", meaning: "Easy warmth and mutual admiration. You make each other feel good without having to work for it." },
-                  { aspect: "Moon conjunct Moon", col: "#f472b6", meaning: "Rare emotional resonance. You instinctively understand each other's moods and needs — often without words." },
+                  { aspect: "Moon conjunct Moon", col: "#f472b6", meaning: "Rare emotional resonance. You instinctively understand each other's moods and needs, often without words." },
                 ].map(({ aspect, col, meaning }) => (
                   <div key={aspect} className="flex gap-4">
                     <div className="w-0.5 rounded-full shrink-0 mt-1" style={{ backgroundColor: col, minHeight: "2.5rem" }} />
@@ -793,7 +793,7 @@ export default function HomePage() {
                 <div className="w-0.5 bg-amber-300 rounded-full shrink-0" style={{ minHeight: "2.5rem" }} />
                 <div>
                   <p className="text-sm font-semibold text-stone-800">Saturn square Mercury</p>
-                  <p className="text-sm text-stone-500 mt-0.5 leading-relaxed">Communication can feel serious or heavy early on. Make space for lightness and humor intentionally — this aspect rewards patience.</p>
+                  <p className="text-sm text-stone-500 mt-0.5 leading-relaxed">Communication can feel serious or heavy early on. Make space for lightness and humor intentionally. This aspect rewards patience.</p>
                 </div>
               </div>
             </div>
@@ -918,7 +918,7 @@ export default function HomePage() {
             <Link href="/signup" className="text-stone-300 hover:text-white underline underline-offset-2 transition-colors">
               start for free
             </Link>
-            {" "}with 5 matches — no card required.
+            {" "}with 5 matches, no card required.
           </p>
         </motion.div>
       </section>

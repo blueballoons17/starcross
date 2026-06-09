@@ -88,7 +88,7 @@ export default function SafetyResourcesPage() {
           <a href="https://www.ic3.gov" target="_blank" rel="noopener noreferrer" className="text-stone-700 underline underline-offset-2 hover:text-stone-900">ic3.gov</a>
         </P>
 
-        <H3>Federal Trade Commission — Scam Alerts</H3>
+        <H3>Federal Trade Commission: Scam Alerts</H3>
         <P>
           Learn about current scam tactics and how to report them.{" "}
           <a href="https://consumer.ftc.gov/scams" target="_blank" rel="noopener noreferrer" className="text-stone-700 underline underline-offset-2 hover:text-stone-900">consumer.ftc.gov/scams</a>

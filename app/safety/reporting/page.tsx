@@ -44,19 +44,19 @@ export default function ReportingPage() {
 
         <H2>How to Report Someone</H2>
 
-        <H3>Step 1 — Open the profile or conversation</H3>
+        <H3>Step 1: Open the profile or conversation</H3>
         <P>Navigate to the profile or conversation of the person you wish to report.</P>
 
-        <H3>Step 2 — Open the options menu</H3>
+        <H3>Step 2: Open the options menu</H3>
         <P>Tap the three-dot menu icon at the top right of the profile or conversation screen.</P>
 
-        <H3>Step 3 — Select Report</H3>
+        <H3>Step 3: Select Report</H3>
         <P>Choose Report from the menu. You will be prompted to select a reason for the report.</P>
 
-        <H3>Step 4 — Choose a reason and submit</H3>
+        <H3>Step 4: Choose a reason and submit</H3>
         <P>Select the category that best describes the issue. You may add additional context in the text field. Tap Submit to send the report.</P>
 
-        <H3>Step 5 — We take it from there</H3>
+        <H3>Step 5: We take it from there</H3>
         <P>Our Trust and Safety team reviews every report. You will receive a confirmation and, where applicable, a follow-up notification once the report has been reviewed. You may continue using Kindred Stars normally in the meantime.</P>
 
         <H2>What You Can Report</H2>

@@ -213,7 +213,7 @@ export default function AdminReportsPage() {
           <div className="flex flex-col items-center justify-center py-20 text-center">
             <CheckCircle2 className="h-10 w-10 text-stone-300 mb-3" />
             <p className="text-stone-500 text-sm">
-              {filter === "open" ? "No open reports — all clear ✓" : "Nothing here yet"}
+              {filter === "open" ? "No open reports, all clear ✓" : "Nothing here yet"}
             </p>
           </div>
         ) : (
