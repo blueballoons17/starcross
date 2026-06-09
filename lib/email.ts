@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 
-const FROM = process.env.EMAIL_FROM ?? "Kindred Stars <hello@kindredstars.org>";
+const FROM    = process.env.EMAIL_FROM    ?? "Kindred Stars <hello@kindredstars.org>";
+const REPLY_TO = process.env.EMAIL_REPLY_TO ?? "admin.kindredstars@gmail.com";
 
 function getResend() {
   if (!process.env.RESEND_API_KEY) return null;
@@ -13,9 +14,12 @@ export async function sendWelcomeEmail(to: string, name?: string) {
   if (!resend) return; // no-op if not configured
 
   const firstName = name?.split(" ")[0] ?? "there";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://kindredstars.org";
+
   await resend.emails.send({
     from: FROM,
     to,
+    reply_to: REPLY_TO,
     subject: "Welcome to Kindred Stars ✦",
     html: `
 <!DOCTYPE html>
@@ -35,16 +39,16 @@ export async function sendWelcomeEmail(to: string, name?: string) {
         Your birth chart is your compass. Kindred Stars uses your Sun, Moon, and Rising signs together to find people who are genuinely compatible with the way you think, feel, and connect.
       </p>
       <p style="margin:0 0 32px;font-size:15px;line-height:1.7;color:#a8a29e;">
-        Start by completing your profile — the more detail you give us, the more precisely the stars align you with someone real.
+        Start by completing your profile. The more detail you give us, the more precisely the stars align you with someone real.
       </p>
-      <a href="${process.env.NEXT_PUBLIC_APP_URL ?? "https://kindredstars.org"}/profile"
+      <a href="${appUrl}/profile"
          style="display:inline-block;background:#4f46e5;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:14px 32px;border-radius:999px;">
         Complete your profile →
       </a>
     </td></tr>
     <tr><td style="text-align:center;padding:28px 0 0;color:#44403c;font-size:12px;line-height:1.6;">
       You're receiving this because you created a Kindred Stars account.<br/>
-      <a href="${process.env.NEXT_PUBLIC_APP_URL ?? "https://kindredstars.org"}/privacy" style="color:#57534e;text-decoration:underline;">Privacy policy</a>
+      <a href="${appUrl}/privacy" style="color:#57534e;text-decoration:underline;">Privacy policy</a>
     </td></tr>
   </table>
 </body>
@@ -63,6 +67,7 @@ export async function sendSubscriptionConfirmationEmail(to: string, name?: strin
   await resend.emails.send({
     from: FROM,
     to,
+    reply_to: REPLY_TO,
     subject: "You're now a Kindred Stars+ member ✦",
     html: `
 <!DOCTYPE html>
@@ -87,7 +92,7 @@ export async function sendSubscriptionConfirmationEmail(to: string, name?: strin
       </p>
       <a href="${appUrl}/matches"
          style="display:inline-block;background:#4f46e5;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:14px 32px;border-radius:999px;">
-        See your matches
+        See your matches →
       </a>
     </td></tr>
     <tr><td style="text-align:center;padding:28px 0 0;color:#44403c;font-size:12px;line-height:1.6;">
@@ -128,7 +133,8 @@ export async function sendReportEmail(opts: {
   await resend.emails.send({
     from: FROM,
     to: adminEmail,
-    subject: `[Kindred Stars] User report — ${opts.reportedName} (${opts.reason})`,
+    reply_to: REPLY_TO,
+    subject: `[Kindred Stars] User report: ${opts.reportedName} (${opts.reason})`,
     html: `
 <!DOCTYPE html>
 <html>
@@ -154,7 +160,7 @@ export async function sendReportEmail(opts: {
         <tr>
           <td style="padding:10px 14px;background:#f7f6f5;border-radius:0 0 8px 8px;border:1px solid #e7e5e4;border-top:0;">
             <p style="margin:0;font-size:12px;font-weight:600;color:#57534e;text-transform:uppercase;letter-spacing:0.08em;">Reported By</p>
-            <p style="margin:4px 0 0;font-size:14px;color:#1c1917;">${opts.reporterName} — ${opts.reporterEmail}</p>
+            <p style="margin:4px 0 0;font-size:14px;color:#1c1917;">${opts.reporterName} · ${opts.reporterEmail}</p>
           </td>
         </tr>
       </table>
@@ -195,10 +201,12 @@ export async function sendMatchEmail(opts: {
 
   const { toEmail, toName, matchName, matchScore, matchId } = opts;
   const firstName = toName.split(" ")[0];
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://kindredstars.org";
 
   await resend.emails.send({
     from: FROM,
     to: toEmail,
+    reply_to: REPLY_TO,
     subject: `You matched with ${matchName} ✨`,
     html: `
 <!DOCTYPE html>
@@ -216,18 +224,18 @@ export async function sendMatchEmail(opts: {
         You and ${matchName} liked each other.
       </h1>
       <p style="margin:0 0 8px;font-size:15px;color:#a8a29e;line-height:1.7;">
-        Hi ${firstName} — the stars aligned. Your compatibility score with ${matchName} is <strong style="color:#fff;">${matchScore}%</strong>.
+        Hi ${firstName}, your compatibility score with ${matchName} is <strong style="color:#fff;">${matchScore}%</strong>.
       </p>
       <p style="margin:0 0 32px;font-size:15px;color:#a8a29e;line-height:1.7;">
         Say hello before someone else does.
       </p>
-      <a href="${process.env.NEXT_PUBLIC_APP_URL ?? "https://kindredstars.org"}/messages/${matchId}"
+      <a href="${appUrl}/messages/${matchId}"
          style="display:inline-block;background:#4f46e5;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:14px 32px;border-radius:999px;">
         Send a message →
       </a>
     </td></tr>
     <tr><td style="text-align:center;padding:28px 0 0;color:#44403c;font-size:12px;line-height:1.6;">
-      <a href="${process.env.NEXT_PUBLIC_APP_URL ?? "https://kindredstars.org"}/privacy" style="color:#57534e;text-decoration:underline;">Privacy policy</a>
+      <a href="${appUrl}/privacy" style="color:#57534e;text-decoration:underline;">Privacy policy</a>
     </td></tr>
   </table>
 </body>
