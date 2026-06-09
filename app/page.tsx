@@ -3,8 +3,14 @@
 import Link from "next/link";
 import { motion, useInView, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
 import { ArrowRight, Heart, Sparkles, Moon } from "lucide-react";
+import dynamic from "next/dynamic";
 import { AnimatedHero } from "@/components/ui/animated-hero";
-import RadialOrbitalTimeline from "@/components/ui/radial-orbital-timeline";
+// Lazy-load the orbital timeline — it has a setInterval running every 50 ms
+// which causes constant re-renders; deferring keeps initial paint fast.
+const RadialOrbitalTimeline = dynamic(
+  () => import("@/components/ui/radial-orbital-timeline"),
+  { ssr: false, loading: () => <div className="h-64" /> }
+);
 import { StarField } from "@/components/ui/star-field";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -368,14 +374,14 @@ export default function HomePage() {
         className="fixed inset-0 flex flex-col items-center justify-center px-6 overflow-hidden z-0"
         style={{ background: "#07091f" }}
       >
-        <StarField count={320} />
+        <StarField count={260} />
 
         <div
           className="absolute inset-0 pointer-events-none"
           style={{ background: "radial-gradient(ellipse 65% 50% at 50% 42%, rgba(80,100,200,0.12) 0%, transparent 70%)" }}
         />
 
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="absolute inset-0 items-center justify-center pointer-events-none hidden sm:flex">
           {[680, 490, 310, 155].map((d, i) => (
             <div
               key={d}

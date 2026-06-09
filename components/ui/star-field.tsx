@@ -29,15 +29,19 @@ const FACE_SRCS = [
   "/api/avatar?gender=men&num=90",
 ];
 
-// Preload once at module level
-const faceImages: HTMLImageElement[] =
-  typeof window !== "undefined"
-    ? FACE_SRCS.map((src) => {
-        const img = new Image();
-        img.src = src;
-        return img;
-      })
-    : [];
+// Lazy-load face images only on desktop (deferred until after first paint)
+let faceImages: HTMLImageElement[] = [];
+let facesLoaded = false;
+function loadFacesIfNeeded() {
+  if (facesLoaded || typeof window === "undefined") return;
+  if (window.innerWidth < 768 || navigator.maxTouchPoints > 1) return; // skip on mobile
+  facesLoaded = true;
+  faceImages = FACE_SRCS.map((src) => {
+    const img = new Image();
+    img.src = src;
+    return img;
+  });
+}
 
 // Page background colour (#07091f)
 const BG_R = 7, BG_G = 9, BG_B = 31;
@@ -78,23 +82,44 @@ export function StarField({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    // ── Device detection ──────────────────────────────────────────────────────
+    const isMobile = window.innerWidth < 768 || navigator.maxTouchPoints > 1;
+    const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 2 : 2);
+    const effectiveCount = isMobile ? Math.min(count, 110) : count;
+    const fpsTarget = isMobile ? 30 : 60;
+    const minFrameMs = 1000 / fpsTarget;
+
+    // Lazy-load faces on desktop only, after a short delay so they don't block first paint
+    if (!isMobile) {
+      setTimeout(loadFacesIfNeeded, 800);
+    }
+
     let animId: number;
     let stars: Star[] = [];
     let ripples: Ripple[] = [];
     let shooters: Shooter[] = [];
     let nextShootAt = 0;
+    let lastFrameTs = 0;
 
     let mouseX = -9999, mouseY = -9999;
     let curOffX = 0, curOffY = 0;
     let tgtOffX = 0, tgtOffY = 0;
-    const MAX_PARALLAX = 52;
+    const MAX_PARALLAX = isMobile ? 0 : 52; // no parallax on mobile
+
+    // Logical (CSS) dimensions — canvas is scaled by dpr internally
+    let cssW = 0, cssH = 0;
 
     function init() {
-      const w = canvas!.width, h = canvas!.height;
-      stars = Array.from({ length: count }, () => {
+      cssW = canvas!.offsetWidth;
+      cssH = canvas!.offsetHeight;
+      canvas!.width  = cssW * dpr;
+      canvas!.height = cssH * dpr;
+      ctx!.scale(dpr, dpr);
+
+      stars = Array.from({ length: effectiveCount }, () => {
         const r = Math.pow(Math.random(), 1.5) * 3.2 + 0.3;
         return {
-          x: Math.random() * w, y: Math.random() * h, r,
+          x: Math.random() * cssW, y: Math.random() * cssH, r,
           alpha: Math.random() * 0.65 + 0.28,
           speed: Math.random() * 0.0022 + 0.0006,
           phase: Math.random() * Math.PI * 2,
@@ -110,13 +135,12 @@ export function StarField({
     }
 
     function spawnShooter(ts: number) {
-      const w = canvas!.width, h = canvas!.height;
-      const burst = Math.random() < 0.3 ? Math.floor(Math.random() * 2) + 2 : 1;
+      const burst = isMobile ? 1 : (Math.random() < 0.3 ? Math.floor(Math.random() * 2) + 2 : 1);
       for (let b = 0; b < burst; b++) {
         const angle = (Math.random() * Math.PI) / 3.5 + Math.PI / 7;
         const speed = 9 + Math.random() * 10;
         shooters.push({
-          x: Math.random() * w * 0.75, y: Math.random() * h * 0.55,
+          x: Math.random() * cssW * 0.75, y: Math.random() * cssH * 0.55,
           vx: Math.cos(-angle) * speed, vy: Math.sin(-angle) * speed,
           len: 180 + Math.random() * 250, life: 0,
           maxLife: 60 + Math.random() * 45, size: 1.5 + Math.random() * 2.5,
@@ -127,32 +151,36 @@ export function StarField({
 
     // Draw one star. faceReveal: 0 = golden dot, 1 = full face.
     function drawStar(s: Star, px: number, py: number, a: number, faceReveal: number) {
-      const starDotR = Math.max(2.0, s.r * 1.0 + 1.0); // 2–4.2 px
-      const faceHalf  = 26 + s.r * 3;                   // 26–36 px half
-
-      // Current half-radius lerped between star and face size
+      const starDotR = Math.max(2.0, s.r * 1.0 + 1.0);
+      const faceHalf  = 26 + s.r * 3;
       const half = starDotR + (faceHalf - starDotR) * faceReveal;
 
       if (faceReveal < 0.04) {
-        // ── Pure golden star dot ────────────────────────────────────────
-        const glowR = starDotR * 5;
-        const grd = ctx!.createRadialGradient(px, py, 0, px, py, glowR);
-        grd.addColorStop(0,   `rgba(255,232,110,${a * 0.85})`);
-        grd.addColorStop(0.3, `rgba(255,210, 55,${a * 0.35})`);
-        grd.addColorStop(0.7, `rgba(255,180, 25,${a * 0.10})`);
-        grd.addColorStop(1,   "rgba(255,160,20,0)");
-        ctx!.beginPath();
-        ctx!.arc(px, py, glowR, 0, Math.PI * 2);
-        ctx!.fillStyle = grd;
-        ctx!.fill();
-        // Bright core
-        ctx!.beginPath();
-        ctx!.arc(px, py, starDotR, 0, Math.PI * 2);
-        ctx!.fillStyle = `rgba(255,252,200,${a})`;
-        ctx!.fill();
+        if (isMobile) {
+          // ── Mobile: simple dot, no radial gradient (much faster) ──────
+          ctx!.beginPath();
+          ctx!.arc(px, py, starDotR, 0, Math.PI * 2);
+          ctx!.fillStyle = `rgba(255,252,200,${a})`;
+          ctx!.fill();
+        } else {
+          // ── Desktop: golden glow ──────────────────────────────────────
+          const glowR = starDotR * 5;
+          const grd = ctx!.createRadialGradient(px, py, 0, px, py, glowR);
+          grd.addColorStop(0,   `rgba(255,232,110,${a * 0.85})`);
+          grd.addColorStop(0.3, `rgba(255,210, 55,${a * 0.35})`);
+          grd.addColorStop(0.7, `rgba(255,180, 25,${a * 0.10})`);
+          grd.addColorStop(1,   "rgba(255,160,20,0)");
+          ctx!.beginPath();
+          ctx!.arc(px, py, glowR, 0, Math.PI * 2);
+          ctx!.fillStyle = grd;
+          ctx!.fill();
+          ctx!.beginPath();
+          ctx!.arc(px, py, starDotR, 0, Math.PI * 2);
+          ctx!.fillStyle = `rgba(255,252,200,${a})`;
+          ctx!.fill();
+        }
       } else {
-        // ── Transitioning / revealed face ───────────────────────────────
-        // Outer glow: gold → pale blue as faceReveal rises
+        // ── Transitioning / revealed face (desktop only) ─────────────────
         const glowR = half * 2.0;
         const ga    = a * (0.55 - faceReveal * 0.25);
         const gr    = Math.round(255 - 75  * faceReveal);
@@ -169,18 +197,15 @@ export function StarField({
 
         ctx!.save();
         ctx!.globalAlpha = a;
-        // Clip to circle
         ctx!.beginPath();
         ctx!.arc(px, py, half, 0, Math.PI * 2);
         ctx!.clip();
 
         const faceSize = half * 2;
         const img = faceImages[s.faceIdx];
-        if (img.complete && img.naturalWidth > 0) {
-          // Face image fades in
+        if (img && img.complete && img.naturalWidth > 0) {
           ctx!.globalAlpha = a * Math.min(1, faceReveal * 2.5);
           ctx!.drawImage(img, px - half, py - half, faceSize, faceSize);
-          // Edge vignette
           const vigStart = 0.62 + faceReveal * 0.13;
           const vgrd = ctx!.createRadialGradient(px, py, half * vigStart, px, py, half);
           vgrd.addColorStop(0, `rgba(${BG_R},${BG_G},${BG_B},0)`);
@@ -189,7 +214,6 @@ export function StarField({
           ctx!.fillStyle = vgrd;
           ctx!.fillRect(px - half - 1, py - half - 1, faceSize + 2, faceSize + 2);
         } else {
-          // Still loading — golden placeholder
           const dotG = ctx!.createRadialGradient(px, py, 0, px, py, half);
           dotG.addColorStop(0, `rgba(255,230,110,${a})`);
           dotG.addColorStop(1, "rgba(255,180,30,0)");
@@ -199,7 +223,6 @@ export function StarField({
         }
         ctx!.restore();
 
-        // White ring — fades in with faceReveal
         if (faceReveal > 0.15) {
           ctx!.beginPath();
           ctx!.arc(px, py, half, 0, Math.PI * 2);
@@ -211,11 +234,19 @@ export function StarField({
     }
 
     function draw(ts: number) {
-      const w = canvas!.width, h = canvas!.height;
-      ctx!.clearRect(0, 0, w, h);
+      // Frame rate cap
+      if (ts - lastFrameTs < minFrameMs) {
+        animId = requestAnimationFrame(draw);
+        return;
+      }
+      lastFrameTs = ts;
 
-      curOffX += (tgtOffX - curOffX) * 0.045;
-      curOffY += (tgtOffY - curOffY) * 0.045;
+      ctx!.clearRect(0, 0, cssW, cssH);
+
+      if (!isMobile) {
+        curOffX += (tgtOffX - curOffX) * 0.045;
+        curOffY += (tgtOffY - curOffY) * 0.045;
+      }
 
       if (ts > nextShootAt) spawnShooter(ts);
 
@@ -223,31 +254,33 @@ export function StarField({
       const pos = stars.map((s) => {
         const drift = Math.sin(ts * 0.00008 + s.driftPhase);
         return {
-          px: s.x + curOffX * s.depth + drift * s.driftX * 40,
-          py: s.y + curOffY * s.depth + drift * s.driftY * 40,
+          px: s.x + curOffX * s.depth + (isMobile ? 0 : drift * s.driftX * 40),
+          py: s.y + curOffY * s.depth + (isMobile ? 0 : drift * s.driftY * 40),
         };
       });
 
-      // Update faceReveal per star based on cursor proximity
+      // Update faceReveal per star (desktop only)
       let topRevealIdx = -1, topReveal = 0.001;
-      for (let i = 0; i < stars.length; i++) {
-        const { px, py } = pos[i];
-        let target = 0;
-        if (mouseX > -500) {
-          const d = Math.hypot(mouseX - px, mouseY - py);
-          if (d < PROXIMITY_RADIUS) {
-            target = Math.pow(1 - d / PROXIMITY_RADIUS, 0.65);
+      if (!isMobile) {
+        for (let i = 0; i < stars.length; i++) {
+          const { px, py } = pos[i];
+          let target = 0;
+          if (mouseX > -500) {
+            const d = Math.hypot(mouseX - px, mouseY - py);
+            if (d < PROXIMITY_RADIUS) {
+              target = Math.pow(1 - d / PROXIMITY_RADIUS, 0.65);
+            }
           }
-        }
-        stars[i].faceReveal += (target - stars[i].faceReveal) * 0.10;
-        if (stars[i].faceReveal > topReveal) {
-          topReveal    = stars[i].faceReveal;
-          topRevealIdx = i;
+          stars[i].faceReveal += (target - stars[i].faceReveal) * 0.10;
+          if (stars[i].faceReveal > topReveal) {
+            topReveal    = stars[i].faceReveal;
+            topRevealIdx = i;
+          }
         }
       }
 
-      // ── Cursor constellation lines (only near cursor) ─────────────────
-      if (mouseX > -500) {
+      // ── Cursor constellation lines (desktop only) ─────────────────────
+      if (!isMobile && mouseX > -500) {
         for (let i = 0; i < stars.length; i++) {
           const { px, py } = pos[i];
           const d = Math.hypot(mouseX - px, mouseY - py);
@@ -266,7 +299,6 @@ export function StarField({
             ctx!.stroke();
           }
         }
-        // Cursor glow dot
         const halo = ctx!.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 26);
         halo.addColorStop(0,   "rgba(220,238,255,0.60)");
         halo.addColorStop(0.4, "rgba(180,208,255,0.22)");
@@ -331,13 +363,17 @@ export function StarField({
         ctx!.strokeStyle = sg;
         ctx!.lineWidth   = sh.size * (1 - p * 0.35);
         ctx!.stroke();
-        const hg = ctx!.createRadialGradient(sh.x, sh.y, 0, sh.x, sh.y, sh.size * 2.8);
-        hg.addColorStop(0, `rgba(255,255,255,${alpha})`);
-        hg.addColorStop(1, "rgba(180,200,255,0)");
-        ctx!.beginPath();
-        ctx!.arc(sh.x, sh.y, sh.size * 2.8, 0, Math.PI * 2);
-        ctx!.fillStyle = hg; ctx!.fill();
+        if (!isMobile) {
+          const hg = ctx!.createRadialGradient(sh.x, sh.y, 0, sh.x, sh.y, sh.size * 2.8);
+          hg.addColorStop(0, `rgba(255,255,255,${alpha})`);
+          hg.addColorStop(1, "rgba(180,200,255,0)");
+          ctx!.beginPath();
+          ctx!.arc(sh.x, sh.y, sh.size * 2.8, 0, Math.PI * 2);
+          ctx!.fillStyle = hg; ctx!.fill();
+        }
       }
+
+      animId = requestAnimationFrame(draw);
     }
 
     function updateMouse(cx: number, cy: number) {
@@ -349,35 +385,46 @@ export function StarField({
 
     const onMM = (e: MouseEvent)   => updateMouse(e.clientX, e.clientY);
     const onML = ()                => { mouseX = -9999; mouseY = -9999; tgtOffX = 0; tgtOffY = 0; };
-    const onTM = (e: TouchEvent)   => updateMouse(e.touches[0].clientX, e.touches[0].clientY);
     const onPD = (e: PointerEvent) => {
       const r = canvas!.getBoundingClientRect();
       ripples.push({ x: e.clientX - r.left, y: e.clientY - r.top, t: performance.now() });
     };
 
     window.addEventListener("mousemove",  onMM, { passive: true });
-    window.addEventListener("touchmove",  onTM, { passive: true });
     window.addEventListener("pointerdown",onPD, { passive: true });
     document.documentElement.addEventListener("mouseleave", onML);
 
     const ro = new ResizeObserver(() => {
-      canvas!.width  = canvas!.offsetWidth;
-      canvas!.height = canvas!.offsetHeight;
-      init();
+      // Re-scale: reset transform before re-applying dpr scale
+      ctx!.setTransform(1, 0, 0, 1, 0, 0);
+      cssW = canvas!.offsetWidth;
+      cssH = canvas!.offsetHeight;
+      canvas!.width  = cssW * dpr;
+      canvas!.height = cssH * dpr;
+      ctx!.scale(dpr, dpr);
+      // Reposition stars to new dimensions
+      stars.forEach((s) => {
+        s.x = Math.random() * cssW;
+        s.y = Math.random() * cssH;
+      });
+      nextShootAt = performance.now() + shootingInterval * 0.5;
     });
     ro.observe(canvas);
-    canvas.width  = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
+
+    // Initial size
+    cssW = canvas.offsetWidth;
+    cssH = canvas.offsetHeight;
+    canvas.width  = cssW * dpr;
+    canvas.height = cssH * dpr;
+    ctx.scale(dpr, dpr);
     init();
 
-    function loop(ts: number) { draw(ts); animId = requestAnimationFrame(loop); }
-    animId = requestAnimationFrame(loop);
+    animId = requestAnimationFrame(draw);
 
     return () => {
       cancelAnimationFrame(animId);
       ro.disconnect();
       window.removeEventListener("mousemove",  onMM);
-      window.removeEventListener("touchmove",  onTM);
       window.removeEventListener("pointerdown",onPD);
       document.documentElement.removeEventListener("mouseleave", onML);
     };
@@ -387,6 +434,7 @@ export function StarField({
     <canvas
       ref={canvasRef}
       className={`absolute inset-0 w-full h-full pointer-events-none ${className}`}
+      style={{ willChange: "transform" }}
     />
   );
 }
