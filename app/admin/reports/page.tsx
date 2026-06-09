@@ -60,7 +60,7 @@ export default function AdminReportsPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const userEmail = (session?.user as { email?: string })?.email;
-  const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL ?? "hello.kindredstars@gmail.com";
+  const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL ?? "admin.kindredstars@gmail.com";
 
   useEffect(() => {
     if (status === "unauthenticated") {

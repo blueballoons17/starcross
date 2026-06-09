@@ -6,7 +6,7 @@ export const metadata = {
 };
 
 const LAST_UPDATED = "June 2, 2026";
-const EMAIL = "hello.kindredstars@gmail.com";
+const EMAIL = "admin.kindredstars@gmail.com";
 
 export default function TermsPage() {
   return (

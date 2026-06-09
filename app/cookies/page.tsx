@@ -116,7 +116,7 @@ export default function CookiesPage() {
         <Section title="6. Contact">
           <p>Questions about our use of cookies? Contact us at:</p>
           <p className="text-sm font-medium text-stone-700">
-            <a href="mailto:hello.kindredstars@gmail.com" className="underline">hello.kindredstars@gmail.com</a>
+            <a href="mailto:admin.kindredstars@gmail.com" className="underline">admin.kindredstars@gmail.com</a>
           </p>
         </Section>
       </main>

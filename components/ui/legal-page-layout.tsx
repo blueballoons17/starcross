@@ -72,7 +72,7 @@ const FOOTER_LINKS = {
   ],
   Company: [
     { href: "/pricing",                       label: "Pricing" },
-    { href: "mailto:hello.kindredstars@gmail.com", label: "Contact" },
+    { href: "mailto:admin.kindredstars@gmail.com", label: "Contact" },
   ],
 };
 

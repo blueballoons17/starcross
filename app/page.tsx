@@ -979,7 +979,7 @@ export default function HomePage() {
                 <p className="text-stone-500 font-semibold uppercase tracking-[0.14em] mb-3">Company</p>
                 <ul className="space-y-2.5">
                   <li><Link href="/pricing" className="text-stone-500 hover:text-stone-300 transition-colors">Pricing</Link></li>
-                  <li><a href="mailto:hello.kindredstars@gmail.com" className="text-stone-500 hover:text-stone-300 transition-colors">Contact</a></li>
+                  <li><a href="mailto:admin.kindredstars@gmail.com" className="text-stone-500 hover:text-stone-300 transition-colors">Contact</a></li>
                 </ul>
               </div>
 

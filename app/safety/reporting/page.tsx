@@ -117,8 +117,8 @@ export default function ReportingPage() {
 
         <P>
           For general enquiries, contact us at{" "}
-          <a href="mailto:hello.kindredstars@gmail.com" className="text-stone-700 underline underline-offset-2 hover:text-stone-900">
-            hello.kindredstars@gmail.com
+          <a href="mailto:admin.kindredstars@gmail.com" className="text-stone-700 underline underline-offset-2 hover:text-stone-900">
+            admin.kindredstars@gmail.com
           </a>.
         </P>
       </main>

@@ -1,6 +1,6 @@
 import { Resend } from "resend";
 
-const FROM = process.env.EMAIL_FROM ?? "Kindred Stars <hello.kindredstars@gmail.com>";
+const FROM = process.env.EMAIL_FROM ?? "Kindred Stars <admin.kindredstars@gmail.com>";
 
 function getResend() {
   if (!process.env.RESEND_API_KEY) return null;
@@ -113,7 +113,7 @@ export async function sendReportEmail(opts: {
   const resend = getResend();
   if (!resend) return;
 
-  const adminEmail = process.env.ADMIN_EMAIL ?? "hello.kindredstars@gmail.com";
+  const adminEmail = process.env.ADMIN_EMAIL ?? "admin.kindredstars@gmail.com";
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://kindredstars.org";
 
   const reasonLabel: Record<string, string> = {

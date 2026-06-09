@@ -9,7 +9,7 @@ interface SessionUser {
 }
 
 const ADMIN_EMAIL =
-  process.env.ADMIN_EMAIL ?? "hello.kindredstars@gmail.com";
+  process.env.ADMIN_EMAIL ?? "admin.kindredstars@gmail.com";
 
 function isAdmin(email?: string | null) {
   return email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
