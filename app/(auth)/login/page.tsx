@@ -66,7 +66,7 @@ export default function LoginPage() {
             className="text-base font-medium text-stone-900 uppercase tracking-[0.18em]"
             style={{ fontFamily: "var(--font-inter)" }}
           >
-            StarCross
+            Kindred Stars
           </span>
         </Link>
 
@@ -121,7 +121,7 @@ export default function LoginPage() {
         </div>
 
         <p className="text-center text-stone-500 text-sm mt-6">
-          New to StarCross?{" "}
+          New to Kindred Stars?{" "}
           <Link href="/signup" className="text-stone-900 font-medium hover:underline underline-offset-2">
             Create an account
           </Link>

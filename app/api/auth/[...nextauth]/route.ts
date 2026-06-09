@@ -23,7 +23,7 @@ export const authOptions: NextAuthOptions = {
             ?.split(",")[0]
             ?.trim() ??
           "unknown";
-        if (loginLimiter.isLimited(ip)) {
+        if (await loginLimiter.isLimited(ip)) {
           throw new Error("Too many login attempts. Please wait a minute.");
         }
 

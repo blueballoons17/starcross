@@ -1,12 +1,12 @@
 import { LegalHeader, LegalFooter, H2, H3, P, UL } from "@/components/ui/legal-page-layout";
 
 export const metadata = {
-  title: "Terms of Service | StarCross",
-  description: "The terms and conditions governing your use of StarCross.",
+  title: "Terms of Service | Kindred Stars",
+  description: "The terms and conditions governing your use of Kindred Stars.",
 };
 
 const LAST_UPDATED = "June 2, 2026";
-const EMAIL = "blueballoons17@gmail.com";
+const EMAIL = "hello.kindredstars@gmail.com";
 
 export default function TermsPage() {
   return (
@@ -22,17 +22,17 @@ export default function TermsPage() {
         </div>
 
         <P>
-          StarCross uses astrology as a framework for exploring compatibility. Compatibility scores, birth-chart interpretations, and planetary insights are provided for entertainment and self-reflection purposes only. They are not scientifically validated and should not be relied upon for important life decisions.
+          Kindred Stars uses astrology as a framework for exploring compatibility. Compatibility scores, birth-chart interpretations, and planetary insights are provided for entertainment and self-reflection purposes only. They are not scientifically validated and should not be relied upon for important life decisions.
         </P>
 
         {/* 1 */}
         <H2>1. Agreement to These Terms</H2>
         <P>
-          These Terms of Service (&ldquo;Terms&rdquo;) govern your access to and use of StarCross and any related
+          These Terms of Service (&ldquo;Terms&rdquo;) govern your access to and use of Kindred Stars and any related
           websites, applications, and services (collectively, the &ldquo;Service&rdquo;).
         </P>
         <P>
-          The Service is operated by <strong className="text-stone-700">StarCross</strong> (&ldquo;StarCross,&rdquo;
+          The Service is operated by <strong className="text-stone-700">Kindred Stars</strong> (&ldquo;Kindred Stars,&rdquo;
           &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;).
         </P>
         <P>
@@ -47,7 +47,7 @@ export default function TermsPage() {
 
         {/* 2 */}
         <H2>2. Eligibility</H2>
-        <P>To use StarCross, you must:</P>
+        <P>To use Kindred Stars, you must:</P>
         <UL>
           <li>Be at least 18 years old.</li>
           <li>Be legally capable of entering into a binding contract.</li>
@@ -84,7 +84,7 @@ export default function TermsPage() {
         {/* 4 */}
         <H2>4. License to Use the Service</H2>
         <P>
-          Subject to your compliance with these Terms, StarCross grants you a limited, non-exclusive,
+          Subject to your compliance with these Terms, Kindred Stars grants you a limited, non-exclusive,
           non-transferable, revocable license to access and use the Service for personal, non-commercial purposes.
         </P>
         <P>This license does not grant ownership of any aspect of the Service.</P>
@@ -114,7 +114,7 @@ export default function TermsPage() {
           messages, and other materials (&ldquo;User Content&rdquo;).
         </P>
         <P>
-          To operate the Service, you grant StarCross a non-exclusive, worldwide, royalty-free license to host, store,
+          To operate the Service, you grant Kindred Stars a non-exclusive, worldwide, royalty-free license to host, store,
           reproduce, display, transmit, and otherwise process User Content solely for the purpose of providing and
           improving the Service.
         </P>
@@ -131,7 +131,7 @@ export default function TermsPage() {
 
         {/* 7 */}
         <H2>7. Subscriptions and Payments</H2>
-        <P>StarCross may offer free and paid subscription plans.</P>
+        <P>Kindred Stars may offer free and paid subscription plans.</P>
 
         <H3>Billing</H3>
         <P>
@@ -165,7 +165,7 @@ export default function TermsPage() {
         {/* 8 */}
         <H2>8. No Background Checks</H2>
         <P>
-          StarCross does not routinely conduct criminal background checks, identity verification, or screening of
+          Kindred Stars does not routinely conduct criminal background checks, identity verification, or screening of
           members.
         </P>
         <P>We do not guarantee the identity, intentions, or conduct of any user.</P>
@@ -178,7 +178,7 @@ export default function TermsPage() {
         {/* 9 */}
         <H2>9. Astrological Content — Entertainment Only</H2>
         <P>
-          StarCross incorporates astrology — including sun signs, moon signs, rising signs, synastry charts, and
+          Kindred Stars incorporates astrology — including sun signs, moon signs, rising signs, synastry charts, and
           planetary compatibility scores — as a creative lens for meeting people. You acknowledge and agree to the
           following:
         </P>
@@ -186,14 +186,14 @@ export default function TermsPage() {
         <H3>Not a Science</H3>
         <P>
           Astrology is not a scientifically recognized discipline. The compatibility scores, personality trait
-          descriptions, and chart readings generated by StarCross are algorithmically derived interpretations
+          descriptions, and chart readings generated by Kindred Stars are algorithmically derived interpretations
           based on traditional astrological frameworks. They are <strong>not empirically validated</strong> and
           carry no guarantee of accuracy, completeness, or predictive value.
         </P>
 
         <H3>Entertainment and Self-Reflection Only</H3>
         <P>
-          All astrological content on StarCross — including but not limited to compatibility percentages,
+          All astrological content on Kindred Stars — including but not limited to compatibility percentages,
           elemental analysis, aspect interpretations, and match recommendations — is provided for{" "}
           <strong>entertainment and personal reflection purposes only</strong>. It should not be treated as
           professional advice of any kind (psychological, medical, financial, romantic, or otherwise).
@@ -202,7 +202,7 @@ export default function TermsPage() {
         <H3>No Guarantee of Compatibility or Outcomes</H3>
         <P>
           A high compatibility score does not guarantee a successful, healthy, or safe relationship. A low
-          score does not mean two people are incompatible. StarCross makes no representations about the accuracy
+          score does not mean two people are incompatible. Kindred Stars makes no representations about the accuracy
           of any astrological assessment or its correlation with real-world relationship outcomes.
         </P>
 
@@ -217,7 +217,7 @@ export default function TermsPage() {
         <H2>10. Intellectual Property</H2>
         <P>
           Except for User Content, all content, software, designs, logos, trademarks, text, graphics, and other
-          materials associated with the Service are owned by or licensed to StarCross and are protected by intellectual
+          materials associated with the Service are owned by or licensed to Kindred Stars and are protected by intellectual
           property laws.
         </P>
         <P>No rights are granted except those expressly stated in these Terms.</P>
@@ -244,7 +244,7 @@ export default function TermsPage() {
         <H2>12. Disclaimer of Warranties</H2>
         <P>
           The service is provided &ldquo;as is&rdquo; and &ldquo;as available.&rdquo; To the maximum extent permitted
-          by law, StarCross disclaims all warranties, whether express, implied, statutory, or otherwise, including
+          by law, Kindred Stars disclaims all warranties, whether express, implied, statutory, or otherwise, including
           warranties of merchantability, fitness for a particular purpose, title, non-infringement, and quiet
           enjoyment. We do not guarantee continuous availability, error-free operation, successful matches,
           compatibility with any user, or accuracy of astrological interpretations. Astrological content is
@@ -259,10 +259,10 @@ export default function TermsPage() {
         {/* 13 */}
         <H2>13. Limitation of Liability</H2>
         <P>
-          To the maximum extent permitted by law, StarCross shall not be liable for any indirect, incidental, special,
+          To the maximum extent permitted by law, Kindred Stars shall not be liable for any indirect, incidental, special,
           consequential, exemplary, or punitive damages arising from or related to your use of the service. Our total
           liability for any claim arising from or related to the service shall not exceed the greater of: (a) the
-          amount you paid to StarCross during the twelve (12) months preceding the event giving rise to the claim; or
+          amount you paid to Kindred Stars during the twelve (12) months preceding the event giving rise to the claim; or
           (b) one hundred U.S. dollars (US $100).
         </P>
         <P>
@@ -273,7 +273,7 @@ export default function TermsPage() {
         {/* 14 */}
         <H2>14. Indemnification</H2>
         <P>
-          You agree to indemnify, defend, and hold harmless StarCross, its affiliates, officers, directors, employees,
+          You agree to indemnify, defend, and hold harmless Kindred Stars, its affiliates, officers, directors, employees,
           contractors, and agents from claims, liabilities, damages, losses, and expenses arising from:
         </P>
         <UL>

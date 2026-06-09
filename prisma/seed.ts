@@ -210,18 +210,18 @@ function buildAstroProfile(birthDate: Date, birthTime?: string) {
 // ── Seed data ─────────────────────────────────────────────────────────────────
 
 const SEED_EMAILS = [
-  "aria.bellini@starcross.demo",
-  "luna.park@starcross.demo",
-  "maya.chen@starcross.demo",
-  "sophia.laurent@starcross.demo",
-  "zara.williams@starcross.demo",
-  "isabel.torres@starcross.demo",
-  "celeste.moreau@starcross.demo",
-  "nadia.vasquez@starcross.demo",
-  "kai.nakamura@starcross.demo",
-  "elena.petrov@starcross.demo",
-  "jasmine.osei@starcross.demo",
-  "river.santos@starcross.demo",
+  "aria.bellini@kindredstars.demo",
+  "luna.park@kindredstars.demo",
+  "maya.chen@kindredstars.demo",
+  "sophia.laurent@kindredstars.demo",
+  "zara.williams@kindredstars.demo",
+  "isabel.torres@kindredstars.demo",
+  "celeste.moreau@kindredstars.demo",
+  "nadia.vasquez@kindredstars.demo",
+  "kai.nakamura@kindredstars.demo",
+  "elena.petrov@kindredstars.demo",
+  "jasmine.osei@kindredstars.demo",
+  "river.santos@kindredstars.demo",
 ];
 
 interface SeedProfile {
@@ -242,7 +242,7 @@ interface SeedProfile {
 const SEED_PROFILES: SeedProfile[] = [
   // 1 ── Aries — Apr 10 ────────────────────────────────────────────────────────
   {
-    email: "aria.bellini@starcross.demo",
+    email: "aria.bellini@kindredstars.demo",
     name: "Aria Bellini",
     birthDate: new Date("1997-04-10"),
     birthTime: "14:30",
@@ -266,7 +266,7 @@ const SEED_PROFILES: SeedProfile[] = [
 
   // 2 ── Taurus — May 5 ────────────────────────────────────────────────────────
   {
-    email: "luna.park@starcross.demo",
+    email: "luna.park@kindredstars.demo",
     name: "Leo Park",
     birthDate: new Date("1994-05-05"),
     birthTime: "09:15",
@@ -290,7 +290,7 @@ const SEED_PROFILES: SeedProfile[] = [
 
   // 3 ── Gemini — Jun 5 ────────────────────────────────────────────────────────
   {
-    email: "maya.chen@starcross.demo",
+    email: "maya.chen@kindredstars.demo",
     name: "Mason Chen",
     birthDate: new Date("1998-06-05"),
     birthTime: "18:45",
@@ -314,7 +314,7 @@ const SEED_PROFILES: SeedProfile[] = [
 
   // 4 ── Cancer — Jul 10 ───────────────────────────────────────────────────────
   {
-    email: "sophia.laurent@starcross.demo",
+    email: "sophia.laurent@kindredstars.demo",
     name: "Sophia Laurent",
     birthDate: new Date("1995-07-10"),
     birthTime: "22:00",
@@ -338,7 +338,7 @@ const SEED_PROFILES: SeedProfile[] = [
 
   // 5 ── Leo — Aug 5 ───────────────────────────────────────────────────────────
   {
-    email: "zara.williams@starcross.demo",
+    email: "zara.williams@kindredstars.demo",
     name: "Zara Williams",
     birthDate: new Date("1996-08-05"),
     birthTime: "06:30",
@@ -362,7 +362,7 @@ const SEED_PROFILES: SeedProfile[] = [
 
   // 6 ── Virgo — Sep 5 ─────────────────────────────────────────────────────────
   {
-    email: "isabel.torres@starcross.demo",
+    email: "isabel.torres@kindredstars.demo",
     name: "Isabel Torres",
     birthDate: new Date("1993-09-05"),
     birthTime: "11:00",
@@ -386,7 +386,7 @@ const SEED_PROFILES: SeedProfile[] = [
 
   // 7 ── Libra — Oct 10 ────────────────────────────────────────────────────────
   {
-    email: "celeste.moreau@starcross.demo",
+    email: "celeste.moreau@kindredstars.demo",
     name: "Celeste Moreau",
     birthDate: new Date("1999-10-10"),
     birthTime: "16:20",
@@ -410,7 +410,7 @@ const SEED_PROFILES: SeedProfile[] = [
 
   // 8 ── Scorpio — Nov 10 ──────────────────────────────────────────────────────
   {
-    email: "nadia.vasquez@starcross.demo",
+    email: "nadia.vasquez@kindredstars.demo",
     name: "Nadia Vasquez",
     birthDate: new Date("1995-11-10"),
     birthTime: "03:45",
@@ -434,7 +434,7 @@ const SEED_PROFILES: SeedProfile[] = [
 
   // 9 ── Sagittarius — Dec 5 ───────────────────────────────────────────────────
   {
-    email: "kai.nakamura@starcross.demo",
+    email: "kai.nakamura@kindredstars.demo",
     name: "Kai Nakamura",
     birthDate: new Date("1994-12-05"),
     birthTime: "20:10",
@@ -458,7 +458,7 @@ const SEED_PROFILES: SeedProfile[] = [
 
   // 10 ── Capricorn — Jan 10 ───────────────────────────────────────────────────
   {
-    email: "elena.petrov@starcross.demo",
+    email: "elena.petrov@kindredstars.demo",
     name: "Eli Petrov",
     birthDate: new Date("1992-01-10"),
     birthTime: "08:00",
@@ -482,7 +482,7 @@ const SEED_PROFILES: SeedProfile[] = [
 
   // 11 ── Aquarius — Feb 10 ────────────────────────────────────────────────────
   {
-    email: "jasmine.osei@starcross.demo",
+    email: "jasmine.osei@kindredstars.demo",
     name: "Jasper Osei",
     birthDate: new Date("1998-02-10"),
     birthTime: "13:30",
@@ -506,7 +506,7 @@ const SEED_PROFILES: SeedProfile[] = [
 
   // 12 ── Pisces — Mar 10 ──────────────────────────────────────────────────────
   {
-    email: "river.santos@starcross.demo",
+    email: "river.santos@kindredstars.demo",
     name: "River Santos",
     birthDate: new Date("1997-03-10"),
     birthTime: "17:45",
@@ -532,9 +532,9 @@ const SEED_PROFILES: SeedProfile[] = [
 // ── Main ─────────────────────────────────────────────────────────────────────
 
 async function main() {
-  console.log("🌟 StarCross seed starting…\n");
+  console.log("🌟 Kindred Stars seed starting…\n");
 
-  const passwordHash = await bcrypt.hash("starcross123", 10);
+  const passwordHash = await bcrypt.hash("kindredstars123", 10);
   const createdIds: string[] = [];
 
   for (const p of SEED_PROFILES) {
@@ -646,7 +646,7 @@ async function main() {
   }
 
   console.log("\n✅ Seed complete!\n");
-  console.log("  Login password for all 12 accounts: starcross123");
+  console.log("  Login password for all 12 accounts: kindredstars123");
   console.log("  Emails:");
   SEED_EMAILS.forEach((e) => console.log(`    ${e}`));
   console.log();

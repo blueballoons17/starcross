@@ -209,7 +209,7 @@ export default function DiscoverPage() {
     <div className="min-h-screen" style={{ background: "#07091f" }}>
       <PageStars />
       <NavBar />
-      <main className="pt-20 pb-24 md:pb-8 px-4">
+      <main className="relative z-[1] pt-20 pb-24 md:pb-8 px-4">
         <div className="max-w-lg mx-auto">
           <div className="text-center mb-8">
             <h1 className="font-serif text-2xl font-semibold text-white mb-1">Discover</h1>
@@ -296,7 +296,7 @@ export default function DiscoverPage() {
                     {likerCount} {likerCount === 1 ? "person" : "people"} already liked you
                   </p>
                   <p className="text-stone-500 text-xs mt-0.5">
-                    Upgrade to StarCross+ to see who →
+                    Upgrade to Kindred Stars+ to see who →
                   </p>
                 </button>
               )}

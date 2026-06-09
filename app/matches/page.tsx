@@ -48,7 +48,7 @@ export default function MatchesPage() {
     <div className="min-h-screen" style={{ background: "#07091f" }}>
       <PageStars />
       <NavBar />
-      <main className="pt-20 pb-24 px-5">
+      <main className="relative z-[1] pt-20 pb-24 px-5">
         <div className="max-w-[480px] mx-auto">
 
           {/* Page header */}

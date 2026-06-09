@@ -535,8 +535,8 @@ function ModalitiesSection() {
             className={cn(
               "text-left rounded-2xl border p-6 transition-colors",
               isOpen
-                ? "border-white/15 bg-white/5"
-                : "border-white/8 hover:border-white/12 bg-transparent"
+                ? "border-white/20 bg-[#0d1124]"
+                : "border-white/12 hover:border-white/20 bg-[#0a0d1e]"
             )}
           >
             <p className="text-xs tracking-[0.18em] uppercase text-stone-500 mb-1">{m.tagline}</p>
@@ -625,7 +625,7 @@ export default function AstrologyPage() {
       <PageStars count={260} />
       <NavBar />
 
-      <main className="pt-24 pb-32 px-6">
+      <main className="relative z-[1] pt-24 pb-32 px-6">
         <div className="max-w-5xl mx-auto">
 
           {/* ── HERO ──────────────────────────────────────────────────────────── */}
@@ -822,7 +822,7 @@ export default function AstrologyPage() {
                 {ZODIAC.map((z) => {
                   const elColor = EL[z.element as Element].hex;
                   return (
-                    <div key={z.sign} className="bg-white/[0.03] border border-white/8 rounded-xl p-4">
+                    <div key={z.sign} className="bg-[#0d1124] border border-white/12 rounded-xl p-4">
                       <div className="flex items-center gap-2 mb-2">
                         <svg viewBox="0 0 24 24" width={16} height={16} fill="none"
                           stroke={elColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -830,7 +830,7 @@ export default function AstrologyPage() {
                         </svg>
                         <span className="text-stone-300 text-xs font-medium">Mercury in {z.sign}</span>
                       </div>
-                      <p className="text-stone-500 text-xs leading-relaxed">{MERCURY_SIGNS[z.sign]}</p>
+                      <p className="text-stone-300 text-xs leading-relaxed">{MERCURY_SIGNS[z.sign]}</p>
                     </div>
                   );
                 })}
@@ -905,29 +905,29 @@ export default function AstrologyPage() {
                 ].map(({ n, title, rel, body }) => (
                   <div key={n} className={cn(
                     "rounded-xl border p-4",
-                    rel ? "border-indigo-500/20 bg-indigo-500/5" : "border-white/8 bg-white/[0.02]"
+                    rel ? "border-indigo-500/30 bg-[#0e1030]" : "border-white/12 bg-[#0d1124]"
                   )}>
                     <div className="flex items-center gap-2 mb-2">
                       <span className="font-serif text-stone-500 text-xs w-7 shrink-0">{n}</span>
                       <span className="text-white text-sm font-semibold">{title}</span>
                       {rel && <span className="ml-auto text-[9px] tracking-[0.12em] uppercase text-indigo-400">Relationship</span>}
                     </div>
-                    <p className="text-stone-500 text-xs leading-relaxed">{body}</p>
+                    <p className="text-stone-300 text-xs leading-relaxed">{body}</p>
                   </div>
                 ))}
               </div>
             </section>
           </FadeIn>
 
-          {/* ── HOW STARCROSS USES IT ──────────────────────────────────────────── */}
+          {/* ── HOW KINDRED STARS USES IT ──────────────────────────────────────────── */}
           <FadeIn>
             <section className="border-t border-white/8 pt-16">
               <div className="max-w-2xl">
                 <h2 className="font-serif text-3xl md:text-4xl font-semibold text-white mb-5 leading-tight">
-                  How StarCross reads the chart
+                  How Kindred Stars reads the chart
                 </h2>
                 <p className="text-stone-300 text-base leading-relaxed mb-10">
-                  Sun-sign matching is where most apps stop. StarCross starts there and goes further.
+                  Sun-sign matching is where most apps stop. Kindred Stars starts there and goes further.
                   We calculate your full natal chart and score compatibility across the
                   dimensions that actually predict whether two people connect.
                 </p>

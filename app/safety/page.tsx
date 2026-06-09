@@ -2,8 +2,8 @@ import Link from "next/link";
 import { LegalHeader, LegalFooter, H2, H3, P, UL } from "@/components/ui/legal-page-layout";
 
 export const metadata = {
-  title: "Safety Tips | StarCross",
-  description: "Tips for staying safe while connecting on StarCross.",
+  title: "Safety Tips | Kindred Stars",
+  description: "Tips for staying safe while connecting on Kindred Stars.",
 };
 
 const SAFETY_NAV = [
@@ -46,7 +46,7 @@ export default function SafetyTipsPage() {
 
         <H3>Never share financial information</H3>
         <P>
-          Never send money or share financial details with someone you have met on StarCross, regardless of the circumstances they describe. Scammers frequently invest significant time in building trust before making requests. Any request for money, gift cards, cryptocurrency, or financial account access is a serious warning sign.
+          Never send money or share financial details with someone you have met on Kindred Stars, regardless of the circumstances they describe. Scammers frequently invest significant time in building trust before making requests. Any request for money, gift cards, cryptocurrency, or financial account access is a serious warning sign.
         </P>
 
         <H3>Speak by phone or video first</H3>
@@ -98,14 +98,14 @@ export default function SafetyTipsPage() {
           Do not share your home address, precise location, financial details, or daily routine with someone you have recently matched with. Take time to build trust before sharing personal information.
         </P>
 
-        <H3>Keep conversations on StarCross</H3>
+        <H3>Keep conversations on Kindred Stars</H3>
         <P>
           We can only investigate and act on behaviour that occurs within our platform. Be cautious of anyone who immediately encourages you to move the conversation to an external app or messaging service.
         </P>
 
         <H3>Use our reporting tools</H3>
         <P>
-          StarCross provides tools to block and report users. If something feels wrong, please use them.{" "}
+          Kindred Stars provides tools to block and report users. If something feels wrong, please use them.{" "}
           <Link href="/safety/reporting" className="text-stone-700 underline underline-offset-2 hover:text-stone-900">
             Learn how to report a concern.
           </Link>

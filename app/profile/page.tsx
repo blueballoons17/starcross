@@ -11,6 +11,7 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
+  Copy,
   Edit2,
   Moon,
   Plus,
@@ -476,6 +477,118 @@ function InterestsEditor({
   );
 }
 
+// ─── Referral card ─────────────────────────────────────────────────────────
+
+interface ReferralData {
+  code: string | null;
+  signupCount: number;
+  paidCount: number;
+  progressToNextReward: number;
+  rewardThreshold: number;
+  pendingFreeMonths: number;
+}
+
+function ReferralCard() {
+  const [data, setData] = useState<ReferralData | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/referral")
+      .then((r) => r.json())
+      .then((d) => { if (!d.error) setData(d); })
+      .catch(() => {});
+  }, []);
+
+  if (!data?.code) return null;
+
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
+  const referralUrl = `${origin}/signup?ref=${data.code}`;
+
+  function handleCopy() {
+    navigator.clipboard.writeText(referralUrl).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
+
+  const progress = data.progressToNextReward;
+  const threshold = data.rewardThreshold;
+
+  return (
+    <div className="bg-white rounded-2xl border border-stone-100 shadow-sm p-5 space-y-4">
+      {/* Header */}
+      <div className="flex items-start justify-between">
+        <div>
+          <h3 className="font-serif text-stone-900 font-semibold text-sm">Refer a Friend</h3>
+          <p className="text-xs text-stone-400 mt-0.5">
+            {threshold} friends subscribe → 1 free month for you
+          </p>
+        </div>
+        <div className="w-8 h-8 rounded-full bg-indigo-50 border border-indigo-100 flex items-center justify-center shrink-0">
+          <Star className="h-4 w-4 text-indigo-500" />
+        </div>
+      </div>
+
+      {/* Progress */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between text-xs">
+          <span className="text-stone-500">
+            {progress}/{threshold} paid subscribers
+          </span>
+          {data.paidCount > 0 && (
+            <span className="text-indigo-500 font-medium">
+              {Math.floor(data.paidCount / threshold)} free month{Math.floor(data.paidCount / threshold) !== 1 ? "s" : ""} earned
+            </span>
+          )}
+        </div>
+        {/* Progress dots */}
+        <div className="flex gap-1.5">
+          {Array.from({ length: threshold }).map((_, i) => (
+            <div
+              key={i}
+              className={cn(
+                "flex-1 h-2 rounded-full transition-all",
+                i < progress ? "bg-indigo-500" : "bg-stone-100"
+              )}
+            />
+          ))}
+        </div>
+        {data.signupCount > data.paidCount && (
+          <p className="text-xs text-stone-400">
+            {data.signupCount - data.paidCount} friend{data.signupCount - data.paidCount !== 1 ? "s" : ""} signed up but haven&apos;t subscribed yet
+          </p>
+        )}
+        {data.pendingFreeMonths > 0 && (
+          <p className="text-xs text-emerald-600 font-medium">
+            {data.pendingFreeMonths} free month{data.pendingFreeMonths !== 1 ? "s" : ""} will be applied when you subscribe
+          </p>
+        )}
+      </div>
+
+      {/* Referral link */}
+      <div className="flex items-center gap-2 bg-stone-50 border border-stone-200 rounded-xl px-3 py-2.5">
+        <p className="text-xs text-stone-500 flex-1 truncate font-mono">
+          {referralUrl}
+        </p>
+        <button
+          onClick={handleCopy}
+          className="shrink-0 flex items-center gap-1 text-xs font-medium text-stone-600 hover:text-stone-900 transition-colors"
+        >
+          {copied ? (
+            <><Check className="h-3.5 w-3.5 text-emerald-500" /> <span className="text-emerald-600">Copied</span></>
+          ) : (
+            <><Copy className="h-3.5 w-3.5" /> Copy</>
+          )}
+        </button>
+      </div>
+
+      <p className="text-[11px] text-stone-400 leading-relaxed">
+        Share your link. When a friend signs up and subscribes, it counts toward your free month. No limit — keep referring and keep earning.
+      </p>
+    </div>
+  );
+}
+
 // ─── Chart carousel ────────────────────────────────────────────────────────
 
 const SLIDE_COUNT = 6;
@@ -843,7 +956,7 @@ export default function ProfilePage() {
       <div className="min-h-screen">
         <PageStars />
         <NavBar />
-        <main className="pt-20 pb-12 px-4 flex items-center justify-center">
+        <main className="relative z-[1] pt-20 pb-12 px-4 flex items-center justify-center">
           <div className="text-center space-y-4">
             <p className="text-stone-500">No profile found.</p>
             <Button asChild className="bg-stone-900 text-white hover:bg-stone-800">
@@ -862,7 +975,7 @@ export default function ProfilePage() {
     <div className="min-h-screen" style={{ background: "#07091f" }}>
       <PageStars />
       <NavBar />
-      <main className="pt-20 pb-12 px-4">
+      <main className="relative z-[1] pt-20 pb-12 px-4">
         <div className="max-w-md mx-auto space-y-5">
 
           {/* ── Profile header ── */}
@@ -928,6 +1041,9 @@ export default function ProfilePage() {
           <div className="bg-white rounded-2xl border border-stone-100 shadow-sm p-5">
             <InterestsEditor interests={interests} onChange={handleInterestsChange} />
           </div>
+
+          {/* ── Refer a Friend ── */}
+          <ReferralCard />
 
           {/* ── Fun questions ── */}
           {PERSONALITY_QUESTIONS.some((q) => answers[q.key]) && (

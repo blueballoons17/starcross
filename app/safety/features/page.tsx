@@ -2,8 +2,8 @@ import Link from "next/link";
 import { LegalHeader, LegalFooter, H2, H3, P } from "@/components/ui/legal-page-layout";
 
 export const metadata = {
-  title: "Safety Features | StarCross",
-  description: "The tools and controls StarCross provides to keep you safe.",
+  title: "Safety Features | Kindred Stars",
+  description: "The tools and controls Kindred Stars provides to keep you safe.",
 };
 
 const SAFETY_NAV = [
@@ -22,7 +22,7 @@ export default function SafetyFeaturesPage() {
         <div className="mb-10">
           <p className="text-xs uppercase tracking-widest text-stone-400 mb-3">Safety</p>
           <h1 className="font-serif text-4xl font-semibold text-stone-900 mb-3">Safety Features</h1>
-          <p className="text-stone-400 text-sm">The tools and controls we build into StarCross to protect you — and how to use them.</p>
+          <p className="text-stone-400 text-sm">The tools and controls we build into Kindred Stars to protect you — and how to use them.</p>
         </div>
 
         {/* Section nav */}
@@ -46,7 +46,7 @@ export default function SafetyFeaturesPage() {
 
         <H3>Location privacy</H3>
         <P>
-          StarCross never displays or stores your exact GPS coordinates. Proximity is shown at city level only, and only when you have enabled location features. You may disable location-based discovery at any time from your profile settings.
+          Kindred Stars never displays or stores your exact GPS coordinates. Proximity is shown at city level only, and only when you have enabled location features. You may disable location-based discovery at any time from your profile settings.
         </P>
 
         <H3>Photo control</H3>
@@ -84,7 +84,7 @@ export default function SafetyFeaturesPage() {
 
         <H3>Authentication</H3>
         <P>
-          StarCross uses industry-standard authentication practices. Passwords are hashed using bcrypt and are never stored in plain text. You may also sign in using your Google or Apple account.
+          Kindred Stars uses industry-standard authentication practices. Passwords are hashed using bcrypt and are never stored in plain text. You may also sign in using your Google or Apple account.
         </P>
 
         <H3>Email verification</H3>

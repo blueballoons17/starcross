@@ -2,8 +2,8 @@ import Link from "next/link";
 import { LegalHeader, LegalFooter } from "@/components/ui/legal-page-layout";
 
 export const metadata = {
-  title: "Cookie Policy | StarCross",
-  description: "How StarCross uses cookies and similar technologies.",
+  title: "Cookie Policy | Kindred Stars",
+  description: "How Kindred Stars uses cookies and similar technologies.",
 };
 
 const LAST_UPDATED = "May 30, 2025";
@@ -37,9 +37,9 @@ export default function CookiesPage() {
           </p>
         </Section>
 
-        <Section title="2. How StarCross Uses Cookies">
+        <Section title="2. How Kindred Stars Uses Cookies">
           <p>
-            StarCross uses a minimal set of cookies, all strictly necessary for the service to function. We do not use advertising cookies, tracking pixels, or third-party analytics cookies.
+            Kindred Stars uses a minimal set of cookies, all strictly necessary for the service to function. We do not use advertising cookies, tracking pixels, or third-party analytics cookies.
           </p>
 
           <div className="overflow-hidden rounded-xl border border-stone-200 mt-4">
@@ -77,7 +77,7 @@ export default function CookiesPage() {
         </Section>
 
         <Section title="3. What We Don't Use">
-          <p>StarCross does <strong className="text-stone-700">not</strong> use:</p>
+          <p>Kindred Stars does <strong className="text-stone-700">not</strong> use:</p>
           <ul className="list-disc pl-5 space-y-1">
             <li>Advertising or retargeting cookies</li>
             <li>Third-party analytics cookies (e.g. Google Analytics)</li>
@@ -91,7 +91,7 @@ export default function CookiesPage() {
 
         <Section title="4. Managing Cookies">
           <p>
-            Because the cookies we set are strictly necessary for you to be logged in and use the service, disabling them through your browser will prevent StarCross from working correctly.
+            Because the cookies we set are strictly necessary for you to be logged in and use the service, disabling them through your browser will prevent Kindred Stars from working correctly.
           </p>
           <p>
             You can manage or delete cookies through your browser settings. Here are instructions for common browsers:
@@ -103,7 +103,7 @@ export default function CookiesPage() {
             <li><strong className="text-stone-700">Edge:</strong> Settings → Cookies and site permissions → Cookies and site data</li>
           </ul>
           <p>
-            Logging out of StarCross will clear your session cookie. Deleting your account removes all data we hold about you in accordance with our <Link href="/privacy" className="underline">Privacy Policy</Link>.
+            Logging out of Kindred Stars will clear your session cookie. Deleting your account removes all data we hold about you in accordance with our <Link href="/privacy" className="underline">Privacy Policy</Link>.
           </p>
         </Section>
 
@@ -116,7 +116,7 @@ export default function CookiesPage() {
         <Section title="6. Contact">
           <p>Questions about our use of cookies? Contact us at:</p>
           <p className="text-sm font-medium text-stone-700">
-            <a href="mailto:blueballoons17@gmail.com" className="underline">blueballoons17@gmail.com</a>
+            <a href="mailto:hello.kindredstars@gmail.com" className="underline">hello.kindredstars@gmail.com</a>
           </p>
         </Section>
       </main>

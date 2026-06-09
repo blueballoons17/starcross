@@ -2,8 +2,8 @@ import Link from "next/link";
 import { LegalHeader, LegalFooter, H2, H3, P, UL } from "@/components/ui/legal-page-layout";
 
 export const metadata = {
-  title: "Reporting | StarCross",
-  description: "How to report unsafe behaviour, scams, or policy violations on StarCross.",
+  title: "Reporting | Kindred Stars",
+  description: "How to report unsafe behaviour, scams, or policy violations on Kindred Stars.",
 };
 
 const SAFETY_NAV = [
@@ -22,7 +22,7 @@ export default function ReportingPage() {
         <div className="mb-10">
           <p className="text-xs uppercase tracking-widest text-stone-400 mb-3">Safety</p>
           <h1 className="font-serif text-4xl font-semibold text-stone-900 mb-3">Reporting</h1>
-          <p className="text-stone-400 text-sm">How to flag unsafe behaviour on StarCross, and what happens after you do. If you are in immediate danger, call 911 or your local emergency services now.</p>
+          <p className="text-stone-400 text-sm">How to flag unsafe behaviour on Kindred Stars, and what happens after you do. If you are in immediate danger, call 911 or your local emergency services now.</p>
         </div>
 
         {/* Section nav */}
@@ -57,7 +57,7 @@ export default function ReportingPage() {
         <P>Select the category that best describes the issue. You may add additional context in the text field. Tap Submit to send the report.</P>
 
         <H3>Step 5 — We take it from there</H3>
-        <P>Our Trust and Safety team reviews every report. You will receive a confirmation and, where applicable, a follow-up notification once the report has been reviewed. You may continue using StarCross normally in the meantime.</P>
+        <P>Our Trust and Safety team reviews every report. You will receive a confirmation and, where applicable, a follow-up notification once the report has been reviewed. You may continue using Kindred Stars normally in the meantime.</P>
 
         <H2>What You Can Report</H2>
 
@@ -83,7 +83,7 @@ export default function ReportingPage() {
 
         <H3>Minors</H3>
         <P>
-          If you believe a profile belongs to a person under 18 years of age, report it immediately. StarCross has a zero-tolerance policy for minors on the platform.
+          If you believe a profile belongs to a person under 18 years of age, report it immediately. Kindred Stars has a zero-tolerance policy for minors on the platform.
         </P>
 
         <H3>Other violations</H3>
@@ -110,15 +110,15 @@ export default function ReportingPage() {
 
         <P>
           For urgent safety concerns that cannot wait for an in-app report, you may contact our Safety team directly at{" "}
-          <a href="mailto:safety@starcross.app" className="text-stone-700 underline underline-offset-2 hover:text-stone-900">
-            safety@starcross.app
+          <a href="mailto:safety@kindredstars.org" className="text-stone-700 underline underline-offset-2 hover:text-stone-900">
+            safety@kindredstars.org
           </a>.
         </P>
 
         <P>
           For general enquiries, contact us at{" "}
-          <a href="mailto:hello@starcross.app" className="text-stone-700 underline underline-offset-2 hover:text-stone-900">
-            hello@starcross.app
+          <a href="mailto:hello.kindredstars@gmail.com" className="text-stone-700 underline underline-offset-2 hover:text-stone-900">
+            hello.kindredstars@gmail.com
           </a>.
         </P>
       </main>

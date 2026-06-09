@@ -165,7 +165,7 @@ function AppPreview() {
 
       {/* ── NavBar ───────────────────────────────────────────────── */}
       <div className="shrink-0 flex items-center justify-between px-3 py-2 border-b border-indigo-400/20 bg-[#07091f]/90 backdrop-blur-md">
-        <span className="text-[7px] font-semibold text-white tracking-[0.28em]" style={{ fontFamily: "var(--font-inter)" }}>starcross</span>
+        <span className="text-[7px] font-semibold text-white tracking-[0.28em]" style={{ fontFamily: "var(--font-inter)" }}>kindred stars</span>
         <div className="flex items-center gap-2.5">
           {["Discover","Matches","Astrology"].map((l, i) => (
             <span key={l} className={cn("text-[6px] uppercase tracking-[0.1em]", i === 2 ? "text-indigo-300 font-medium" : "text-stone-500")}>{l}</span>
@@ -325,7 +325,7 @@ export default function HomePage() {
               className="text-4xl font-semibold text-white tracking-[0.25em]"
               style={{ fontFamily: "var(--font-inter)" }}
             >
-              starcross
+              kindred stars
             </span>
           </Link>
 
@@ -394,7 +394,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1 }}
-            className="font-serif text-stone-500 font-medium tracking-wide mb-3"
+            className="font-serif text-stone-300 font-medium tracking-wide mb-3"
             style={{ fontSize: "clamp(1.1rem, 2.6vw, 1.5rem)" }}
           >
             Find someone
@@ -419,10 +419,19 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.32 }}
-            className="text-base sm:text-lg text-stone-400 max-w-lg mx-auto leading-relaxed mb-12"
+            className="text-base sm:text-lg text-stone-300 max-w-lg mx-auto leading-relaxed mb-4"
           >
-            StarCross maps your birth chart into a compatibility fingerprint, then finds the people who match it most deeply.
+            Kindred Stars maps your full birth chart — 10 planets, 12 houses, 5 major aspects — into a 0–100 compatibility score, then surfaces the people who match it most deeply.
           </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.38 }}
+            className="text-sm text-stone-500 max-w-md mx-auto mb-12"
+          >
+            Not sun-sign guesswork. A structured methodology — the same framework astrologers have used for centuries, scored into something you can actually act on.
+          </motion.p>
+
 
           <motion.div
             ref={heroCTARef}
@@ -506,7 +515,7 @@ export default function HomePage() {
               <div className="text-center mb-1">
                 <span className="text-xs tracking-widest uppercase text-stone-400 block mb-3">The system</span>
                 <h2 className="font-serif text-3xl md:text-4xl font-semibold text-stone-900 tracking-tight">
-                  How StarCross works
+                  How Kindred Stars works
                 </h2>
                 <p className="text-stone-500 text-sm max-w-xs mx-auto mt-3">
                   Click any node to explore each step.
@@ -532,7 +541,7 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="mb-20"
           >
-            <span className="text-xs tracking-widest uppercase text-stone-500 block mb-5">
+            <span className="text-xs tracking-widest uppercase text-stone-400 block mb-5">
               The method
             </span>
             <h2 className="font-serif text-4xl md:text-5xl font-semibold text-white tracking-tight leading-[1.08] max-w-xl">
@@ -540,9 +549,9 @@ export default function HomePage() {
               <span className="text-stone-400 italic">Sun-sign matchmaking.</span>
             </h2>
             <div className="w-10 h-px bg-white/15 mt-7 mb-7" />
-            <p className="text-stone-400 text-base leading-relaxed max-w-xl">
+            <p className="text-stone-300 text-base leading-relaxed max-w-xl">
               A birth chart captures where every planet sat at the exact moment you were born.
-              StarCross reads that chart, not just your Sun sign, and scores compatibility
+              Kindred Stars reads that chart, not just your Sun sign, and scores compatibility
               across the dimensions that actually predict whether two people connect.
             </p>
           </motion.div>
@@ -579,16 +588,16 @@ export default function HomePage() {
                 transition={{ duration: 0.55, delay: i * 0.1 }}
                 className="flex gap-6"
               >
-                <span className="font-serif text-stone-600 text-sm shrink-0 pt-0.5">{n}</span>
+                <span className="font-serif text-indigo-400/70 text-sm shrink-0 pt-0.5">{n}</span>
                 <div>
                   <h3 className="font-serif text-white text-xl font-semibold mb-3">{title}</h3>
-                  <p className="text-stone-400 text-sm leading-relaxed">{body}</p>
+                  <p className="text-stone-300 text-sm leading-relaxed">{body}</p>
                 </div>
               </motion.div>
             ))}
           </div>
 
-          {/* How StarCross scores it */}
+          {/* How Kindred Stars scores it */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -597,10 +606,10 @@ export default function HomePage() {
             className="border-t border-white/8 pt-14"
           >
             <h3 className="font-serif text-2xl md:text-3xl font-semibold text-white mb-4">
-              How StarCross reads the chart
+              How Kindred Stars reads the chart
             </h3>
-            <p className="text-stone-400 text-sm leading-relaxed max-w-xl mb-12">
-              Sun-sign matching is where most apps stop. StarCross starts there and goes further
+            <p className="text-stone-300 text-sm leading-relaxed max-w-xl mb-12">
+              Sun-sign matching is where most apps stop. Kindred Stars starts there and goes further
               calculating a full natal chart and scoring compatibility across the dimensions
               that actually matter.
             </p>
@@ -628,28 +637,200 @@ export default function HomePage() {
                 },
               ].map(({ n, title, desc }) => (
                 <div key={n} className="flex gap-5">
-                  <span className="font-serif text-stone-600 text-sm shrink-0 pt-0.5">{n}</span>
+                  <span className="font-serif text-indigo-400/70 text-sm shrink-0 pt-0.5">{n}</span>
                   <div>
                     <p className="text-white text-sm font-semibold mb-1">{title}</p>
-                    <p className="text-stone-500 text-sm leading-relaxed">{desc}</p>
+                    <p className="text-stone-300 text-sm leading-relaxed">{desc}</p>
                   </div>
                 </div>
               ))}
             </div>
 
-            <Link
-              href="/astrology"
-              className="inline-flex items-center gap-2 text-stone-400 hover:text-white text-sm transition-colors"
-            >
-              Read the full astrology guide
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-4 items-start">
+              <Link
+                href="/astrology"
+                className="inline-flex items-center gap-2 text-stone-400 hover:text-white text-sm transition-colors"
+              >
+                Read the full astrology guide
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+              <span className="hidden sm:block text-stone-700 text-sm">·</span>
+              <Link
+                href="/astrology#how-we-score"
+                className="inline-flex items-center gap-2 text-stone-400 hover:text-white text-sm transition-colors"
+              >
+                How we calculate the 0–100 score
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
           </motion.div>
 
         </div>
       </section>
 
+      {/* ── Testimonials ─────────────────────────────────────────────────── */}
+      <section className="py-20 px-6 bg-[#07091f] border-t border-stone-800/40">
+        <div className="max-w-5xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <span className="text-xs tracking-widest uppercase text-stone-500 block mb-3">What people say</span>
+            <h2 className="font-serif text-3xl font-semibold text-white tracking-tight">
+              Not just for believers
+            </h2>
+          </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              {
+                quote: "I'm a software engineer who rolls his eyes at horoscopes. But the compatibility report called out things about us that took me months to figure out in past relationships. I can't fully explain it.",
+                name: "Jordan, 31",
+                detail: "Austin TX · Met his match after 3 weeks",
+              },
+              {
+                quote: "I've been doing astrology for years and manually running synastry on every person I date. This is the first app that actually understands what I'm looking for — not just sun signs.",
+                name: "Priya, 24",
+                detail: "Los Angeles · Scorpio Moon",
+              },
+              {
+                quote: "I liked that the app didn't tell me who I was 'destined' to be with. It just gave me context before I met someone. I went in curious instead of guarded.",
+                name: "Danielle, 29",
+                detail: "Chicago · Third date this month",
+              },
+            ].map(({ quote, name, detail }) => (
+              <motion.div
+                key={name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="rounded-2xl border border-stone-800 bg-stone-900/40 p-6"
+              >
+                <p className="text-stone-300 text-sm leading-relaxed mb-5 italic">&ldquo;{quote}&rdquo;</p>
+                <div>
+                  <p className="text-white text-sm font-medium">{name}</p>
+                  <p className="text-stone-500 text-xs mt-0.5">{detail}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Sample compatibility report ───────────────────────────────────── */}
+      <section className="py-24 px-6 bg-[#FAF8F4]">
+        <div className="max-w-2xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <span className="text-xs tracking-widest uppercase text-stone-400 block mb-4">Sample report</span>
+            <h2 className="font-serif text-4xl font-semibold text-stone-900 tracking-tight leading-tight">
+              This is what you see<br />
+              <span className="italic text-stone-500">before the first date</span>
+            </h2>
+            <p className="text-stone-500 text-base mt-4 max-w-md mx-auto">Every match comes with a full compatibility breakdown. No algorithm black box — you see exactly why two charts connect.</p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="rounded-3xl border border-stone-200 bg-white shadow-sm overflow-hidden"
+          >
+            {/* Header row */}
+            <div className="px-8 py-6 border-b border-stone-100 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Zara" className="w-10 h-10 rounded-full object-cover" />
+                <div>
+                  <p className="font-medium text-stone-900 text-sm">Zara, 25</p>
+                  <p className="text-[11px] text-stone-400">♉ Taurus · ♒ Aquarius Moon</p>
+                </div>
+              </div>
+              <div className="text-center shrink-0">
+                <p className="text-3xl font-bold text-indigo-600 leading-none">94<span className="text-lg">%</span></p>
+                <p className="text-[10px] text-stone-400 uppercase tracking-widest mt-0.5">match</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="text-right">
+                  <p className="font-medium text-stone-900 text-sm">Sofia, 27</p>
+                  <p className="text-[11px] text-stone-400">♓ Pisces · ♑ Capricorn Moon</p>
+                </div>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="https://randomuser.me/api/portraits/women/26.jpg" alt="Sofia" className="w-10 h-10 rounded-full object-cover" />
+              </div>
+            </div>
+
+            {/* What's working */}
+            <div className="px-8 py-6 border-b border-stone-100">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-stone-400 mb-4">What&apos;s working</p>
+              <div className="space-y-4">
+                {[
+                  { aspect: "Venus trine Moon", col: "#818cf8", meaning: "Deep emotional understanding flows naturally. One of the strongest bonds in a synastry chart — each person feels genuinely seen by the other." },
+                  { aspect: "Sun sextile Venus", col: "#34d399", meaning: "Easy warmth and mutual admiration. You make each other feel good without having to work for it." },
+                  { aspect: "Moon conjunct Moon", col: "#f472b6", meaning: "Rare emotional resonance. You instinctively understand each other's moods and needs — often without words." },
+                ].map(({ aspect, col, meaning }) => (
+                  <div key={aspect} className="flex gap-4">
+                    <div className="w-0.5 rounded-full shrink-0 mt-1" style={{ backgroundColor: col, minHeight: "2.5rem" }} />
+                    <div>
+                      <p className="text-sm font-semibold text-stone-800">{aspect}</p>
+                      <p className="text-sm text-stone-500 mt-0.5 leading-relaxed">{meaning}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Where to navigate */}
+            <div className="px-8 py-6 border-b border-stone-100">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-stone-400 mb-4">Where to navigate</p>
+              <div className="flex gap-4">
+                <div className="w-0.5 bg-amber-300 rounded-full shrink-0" style={{ minHeight: "2.5rem" }} />
+                <div>
+                  <p className="text-sm font-semibold text-stone-800">Saturn square Mercury</p>
+                  <p className="text-sm text-stone-500 mt-0.5 leading-relaxed">Communication can feel serious or heavy early on. Make space for lightness and humor intentionally — this aspect rewards patience.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Elemental harmony */}
+            <div className="px-8 py-5 border-b border-stone-100">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-stone-400 mb-3">Elemental harmony</p>
+              <div className="space-y-2">
+                {[
+                  { label: "Fire", pct: 72, col: "#f59e0b" },
+                  { label: "Water", pct: 88, col: "#6366f1" },
+                  { label: "Air", pct: 55, col: "#38bdf8" },
+                ].map(e => (
+                  <div key={e.label} className="flex items-center gap-3">
+                    <span className="text-xs text-stone-400 w-10 shrink-0">{e.label}</span>
+                    <div className="flex-1 h-1.5 bg-stone-100 rounded-full overflow-hidden">
+                      <div className="h-full rounded-full" style={{ width: `${e.pct}%`, backgroundColor: e.col }} />
+                    </div>
+                    <span className="text-xs text-stone-400 w-8 text-right shrink-0">{e.pct}%</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="px-8 py-4 bg-stone-50 flex items-center justify-between">
+              <p className="text-xs text-stone-400">Every match includes this report. Free tier: 5 matches.</p>
+              <Link href="/signup" className="text-xs font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
+                See your matches →
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* ── CTA ──────────────────────────────────────────────────────────── */}
+      {!(isLoggedIn && isPremium) && (
       <section id="pricing-cta" className="pt-24 pb-16 px-6 relative overflow-hidden" style={{ background: "#07091f" }}>
         {/* Dense starfield — faster shooting stars (interval 600 ms) */}
         <StarField count={320} shootingInterval={600} />
@@ -678,7 +859,7 @@ export default function HomePage() {
             <p className="text-stone-400 text-base">Unlock every connection the stars have written.</p>
           </div>
 
-          {/* Single centered StarCross+ card */}
+          {/* Single centered Kindred Stars+ card */}
           <div className="rounded-3xl border border-stone-200 bg-[#FAF8F4] overflow-visible relative shadow-[0_24px_60px_rgba(0,0,0,0.4)]">
             {/* Badge */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
@@ -690,7 +871,7 @@ export default function HomePage() {
             {/* Price block */}
             <div className="px-8 pt-10 pb-6 text-center border-b border-stone-200">
               <p className="text-[10px] tracking-[0.22em] uppercase text-indigo-500 mb-3" style={{ fontFamily: "var(--font-inter)" }}>Full access</p>
-              <h3 className="text-3xl font-semibold text-stone-900 mb-2" style={{ fontFamily: "var(--font-inter)" }}>StarCross+</h3>
+              <h3 className="text-3xl font-semibold text-stone-900 mb-2" style={{ fontFamily: "var(--font-inter)" }}>Kindred Stars+</h3>
               <p className="text-stone-500 text-sm mb-5">Cancel anytime. No hidden fees.</p>
               <div className="flex items-baseline justify-center gap-1">
                 <span className="text-5xl font-light text-stone-900">$14.99</span>
@@ -727,6 +908,8 @@ export default function HomePage() {
                 </Link>
               </Button>
               <p className="text-center text-stone-400 text-xs mt-3">Secure payment via Stripe · Cancel anytime</p>
+              <p className="text-center text-stone-600 text-xs mt-2">🔒 Your birth data is encrypted and never sold</p>
+              <p className="text-center text-stone-400 text-xs mt-2">🔒 Your birth data is encrypted, never sold, and only used for compatibility scoring.</p>
             </div>
           </div>
 
@@ -740,6 +923,7 @@ export default function HomePage() {
           </p>
         </motion.div>
       </section>
+      )}
 
       {/* ── Footer ───────────────────────────────────────────────────────── */}
       <footer className="px-6 pt-14 pb-10 border-t border-stone-800/60 text-xs" style={{ background: "#07091f" }}>
@@ -754,7 +938,7 @@ export default function HomePage() {
                 className="text-sm font-medium text-stone-300 tracking-[0.28em] block mb-2"
                 style={{ fontFamily: "var(--font-inter)" }}
               >
-                starcross
+                kindred stars
               </span>
               <p className="text-stone-600 text-[11px] max-w-[180px] leading-relaxed">
                 Astrology-based compatibility. Find your cosmic counterpart.
@@ -790,7 +974,7 @@ export default function HomePage() {
                 <p className="text-stone-500 font-semibold uppercase tracking-[0.14em] mb-3">Company</p>
                 <ul className="space-y-2.5">
                   <li><Link href="/pricing" className="text-stone-500 hover:text-stone-300 transition-colors">Pricing</Link></li>
-                  <li><a href="mailto:hello@starcross.app" className="text-stone-500 hover:text-stone-300 transition-colors">Contact</a></li>
+                  <li><a href="mailto:hello.kindredstars@gmail.com" className="text-stone-500 hover:text-stone-300 transition-colors">Contact</a></li>
                 </ul>
               </div>
 
@@ -799,7 +983,7 @@ export default function HomePage() {
 
           {/* Bottom bar */}
           <div className="border-t border-stone-800/60 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-stone-600 text-[11px]">
-            <p>&copy; {new Date().getFullYear()} StarCross. Written in the stars.</p>
+            <p>&copy; {new Date().getFullYear()} Kindred Stars. Written in the stars.</p>
             <p>Made with ♡ for the cosmically curious.</p>
           </div>
 

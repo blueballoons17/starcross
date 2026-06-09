@@ -43,7 +43,7 @@ export function LegalHeader() {
           className="text-sm font-medium text-stone-700 tracking-[0.28em]"
           style={{ fontFamily: "var(--font-inter)" }}
         >
-          starcross
+          kindred stars
         </Link>
         <button
           onClick={() => router.back()}
@@ -72,7 +72,7 @@ const FOOTER_LINKS = {
   ],
   Company: [
     { href: "/pricing",                       label: "Pricing" },
-    { href: "mailto:hello@starcross.app",     label: "Contact" },
+    { href: "mailto:hello.kindredstars@gmail.com", label: "Contact" },
   ],
 };
 
@@ -87,7 +87,7 @@ export function LegalFooter() {
               className="text-sm font-medium text-stone-700 tracking-[0.28em] block mb-2"
               style={{ fontFamily: "var(--font-inter)" }}
             >
-              starcross
+              kindred stars
             </Link>
             <p className="text-stone-400 text-[11px] max-w-[160px] leading-relaxed">
               Astrology-based compatibility. Find your cosmic counterpart.
@@ -116,7 +116,7 @@ export function LegalFooter() {
         </div>
 
         <div className="border-t border-stone-100 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-stone-400 text-[11px]">
-          <p>&copy; {new Date().getFullYear()} StarCross. Written in the stars.</p>
+          <p>&copy; {new Date().getFullYear()} Kindred Stars. Written in the stars.</p>
           <p>Made with care for the cosmically curious.</p>
         </div>
       </div>
@@ -137,7 +137,7 @@ export function AppFooter() {
               className="text-sm font-medium text-stone-300 tracking-[0.28em] block mb-2"
               style={{ fontFamily: "var(--font-inter)" }}
             >
-              starcross
+              kindred stars
             </Link>
             <p className="text-stone-600 text-[11px] max-w-[160px] leading-relaxed">
               Astrology-based compatibility. Find your cosmic counterpart.
@@ -166,7 +166,7 @@ export function AppFooter() {
         </div>
 
         <div className="border-t border-white/[0.06] pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-stone-600 text-[11px]">
-          <p>&copy; {new Date().getFullYear()} StarCross. Written in the stars.</p>
+          <p>&copy; {new Date().getFullYear()} Kindred Stars. Written in the stars.</p>
           <p>Made with care for the cosmically curious.</p>
         </div>
       </div>

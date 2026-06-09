@@ -4,18 +4,8 @@ import { Suspense, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Check, X } from "lucide-react";
+import { Check } from "lucide-react";
 import { PageStars } from "@/components/PageStars";
-
-const FREE_FEATURES = [
-  { text: "5 suggested matches", included: true },
-  { text: "Message your matches", included: true },
-  { text: "Astrology chart", included: true },
-  { text: "Unlimited swipes", included: false },
-  { text: "See who liked you", included: false },
-  { text: "Priority profile visibility", included: false },
-  { text: "Full synastry breakdown", included: false },
-];
 
 const PAID_FEATURES = [
   "Unlimited swipes",
@@ -125,7 +115,7 @@ function PricingContent() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center group">
             <span className="text-[13px] font-normal text-white tracking-[0.32em]" style={{ fontFamily: "var(--font-inter)" }}>
-              starcross
+              kindred stars
             </span>
           </Link>
           <Link href="/login" className="text-stone-400 hover:text-stone-100 text-sm transition-colors">
@@ -134,7 +124,7 @@ function PricingContent() {
         </div>
       </header>
 
-      <main className="flex-1 flex items-center justify-center pt-24 pb-20 px-4">
+      <main className="relative z-[1] flex-1 flex items-center justify-center pt-24 pb-20 px-4">
         <div className="w-full max-w-2xl">
 
           {/* Heading */}
@@ -150,79 +140,28 @@ function PricingContent() {
 
           {upgraded && (
             <div className="mb-8 rounded-2xl border border-indigo-500/30 bg-indigo-950/40 px-5 py-4 text-center">
-              <p className="text-indigo-200 text-sm font-medium">Welcome to StarCross+ ✨</p>
+              <p className="text-indigo-200 text-sm font-medium">Welcome to Kindred Stars+ ✨</p>
               <p className="text-indigo-400 text-xs mt-0.5">Your subscription is active. The stars are aligned.</p>
             </div>
           )}
 
-          {/* Plans */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Single paid plan card */}
+          <div className="max-w-sm mx-auto w-full">
+            <div className="rounded-3xl border border-indigo-500/40 bg-stone-900/60 backdrop-blur-md overflow-hidden flex flex-col">
 
-            {/* Free plan */}
-            <div className="rounded-3xl border border-white/10 bg-stone-900/40 backdrop-blur-md overflow-hidden flex flex-col">
-              <div className="px-7 pt-8 pb-6 text-center border-b border-white/[0.06]">
-                <p className="text-[10px] tracking-[0.22em] uppercase text-stone-500 mb-3" style={{ fontFamily: "var(--font-cinzel)" }}>
-                  Free
-                </p>
-                <h2 className="text-2xl font-semibold text-white mb-2" style={{ fontFamily: "var(--font-inter)" }}>
-                  Starcross
-                </h2>
-                <p className="text-stone-500 text-xs leading-relaxed mb-4">
-                  Dip your toes in — no card required.
-                </p>
-                <div className="flex items-baseline justify-center gap-1">
-                  <span className="text-4xl font-light text-white">$0</span>
-                  <span className="text-stone-500 text-sm">/ forever</span>
-                </div>
-              </div>
-
-              <div className="px-7 py-5 flex-1">
-                <ul className="space-y-3">
-                  {FREE_FEATURES.map((f) => (
-                    <li key={f.text} className="flex items-center gap-3">
-                      <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
-                        f.included
-                          ? "bg-emerald-500/10 border border-emerald-500/30"
-                          : "bg-stone-800 border border-stone-700"
-                      }`}>
-                        {f.included
-                          ? <Check className="h-3 w-3 text-emerald-400" />
-                          : <X className="h-3 w-3 text-stone-600" />
-                        }
-                      </div>
-                      <span className={`text-sm ${f.included ? "text-stone-300" : "text-stone-600"}`}>
-                        {f.text}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="px-7 pb-7">
-                <button
-                  onClick={handleFree}
-                  className="w-full py-3.5 rounded-2xl border border-white/15 hover:border-white/30 text-stone-300 hover:text-white font-medium text-sm transition-all"
-                >
-                  Continue for free
-                </button>
-              </div>
-            </div>
-
-            {/* Paid plan */}
-            <div className="rounded-3xl border border-indigo-500/40 bg-stone-900/60 backdrop-blur-md overflow-hidden flex flex-col relative">
-              {/* Recommended badge */}
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
+              {/* Badge — inside card, no overlap */}
+              <div className="pt-6 pb-0 flex justify-center">
                 <span className="bg-indigo-500 text-white text-[10px] font-semibold tracking-[0.1em] uppercase px-3 py-1 rounded-full">
                   Most popular
                 </span>
               </div>
 
-              <div className="px-7 pt-10 pb-6 text-center border-b border-white/[0.07]">
+              <div className="px-7 pt-4 pb-6 text-center border-b border-white/[0.07]">
                 <p className="text-[10px] tracking-[0.22em] uppercase text-indigo-400 mb-3" style={{ fontFamily: "var(--font-inter)" }}>
                   Full access
                 </p>
                 <h2 className="text-2xl font-semibold text-white mb-2" style={{ fontFamily: "var(--font-inter)" }}>
-                  StarCross+
+                  Kindred Stars+
                 </h2>
                 <p className="text-stone-400 text-xs leading-relaxed mb-4">
                   Unlock every connection the stars have written.
@@ -270,14 +209,23 @@ function PricingContent() {
                 </p>
               </div>
             </div>
-          </div>
 
-          <p className="text-center text-stone-600 text-xs mt-6">
-            Already have an account?{" "}
-            <Link href="/login?callbackUrl=/pricing" className="text-stone-400 hover:text-stone-200 transition-colors underline underline-offset-2">
-              Sign in
-            </Link>
-          </p>
+            {/* Free option as subtle link */}
+            <div className="text-center mt-5 space-y-2">
+              <button
+                onClick={handleFree}
+                className="text-stone-500 hover:text-stone-300 text-sm transition-colors underline underline-offset-4"
+              >
+                Continue for free — 5 matches, no card required
+              </button>
+              <p className="text-stone-700 text-xs">
+                Already have an account?{" "}
+                <Link href="/login?callbackUrl=/pricing" className="text-stone-500 hover:text-stone-300 transition-colors underline underline-offset-2">
+                  Sign in
+                </Link>
+              </p>
+            </div>
+          </div>
         </div>
       </main>
     </div>

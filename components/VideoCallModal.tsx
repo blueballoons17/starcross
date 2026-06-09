@@ -87,7 +87,7 @@ export function VideoCallModal({
   matchScore,
 }: VideoCallModalProps) {
   const [phase, setPhase] = useState<"prejoin" | "calling">("prejoin");
-  const roomName = `starcross-${matchId}`;
+  const roomName = `kindredstars-${matchId}`;
 
   // Reset to prejoin when opened
   useEffect(() => {

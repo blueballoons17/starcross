@@ -507,14 +507,14 @@ export function SwipeDeck({ candidates, onLike, onPass, isSubscribed = false }: 
               You&apos;ve seen your 5 free matches
             </h3>
             <p className="text-white/60 text-sm max-w-xs mb-6">
-              Upgrade to StarCross+ to unlock unlimited suggestions, see who liked you, and find your cosmic match.
+              Upgrade to Kindred Stars+ to unlock unlimited suggestions, see who liked you, and find your cosmic match.
             </p>
             <a
               href="/pricing"
               className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium px-6 py-3 rounded-2xl transition-colors shadow-lg shadow-indigo-500/20"
             >
               <Star className="h-4 w-4" />
-              Upgrade to StarCross+
+              Upgrade to Kindred Stars+
             </a>
           </div>
         </div>

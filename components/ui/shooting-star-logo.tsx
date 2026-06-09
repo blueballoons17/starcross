@@ -2,7 +2,7 @@
 import { cn } from "@/lib/utils";
 
 /**
- * StarCross logo — two four-pointed diamond stars (primary + secondary)
+ * Kindred Stars logo — two four-pointed diamond stars (primary + secondary)
  * connected by a delicate orbital arc, representing two celestial paths crossing.
  */
 export function ShootingStarLogo({

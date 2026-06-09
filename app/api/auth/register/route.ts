@@ -4,26 +4,47 @@ import { hashPassword } from "@/lib/auth";
 import { sendWelcomeEmail } from "@/lib/email";
 import { registerLimiter } from "@/lib/rate-limit";
 
+// ── Unique referral code generator ───────────────────────────────────────────
+
+async function generateUniqueReferralCode(): Promise<string> {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no ambiguous chars (I/1/0/O)
+  for (let attempt = 0; attempt < 10; attempt++) {
+    let code = "";
+    for (let i = 0; i < 8; i++) {
+      code += chars[Math.floor(Math.random() * chars.length)];
+    }
+    const existing = await prisma.user.findUnique({
+      where: { referralCode: code },
+      select: { id: true },
+    });
+    if (!existing) return code;
+  }
+  // Fallback: timestamp-based code (essentially impossible collision)
+  return Date.now().toString(36).toUpperCase().slice(-8).padStart(8, "0");
+}
+
+// ── POST /api/auth/register ──────────────────────────────────────────────────
+
 export async function POST(request: NextRequest) {
   const ip =
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
     "unknown";
 
-  if (registerLimiter.isLimited(ip)) {
+  if (await registerLimiter.isLimited(ip)) {
     return NextResponse.json(
       { error: "Too many requests. Please wait a minute." },
       { status: 429 }
     );
   }
 
-  let body: { email?: string; password?: string };
+  let body: { email?: string; password?: string; referralCode?: string };
   try {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  const { email, password } = body;
+  const { email, password, referralCode: incomingRef } = body;
 
   if (!email || typeof email !== "string") {
     return NextResponse.json({ error: "Email is required." }, { status: 400 });
@@ -54,12 +75,35 @@ export async function POST(request: NextRequest) {
 
   const passwordHash = await hashPassword(password);
 
+  // Generate a unique referral code for the new user
+  const newUserReferralCode = await generateUniqueReferralCode();
+
   const user = await prisma.user.create({
     data: {
       email: email.toLowerCase(),
       passwordHash,
+      referralCode: newUserReferralCode,
     },
   });
+
+  // If a valid referral code was supplied, create the referral record
+  if (incomingRef && typeof incomingRef === "string") {
+    const referrer = await prisma.user.findUnique({
+      where: { referralCode: incomingRef.toUpperCase() },
+      select: { id: true },
+    });
+    if (referrer && referrer.id !== user.id) {
+      // upsert to be safe against double-registration edge cases
+      await prisma.referral.upsert({
+        where: { referredUserId: user.id },
+        create: {
+          referrerId: referrer.id,
+          referredUserId: user.id,
+        },
+        update: {}, // already exists — no-op
+      });
+    }
+  }
 
   // Send welcome email — fire-and-forget, never block registration
   sendWelcomeEmail(user.email).catch(() => {});

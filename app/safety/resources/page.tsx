@@ -2,7 +2,7 @@ import Link from "next/link";
 import { LegalHeader, LegalFooter, H2, H3, P } from "@/components/ui/legal-page-layout";
 
 export const metadata = {
-  title: "Safety Resources | StarCross",
+  title: "Safety Resources | Kindred Stars",
   description: "External organisations and helplines for safety and support.",
 };
 
@@ -122,7 +122,7 @@ export default function SafetyResourcesPage() {
 
         <H2>Disclaimer</H2>
         <P>
-          StarCross does not operate, endorse, or have an affiliation with any of the external organisations listed on this page. These resources are provided for informational purposes only. If you have experienced something on StarCross specifically, please{" "}
+          Kindred Stars does not operate, endorse, or have an affiliation with any of the external organisations listed on this page. These resources are provided for informational purposes only. If you have experienced something on Kindred Stars specifically, please{" "}
           <Link href="/safety/reporting" className="text-stone-700 underline underline-offset-2 hover:text-stone-900">
             report it to us directly
           </Link>.

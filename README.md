@@ -1,4 +1,4 @@
-# StarCross
+# Kindred Stars
 
 An astrology-based dating platform built with Next.js 16, Prisma 7, and TypeScript.
 
@@ -12,7 +12,7 @@ An astrology-based dating platform built with Next.js 16, Prisma 7, and TypeScri
 
 ```bash
 git clone <repo-url>
-cd starcross
+cd kindredstars
 npm install
 ```
 
@@ -25,7 +25,7 @@ cp .env.example .env
 Edit `.env` with your values:
 
 ```env
-DATABASE_URL="postgresql://postgres:password@localhost:5432/starcross"
+DATABASE_URL="postgresql://postgres:password@localhost:5432/kindredstars"
 NEXTAUTH_SECRET="your-secret-here-change-in-production"
 NEXTAUTH_URL="http://localhost:3000"
 ```
@@ -80,7 +80,7 @@ All demo users have password: `password123`
 ## Architecture
 
 ```
-starcross/
+kindredstars/
 ├── app/                        # Next.js App Router
 │   ├── (auth)/                 # Auth route group
 │   │   ├── login/page.tsx      # Login page

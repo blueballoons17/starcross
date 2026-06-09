@@ -15,9 +15,9 @@ interface Props {
 
 const HEADLINES: Record<UpgradeFeature, string> = {
   swipes: "You've used your 3 daily swipes",
-  messaging: "Messaging is StarCross+",
-  synastry: "Full synastry charts are StarCross+",
-  likes: "See who liked you: StarCross+",
+  messaging: "Messaging is Kindred Stars+",
+  synastry: "Full synastry charts are Kindred Stars+",
+  likes: "See who liked you: Kindred Stars+",
 };
 
 const SUBLINES: Record<UpgradeFeature, string> = {
@@ -89,7 +89,7 @@ export function UpgradeModal({ open, onClose, feature }: Props) {
                 </button>
 
                 <p className="text-[10px] tracking-[0.22em] uppercase text-stone-500 mb-2">
-                  Unlock StarCross+
+                  Unlock Kindred Stars+
                 </p>
                 <h2 className="font-serif text-white text-xl font-semibold leading-snug mb-1">
                   {HEADLINES[feature]}
@@ -102,7 +102,7 @@ export function UpgradeModal({ open, onClose, feature }: Props) {
               {/* Features list */}
               <div className="px-6 py-5">
                 <p className="text-[10px] tracking-[0.18em] uppercase text-stone-500 mb-3">
-                  Everything in StarCross+
+                  Everything in Kindred Stars+
                 </p>
                 <ul className="space-y-2.5">
                   {FEATURES.map(({ icon: Icon, label }) => (
@@ -138,7 +138,7 @@ export function UpgradeModal({ open, onClose, feature }: Props) {
                     <span>
                       Upgrade to{" "}
                       <span style={{ fontFamily: "var(--font-inter)" }}>
-                        StarCross+
+                        Kindred Stars+
                       </span>
                     </span>
                   )}

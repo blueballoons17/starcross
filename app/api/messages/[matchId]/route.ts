@@ -54,7 +54,7 @@ export async function POST(
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   // Rate-limit: 30 messages per minute per user
-  if (messageLimiter.isLimited(userId)) {
+  if (await messageLimiter.isLimited(userId)) {
     return NextResponse.json({ error: "Slow down, too many messages." }, { status: 429 });
   }
 

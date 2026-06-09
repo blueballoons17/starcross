@@ -21,7 +21,7 @@ async function run() {
   // Find all real (non-seed) users with a full profile
   const realUsers = await prisma.user.findMany({
     where: {
-      email: { not: { contains: "starcross.demo" } },
+      email: { not: { contains: "kindredstars.demo" } },
       profile: { isNot: null },
       astrologyProfile: { isNot: null },
     },
@@ -31,7 +31,7 @@ async function run() {
   // Find all seed users
   const seedUsers = await prisma.user.findMany({
     where: {
-      email: { contains: "starcross.demo" },
+      email: { contains: "kindredstars.demo" },
       profile: { isNot: null },
       astrologyProfile: { isNot: null },
     },

@@ -60,7 +60,7 @@ export default function AdminReportsPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const userEmail = (session?.user as { email?: string })?.email;
-  const adminEmail = "blueballoons17@gmail.com";
+  const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL ?? "hello.kindredstars@gmail.com";
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -151,7 +151,7 @@ export default function AdminReportsPage() {
             <ShieldAlert className="h-5 w-5 text-red-500" />
             <div>
               <h1 className="text-lg font-semibold text-stone-900 leading-none">Reports</h1>
-              <p className="text-xs text-stone-500 mt-0.5">StarCross Admin</p>
+              <p className="text-xs text-stone-500 mt-0.5">Kindred Stars Admin</p>
             </div>
           </div>
           <button
@@ -317,7 +317,7 @@ export default function AdminReportsPage() {
                     </button>
 
                     <a
-                      href={`mailto:${report.reported.email}?subject=Your StarCross account&body=Hi ${report.reported.profile?.name ?? "there"},`}
+                      href={`mailto:${report.reported.email}?subject=Your Kindred Stars account&body=Hi ${report.reported.profile?.name ?? "there"},`}
                       className="flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-lg bg-stone-100 text-stone-600 hover:bg-stone-200 transition-all"
                     >
                       <ExternalLink className="h-4 w-4" />

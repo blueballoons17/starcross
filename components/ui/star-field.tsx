@@ -1,53 +1,64 @@
 "use client";
 import { useEffect, useRef } from "react";
 
-// Real diverse headshot photos — preloaded once at module level
-// pravatar.cc delivers CORS-safe real human face photos (Access-Control-Allow-Origin: *)
+// Same-origin proxy URLs — canvas drawImage works without any CORS taint.
 const FACE_SRCS = [
-  // Spread of 16 across the 1-70 pool for maximum diversity of gender + ethnicity
-  "https://i.pravatar.cc/80?img=1",
-  "https://i.pravatar.cc/80?img=5",
-  "https://i.pravatar.cc/80?img=8",
-  "https://i.pravatar.cc/80?img=12",
-  "https://i.pravatar.cc/80?img=16",
-  "https://i.pravatar.cc/80?img=20",
-  "https://i.pravatar.cc/80?img=25",
-  "https://i.pravatar.cc/80?img=29",
-  "https://i.pravatar.cc/80?img=33",
-  "https://i.pravatar.cc/80?img=38",
-  "https://i.pravatar.cc/80?img=43",
-  "https://i.pravatar.cc/80?img=47",
-  "https://i.pravatar.cc/80?img=52",
-  "https://i.pravatar.cc/80?img=57",
-  "https://i.pravatar.cc/80?img=62",
-  "https://i.pravatar.cc/80?img=68",
+  "/api/avatar?gender=women&num=2",
+  "/api/avatar?gender=women&num=14",
+  "/api/avatar?gender=women&num=25",
+  "/api/avatar?gender=women&num=27",
+  "/api/avatar?gender=women&num=31",
+  "/api/avatar?gender=women&num=33",
+  "/api/avatar?gender=women&num=45",
+  "/api/avatar?gender=women&num=63",
+  "/api/avatar?gender=women&num=64",
+  "/api/avatar?gender=women&num=65",
+  "/api/avatar?gender=women&num=83",
+  "/api/avatar?gender=women&num=85",
+  "/api/avatar?gender=men&num=5",
+  "/api/avatar?gender=men&num=7",
+  "/api/avatar?gender=men&num=22",
+  "/api/avatar?gender=men&num=25",
+  "/api/avatar?gender=men&num=29",
+  "/api/avatar?gender=men&num=30",
+  "/api/avatar?gender=men&num=31",
+  "/api/avatar?gender=men&num=38",
+  "/api/avatar?gender=men&num=54",
+  "/api/avatar?gender=men&num=65",
+  "/api/avatar?gender=men&num=85",
+  "/api/avatar?gender=men&num=90",
 ];
 
+// Preload once at module level
 const faceImages: HTMLImageElement[] =
   typeof window !== "undefined"
     ? FACE_SRCS.map((src) => {
         const img = new Image();
-        img.crossOrigin = "anonymous";
         img.src = src;
         return img;
       })
     : [];
 
+// Page background colour (#07091f)
+const BG_R = 7, BG_G = 9, BG_B = 31;
+
+// Distance (px) within which a face begins to reveal (~1 inch at 96 dpi)
+const PROXIMITY_RADIUS = 110;
+// Lines only appear within this distance from the cursor
+const LINE_REACH = 200;
+
 interface Star {
   x: number; y: number; r: number;
   alpha: number; speed: number; phase: number;
   depth: number;
-  r_: number; g_: number; b_: number;
   driftX: number; driftY: number; driftPhase: number;
   faceIdx: number;
+  faceReveal: number; // 0 = golden star dot · 1 = full face circle
 }
-
-interface ConstellationLine { a: number; b: number; }
 interface Ripple { x: number; y: number; t: number; }
 interface Shooter {
   x: number; y: number; vx: number; vy: number;
-  len: number; life: number; maxLife: number;
-  size: number;
+  len: number; life: number; maxLife: number; size: number;
 }
 
 export function StarField({
@@ -57,7 +68,6 @@ export function StarField({
 }: {
   count?: number;
   className?: string;
-  /** ms between shooting-star bursts — lower = more frequent */
   shootingInterval?: number;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -70,7 +80,6 @@ export function StarField({
 
     let animId: number;
     let stars: Star[] = [];
-    let constLines: ConstellationLine[] = [];
     let ripples: Ripple[] = [];
     let shooters: Shooter[] = [];
     let nextShootAt = 0;
@@ -78,319 +87,288 @@ export function StarField({
     let mouseX = -9999, mouseY = -9999;
     let curOffX = 0, curOffY = 0;
     let tgtOffX = 0, tgtOffY = 0;
-    const MAX_PARALLAX = 52; // more movement
+    const MAX_PARALLAX = 52;
 
     function init() {
       const w = canvas!.width, h = canvas!.height;
-
-      const palettes = [
-        [200, 220, 255],
-        [255, 252, 240],
-        [220, 225, 255],
-        [255, 238, 200],
-        [180, 200, 255],
-        [255, 255, 255],
-        [210, 230, 255],
-        [255, 245, 210],
-      ];
-
       stars = Array.from({ length: count }, () => {
-        const r = Math.pow(Math.random(), 1.5) * 3.2 + 0.3; // slightly bigger stars
-        const pal = palettes[Math.floor(Math.random() * palettes.length)];
+        const r = Math.pow(Math.random(), 1.5) * 3.2 + 0.3;
         return {
-          x: Math.random() * w,
-          y: Math.random() * h,
-          r,
-          alpha: Math.random() * 0.6 + 0.25,
-          speed: Math.random() * 0.0022 + 0.0006, // faster twinkle
+          x: Math.random() * w, y: Math.random() * h, r,
+          alpha: Math.random() * 0.65 + 0.28,
+          speed: Math.random() * 0.0022 + 0.0006,
           phase: Math.random() * Math.PI * 2,
           depth: Math.pow((r - 0.3) / 3.2, 1.4),
-          r_: pal[0], g_: pal[1], b_: pal[2],
-          driftX: (Math.random() - 0.5) * 0.018, // slow drift
+          driftX: (Math.random() - 0.5) * 0.018,
           driftY: (Math.random() - 0.5) * 0.012,
           driftPhase: Math.random() * Math.PI * 2,
           faceIdx: Math.floor(Math.random() * FACE_SRCS.length),
+          faceReveal: 0,
         };
       });
-
-      constLines = [];
-      for (let i = 0; i < stars.length; i++) {
-        let connections = 0;
-        for (let j = i + 1; j < stars.length; j++) {
-          if (connections >= 2) break;
-          const dx = stars[i].x - stars[j].x;
-          const dy = stars[i].y - stars[j].y;
-          if (dx * dx + dy * dy < 130 * 130 && Math.random() < 0.18) {
-            constLines.push({ a: i, b: j });
-            connections++;
-          }
-        }
-      }
-
       nextShootAt = performance.now() + shootingInterval * 0.5;
     }
 
     function spawnShooter(ts: number) {
       const w = canvas!.width, h = canvas!.height;
-      // Spawn 1-3 shooters at once for burst effect
       const burst = Math.random() < 0.3 ? Math.floor(Math.random() * 2) + 2 : 1;
       for (let b = 0; b < burst; b++) {
         const angle = (Math.random() * Math.PI) / 3.5 + Math.PI / 7;
         const speed = 9 + Math.random() * 10;
-        const size = 1.5 + Math.random() * 2.5; // variable size, much bigger
         shooters.push({
-          x: Math.random() * w * 0.75,
-          y: Math.random() * h * 0.55,
-          vx: Math.cos(-angle) * speed,
-          vy: Math.sin(-angle) * speed,
-          len: 180 + Math.random() * 250, // longer tails
-          life: 0,
-          maxLife: 60 + Math.random() * 45,
-          size,
+          x: Math.random() * w * 0.75, y: Math.random() * h * 0.55,
+          vx: Math.cos(-angle) * speed, vy: Math.sin(-angle) * speed,
+          len: 180 + Math.random() * 250, life: 0,
+          maxLife: 60 + Math.random() * 45, size: 1.5 + Math.random() * 2.5,
         });
       }
       nextShootAt = ts + shootingInterval * (0.4 + Math.random() * 0.8);
     }
 
-    function resize() {
-      canvas!.width = canvas!.offsetWidth;
-      canvas!.height = canvas!.offsetHeight;
-      init();
+    // Draw one star. faceReveal: 0 = golden dot, 1 = full face.
+    function drawStar(s: Star, px: number, py: number, a: number, faceReveal: number) {
+      const starDotR = Math.max(2.0, s.r * 1.0 + 1.0); // 2–4.2 px
+      const faceHalf  = 26 + s.r * 3;                   // 26–36 px half
+
+      // Current half-radius lerped between star and face size
+      const half = starDotR + (faceHalf - starDotR) * faceReveal;
+
+      if (faceReveal < 0.04) {
+        // ── Pure golden star dot ────────────────────────────────────────
+        const glowR = starDotR * 5;
+        const grd = ctx!.createRadialGradient(px, py, 0, px, py, glowR);
+        grd.addColorStop(0,   `rgba(255,232,110,${a * 0.85})`);
+        grd.addColorStop(0.3, `rgba(255,210, 55,${a * 0.35})`);
+        grd.addColorStop(0.7, `rgba(255,180, 25,${a * 0.10})`);
+        grd.addColorStop(1,   "rgba(255,160,20,0)");
+        ctx!.beginPath();
+        ctx!.arc(px, py, glowR, 0, Math.PI * 2);
+        ctx!.fillStyle = grd;
+        ctx!.fill();
+        // Bright core
+        ctx!.beginPath();
+        ctx!.arc(px, py, starDotR, 0, Math.PI * 2);
+        ctx!.fillStyle = `rgba(255,252,200,${a})`;
+        ctx!.fill();
+      } else {
+        // ── Transitioning / revealed face ───────────────────────────────
+        // Outer glow: gold → pale blue as faceReveal rises
+        const glowR = half * 2.0;
+        const ga    = a * (0.55 - faceReveal * 0.25);
+        const gr    = Math.round(255 - 75  * faceReveal);
+        const gg    = Math.round(220 - 35  * faceReveal);
+        const gb    = Math.round(80  + 175 * faceReveal);
+        const grd   = ctx!.createRadialGradient(px, py, 0, px, py, glowR);
+        grd.addColorStop(0,    `rgba(${gr},${gg},${gb},${ga})`);
+        grd.addColorStop(0.55, `rgba(${gr},${gg},${gb},${ga * 0.12})`);
+        grd.addColorStop(1,    `rgba(${gr},${gg},${gb},0)`);
+        ctx!.beginPath();
+        ctx!.arc(px, py, glowR, 0, Math.PI * 2);
+        ctx!.fillStyle = grd;
+        ctx!.fill();
+
+        ctx!.save();
+        ctx!.globalAlpha = a;
+        // Clip to circle
+        ctx!.beginPath();
+        ctx!.arc(px, py, half, 0, Math.PI * 2);
+        ctx!.clip();
+
+        const faceSize = half * 2;
+        const img = faceImages[s.faceIdx];
+        if (img.complete && img.naturalWidth > 0) {
+          // Face image fades in
+          ctx!.globalAlpha = a * Math.min(1, faceReveal * 2.5);
+          ctx!.drawImage(img, px - half, py - half, faceSize, faceSize);
+          // Edge vignette
+          const vigStart = 0.62 + faceReveal * 0.13;
+          const vgrd = ctx!.createRadialGradient(px, py, half * vigStart, px, py, half);
+          vgrd.addColorStop(0, `rgba(${BG_R},${BG_G},${BG_B},0)`);
+          vgrd.addColorStop(1, `rgba(${BG_R},${BG_G},${BG_B},${0.88 - faceReveal * 0.30})`);
+          ctx!.globalAlpha = 1;
+          ctx!.fillStyle = vgrd;
+          ctx!.fillRect(px - half - 1, py - half - 1, faceSize + 2, faceSize + 2);
+        } else {
+          // Still loading — golden placeholder
+          const dotG = ctx!.createRadialGradient(px, py, 0, px, py, half);
+          dotG.addColorStop(0, `rgba(255,230,110,${a})`);
+          dotG.addColorStop(1, "rgba(255,180,30,0)");
+          ctx!.globalAlpha = a;
+          ctx!.fillStyle = dotG;
+          ctx!.fill();
+        }
+        ctx!.restore();
+
+        // White ring — fades in with faceReveal
+        if (faceReveal > 0.15) {
+          ctx!.beginPath();
+          ctx!.arc(px, py, half, 0, Math.PI * 2);
+          ctx!.strokeStyle = `rgba(255,255,255,${a * faceReveal * 0.75})`;
+          ctx!.lineWidth = faceReveal * 2.2;
+          ctx!.stroke();
+        }
+      }
     }
 
     function draw(ts: number) {
       const w = canvas!.width, h = canvas!.height;
       ctx!.clearRect(0, 0, w, h);
 
-      curOffX += (tgtOffX - curOffX) * 0.045; // slightly slower, more fluid
+      curOffX += (tgtOffX - curOffX) * 0.045;
       curOffY += (tgtOffY - curOffY) * 0.045;
 
       if (ts > nextShootAt) spawnShooter(ts);
 
-      const mouseNear = mouseX > -500;
-      const PULL_R = 200;
-      const PULL_STR = 18;
-      const GLOW_R = 160;
-      const LINE_R = 230;
+      // Pre-compute positions with parallax + drift
+      const pos = stars.map((s) => {
+        const drift = Math.sin(ts * 0.00008 + s.driftPhase);
+        return {
+          px: s.x + curOffX * s.depth + drift * s.driftX * 40,
+          py: s.y + curOffY * s.depth + drift * s.driftY * 40,
+        };
+      });
 
-      // ── Constellation lines ──────────────────────────────────────────────
-      for (const { a, b } of constLines) {
-        const sa = stars[a], sb = stars[b];
-        const ax = sa.x + curOffX * sa.depth;
-        const ay = sa.y + curOffY * sa.depth;
-        const bx = sb.x + curOffX * sb.depth;
-        const by = sb.y + curOffY * sb.depth;
-        const al = ((sa.alpha + sb.alpha) / 2) * 0.18;
-        ctx!.beginPath();
-        ctx!.moveTo(ax, ay);
-        ctx!.lineTo(bx, by);
-        ctx!.strokeStyle = `rgba(120,150,240,${al})`;
-        ctx!.lineWidth = 0.5;
-        ctx!.stroke();
+      // Update faceReveal per star based on cursor proximity
+      let topRevealIdx = -1, topReveal = 0.001;
+      for (let i = 0; i < stars.length; i++) {
+        const { px, py } = pos[i];
+        let target = 0;
+        if (mouseX > -500) {
+          const d = Math.hypot(mouseX - px, mouseY - py);
+          if (d < PROXIMITY_RADIUS) {
+            target = Math.pow(1 - d / PROXIMITY_RADIUS, 0.65);
+          }
+        }
+        stars[i].faceReveal += (target - stars[i].faceReveal) * 0.10;
+        if (stars[i].faceReveal > topReveal) {
+          topReveal    = stars[i].faceReveal;
+          topRevealIdx = i;
+        }
       }
 
-      // ── Cursor constellation lines + glow ────────────────────────────────
-      if (mouseNear) {
-        const near: { s: Star; d: number }[] = [];
-        for (const s of stars) {
-          const sx = s.x + curOffX * s.depth;
-          const sy = s.y + curOffY * s.depth;
-          const d = Math.hypot(mouseX - sx, mouseY - sy);
-          if (d < LINE_R) near.push({ s, d });
+      // ── Cursor constellation lines (only near cursor) ─────────────────
+      if (mouseX > -500) {
+        for (let i = 0; i < stars.length; i++) {
+          const { px, py } = pos[i];
+          const d = Math.hypot(mouseX - px, mouseY - py);
+          if (d < LINE_REACH) {
+            const prox = 1 - d / LINE_REACH;
+            const op   = Math.pow(prox, 1.3) * 0.82;
+            const g    = ctx!.createLinearGradient(mouseX, mouseY, px, py);
+            g.addColorStop(0,    `rgba(210,230,255,${op})`);
+            g.addColorStop(0.45, `rgba(180,205,255,${op * 0.45})`);
+            g.addColorStop(1,    "rgba(160,185,255,0)");
+            ctx!.beginPath();
+            ctx!.moveTo(mouseX, mouseY);
+            ctx!.lineTo(px, py);
+            ctx!.strokeStyle = g;
+            ctx!.lineWidth   = 1.3 * prox + 0.25;
+            ctx!.stroke();
+          }
         }
-        near.sort((a, b) => a.d - b.d);
-
-        for (const { s, d } of near.slice(0, 8)) {
-          const sx = s.x + curOffX * s.depth;
-          const sy = s.y + curOffY * s.depth;
-          const op = Math.pow(1 - d / LINE_R, 1.4) * 0.8;
-          const grad = ctx!.createLinearGradient(mouseX, mouseY, sx, sy);
-          grad.addColorStop(0, `rgba(180,205,255,${op})`);
-          grad.addColorStop(0.6, `rgba(160,185,255,${op * 0.4})`);
-          grad.addColorStop(1, `rgba(160,185,255,0)`);
-          ctx!.beginPath();
-          ctx!.moveTo(mouseX, mouseY);
-          ctx!.lineTo(sx, sy);
-          ctx!.strokeStyle = grad;
-          ctx!.lineWidth = 1.0;
-          ctx!.stroke();
-        }
-
-        const halo = ctx!.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 22);
-        halo.addColorStop(0, "rgba(160,185,255,0.4)");
-        halo.addColorStop(0.4, "rgba(140,170,255,0.14)");
-        halo.addColorStop(1, "rgba(140,170,255,0)");
+        // Cursor glow dot
+        const halo = ctx!.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 26);
+        halo.addColorStop(0,   "rgba(220,238,255,0.60)");
+        halo.addColorStop(0.4, "rgba(180,208,255,0.22)");
+        halo.addColorStop(1,   "rgba(140,170,255,0)");
         ctx!.beginPath();
-        ctx!.arc(mouseX, mouseY, 22, 0, Math.PI * 2);
+        ctx!.arc(mouseX, mouseY, 26, 0, Math.PI * 2);
         ctx!.fillStyle = halo;
         ctx!.fill();
-
         ctx!.beginPath();
-        ctx!.arc(mouseX, mouseY, 2.5, 0, Math.PI * 2);
-        ctx!.fillStyle = "rgba(220,235,255,0.95)";
+        ctx!.arc(mouseX, mouseY, 2.0, 0, Math.PI * 2);
+        ctx!.fillStyle = "rgba(242,252,255,0.92)";
         ctx!.fill();
       }
 
-      // ── Click ripples ────────────────────────────────────────────────────
+      // ── Click ripples ─────────────────────────────────────────────────
       ripples = ripples.filter((r) => ts - r.t < 1000);
       for (const rp of ripples) {
-        const age = Math.max(0, ts - rp.t);
-        const p = Math.min(1, age / 1000);
-        const r1 = p * 240;
-        const o1 = (1 - p) * 0.45;
+        const p = Math.min(1, (ts - rp.t) / 1000);
         ctx!.beginPath();
-        ctx!.arc(rp.x, rp.y, r1, 0, Math.PI * 2);
-        ctx!.strokeStyle = `rgba(160,185,255,${o1})`;
-        ctx!.lineWidth = 1.2 * (1 - p * 0.5);
+        ctx!.arc(rp.x, rp.y, p * 240, 0, Math.PI * 2);
+        ctx!.strokeStyle = `rgba(160,185,255,${(1 - p) * 0.45})`;
+        ctx!.lineWidth   = 1.2 * (1 - p * 0.5);
         ctx!.stroke();
-        if (p < 0.7) {
-          const r2 = (p / 0.7) * 130;
-          const o2 = (1 - p / 0.7) * 0.3;
-          ctx!.beginPath();
-          ctx!.arc(rp.x, rp.y, r2, 0, Math.PI * 2);
-          ctx!.strokeStyle = `rgba(200,215,255,${o2})`;
-          ctx!.lineWidth = 0.8;
-          ctx!.stroke();
-        }
       }
 
-      // ── Stars ────────────────────────────────────────────────────────────
-      for (const s of stars) {
-        // Bigger twinkle amplitude
-        const twinkle = Math.sin(ts * s.speed + s.phase) * 0.42;
-        let a = Math.max(0.05, Math.min(0.98, s.alpha + twinkle));
-
-        // Drift offset — stars slowly float
-        const drift = Math.sin(ts * 0.00008 + s.driftPhase);
-        let dx = curOffX * s.depth + drift * s.driftX * 40;
-        let dy = curOffY * s.depth + drift * s.driftY * 40;
-
-        if (mouseNear) {
-          const sx = s.x + dx, sy = s.y + dy;
-          const mdx = mouseX - sx, mdy = mouseY - sy;
-          const dist = Math.sqrt(mdx * mdx + mdy * mdy);
-
-          if (dist < PULL_R && dist > 0.5) {
-            const pull = ((1 - dist / PULL_R) ** 2) * PULL_STR;
-            dx += (mdx / dist) * pull;
-            dy += (mdy / dist) * pull;
-          }
-          if (dist < GLOW_R) {
-            a = Math.min(1, a + (1 - dist / GLOW_R) * 0.7);
-          }
-        }
-
-        const px = s.x + dx, py = s.y + dy;
-
+      // ── Draw all stars (most-revealed goes last = on top) ─────────────
+      for (let i = 0; i < stars.length; i++) {
+        if (i === topRevealIdx) continue;
+        const s = stars[i];
+        const { px, py } = pos[i];
         if (!isFinite(px) || !isFinite(py)) continue;
-
-        // Soft glow halo behind each face
-        if (s.r > 1.2) {
-          const gr = s.r * 6;
-          const grd = ctx!.createRadialGradient(px, py, 0, px, py, gr);
-          grd.addColorStop(0, `rgba(${s.r_},${s.g_},${s.b_},${a * 0.28})`);
-          grd.addColorStop(1, `rgba(${s.r_},${s.g_},${s.b_},0)`);
-          ctx!.beginPath();
-          ctx!.arc(px, py, gr, 0, Math.PI * 2);
-          ctx!.fillStyle = grd;
-          ctx!.fill();
+        const twinkle = Math.sin(ts * s.speed + s.phase) * 0.42;
+        const a = Math.max(0.05, Math.min(0.98, s.alpha + twinkle));
+        drawStar(s, px, py, a, s.faceReveal);
+      }
+      if (topRevealIdx !== -1) {
+        const s = stars[topRevealIdx];
+        const { px, py } = pos[topRevealIdx];
+        if (isFinite(px) && isFinite(py)) {
+          const twinkle = Math.sin(ts * s.speed + s.phase) * 0.42;
+          const a = Math.max(0.05, Math.min(0.98, s.alpha + twinkle));
+          drawStar(s, px, py, a, s.faceReveal);
         }
-
-        // Circular face avatar — sized so even small stars show a face
-        const faceSize = Math.max(12, s.r * 9);
-        const half = faceSize / 2;
-        const img = faceImages[s.faceIdx];
-        ctx!.save();
-        ctx!.globalAlpha = a;
-        ctx!.beginPath();
-        ctx!.arc(px, py, half, 0, Math.PI * 2);
-        ctx!.clip();
-        if (img && img.complete && img.naturalWidth > 0) {
-          try {
-            ctx!.drawImage(img, px - half, py - half, faceSize, faceSize);
-          } catch {
-            // canvas taint fallback
-            ctx!.fillStyle = `rgba(${s.r_},${s.g_},${s.b_},1)`;
-            ctx!.fill();
-          }
-        } else {
-          // Dot while loading
-          ctx!.fillStyle = `rgba(${s.r_},${s.g_},${s.b_},1)`;
-          ctx!.fill();
-        }
-        ctx!.restore();
-
-        // Thin white ring so each face reads clearly against dark sky
-        ctx!.beginPath();
-        ctx!.arc(px, py, half, 0, Math.PI * 2);
-        ctx!.strokeStyle = `rgba(255,255,255,${a * 0.55})`;
-        ctx!.lineWidth = 0.9;
-        ctx!.stroke();
       }
 
-      // ── Shooting stars (larger, more frequent) ───────────────────────────
+      // ── Shooting stars ────────────────────────────────────────────────
       shooters = shooters.filter((sh) => sh.life < sh.maxLife);
       for (const sh of shooters) {
-        sh.life++;
-        sh.x += sh.vx;
-        sh.y += sh.vy;
+        sh.life++; sh.x += sh.vx; sh.y += sh.vy;
         const p = sh.life / sh.maxLife;
         const alpha = p < 0.12 ? p / 0.12 : 1 - (p - 0.12) / 0.88;
-        const speed = Math.hypot(sh.vx, sh.vy);
-        const tailX = sh.x - (sh.vx / speed) * sh.len;
-        const tailY = sh.y - (sh.vy / speed) * sh.len;
-
-        const sGrad = ctx!.createLinearGradient(sh.x, sh.y, tailX, tailY);
-        sGrad.addColorStop(0, `rgba(255,255,255,${alpha})`);
-        sGrad.addColorStop(0.2, `rgba(220,235,255,${alpha * 0.7})`);
-        sGrad.addColorStop(0.55, `rgba(180,205,255,${alpha * 0.3})`);
-        sGrad.addColorStop(1, "rgba(160,190,255,0)");
+        const spd = Math.hypot(sh.vx, sh.vy);
+        const tx = sh.x - (sh.vx / spd) * sh.len;
+        const ty = sh.y - (sh.vy / spd) * sh.len;
+        const sg = ctx!.createLinearGradient(sh.x, sh.y, tx, ty);
+        sg.addColorStop(0,    `rgba(255,255,255,${alpha})`);
+        sg.addColorStop(0.2,  `rgba(220,235,255,${alpha * 0.7})`);
+        sg.addColorStop(0.55, `rgba(180,205,255,${alpha * 0.3})`);
+        sg.addColorStop(1,    "rgba(160,190,255,0)");
         ctx!.beginPath();
-        ctx!.moveTo(sh.x, sh.y);
-        ctx!.lineTo(tailX, tailY);
-        ctx!.strokeStyle = sGrad;
-        ctx!.lineWidth = sh.size * (1 - p * 0.35); // thicker lines
+        ctx!.moveTo(sh.x, sh.y); ctx!.lineTo(tx, ty);
+        ctx!.strokeStyle = sg;
+        ctx!.lineWidth   = sh.size * (1 - p * 0.35);
         ctx!.stroke();
-
-        // Bright flaring head
-        const headR = sh.size * 2.8;
-        const hGrad = ctx!.createRadialGradient(sh.x, sh.y, 0, sh.x, sh.y, headR);
-        hGrad.addColorStop(0, `rgba(255,255,255,${alpha})`);
-        hGrad.addColorStop(0.4, `rgba(200,220,255,${alpha * 0.6})`);
-        hGrad.addColorStop(1, "rgba(180,200,255,0)");
+        const hg = ctx!.createRadialGradient(sh.x, sh.y, 0, sh.x, sh.y, sh.size * 2.8);
+        hg.addColorStop(0, `rgba(255,255,255,${alpha})`);
+        hg.addColorStop(1, "rgba(180,200,255,0)");
         ctx!.beginPath();
-        ctx!.arc(sh.x, sh.y, headR, 0, Math.PI * 2);
-        ctx!.fillStyle = hGrad;
-        ctx!.fill();
+        ctx!.arc(sh.x, sh.y, sh.size * 2.8, 0, Math.PI * 2);
+        ctx!.fillStyle = hg; ctx!.fill();
       }
     }
 
-    function updateMouse(clientX: number, clientY: number) {
-      const rect = canvas!.getBoundingClientRect();
-      mouseX = clientX - rect.left;
-      mouseY = clientY - rect.top;
-      const cx = rect.width / 2, cy = rect.height / 2;
-      tgtOffX = ((mouseX - cx) / cx) * MAX_PARALLAX;
-      tgtOffY = ((mouseY - cy) / cy) * MAX_PARALLAX;
+    function updateMouse(cx: number, cy: number) {
+      const r = canvas!.getBoundingClientRect();
+      mouseX = cx - r.left; mouseY = cy - r.top;
+      tgtOffX = ((mouseX - r.width  / 2) / (r.width  / 2)) * MAX_PARALLAX;
+      tgtOffY = ((mouseY - r.height / 2) / (r.height / 2)) * MAX_PARALLAX;
     }
 
-    function onMouseMove(e: MouseEvent) { updateMouse(e.clientX, e.clientY); }
-    function onMouseLeave() { mouseX = -9999; mouseY = -9999; tgtOffX = 0; tgtOffY = 0; }
-    function onTouchMove(e: TouchEvent) { updateMouse(e.touches[0].clientX, e.touches[0].clientY); }
-    function addRipple(clientX: number, clientY: number, ts: number) {
-      const rect = canvas!.getBoundingClientRect();
-      ripples.push({ x: clientX - rect.left, y: clientY - rect.top, t: ts });
-    }
-    function onPointerDown(e: PointerEvent) { addRipple(e.clientX, e.clientY, performance.now()); }
+    const onMM = (e: MouseEvent)   => updateMouse(e.clientX, e.clientY);
+    const onML = ()                => { mouseX = -9999; mouseY = -9999; tgtOffX = 0; tgtOffY = 0; };
+    const onTM = (e: TouchEvent)   => updateMouse(e.touches[0].clientX, e.touches[0].clientY);
+    const onPD = (e: PointerEvent) => {
+      const r = canvas!.getBoundingClientRect();
+      ripples.push({ x: e.clientX - r.left, y: e.clientY - r.top, t: performance.now() });
+    };
 
-    window.addEventListener("mousemove", onMouseMove, { passive: true });
-    window.addEventListener("touchmove", onTouchMove, { passive: true });
-    window.addEventListener("pointerdown", onPointerDown, { passive: true });
-    document.documentElement.addEventListener("mouseleave", onMouseLeave);
+    window.addEventListener("mousemove",  onMM, { passive: true });
+    window.addEventListener("touchmove",  onTM, { passive: true });
+    window.addEventListener("pointerdown",onPD, { passive: true });
+    document.documentElement.addEventListener("mouseleave", onML);
 
-    const ro = new ResizeObserver(resize);
+    const ro = new ResizeObserver(() => {
+      canvas!.width  = canvas!.offsetWidth;
+      canvas!.height = canvas!.offsetHeight;
+      init();
+    });
     ro.observe(canvas);
-    resize();
+    canvas.width  = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    init();
 
     function loop(ts: number) { draw(ts); animId = requestAnimationFrame(loop); }
     animId = requestAnimationFrame(loop);
@@ -398,10 +376,10 @@ export function StarField({
     return () => {
       cancelAnimationFrame(animId);
       ro.disconnect();
-      window.removeEventListener("mousemove", onMouseMove);
-      window.removeEventListener("touchmove", onTouchMove);
-      window.removeEventListener("pointerdown", onPointerDown);
-      document.documentElement.removeEventListener("mouseleave", onMouseLeave);
+      window.removeEventListener("mousemove",  onMM);
+      window.removeEventListener("touchmove",  onTM);
+      window.removeEventListener("pointerdown",onPD);
+      document.documentElement.removeEventListener("mouseleave", onML);
     };
   }, [count, shootingInterval]);
 

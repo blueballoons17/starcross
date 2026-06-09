@@ -2,8 +2,8 @@ import Link from "next/link";
 import { LegalHeader, LegalFooter, H2, H3, P, UL } from "@/components/ui/legal-page-layout";
 
 export const metadata = {
-  title: "Privacy Policy | StarCross",
-  description: "How StarCross collects, uses, and protects your personal information.",
+  title: "Privacy Policy | Kindred Stars",
+  description: "How Kindred Stars collects, uses, and protects your personal information.",
 };
 
 const LAST_UPDATED = "May 30, 2026";
@@ -24,7 +24,7 @@ export default function PrivacyPage() {
         {/* 1 */}
         <H2>1. Who We Are</H2>
         <P>
-          StarCross (&ldquo;StarCross,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) is an
+          Kindred Stars (&ldquo;Kindred Stars,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) is an
           astrology-based dating and connection platform operated by its owner. This Privacy Policy explains
           what personal information we collect, how we use it, and the choices available to you regarding your
           information.
@@ -167,7 +167,7 @@ export default function PrivacyPage() {
 
         <H3>Business Transfers</H3>
         <P>
-          If StarCross is involved in a merger, acquisition, financing, asset sale, or similar corporate transaction,
+          If Kindred Stars is involved in a merger, acquisition, financing, asset sale, or similar corporate transaction,
           personal information may be transferred as part of that transaction.
         </P>
 
@@ -228,7 +228,7 @@ export default function PrivacyPage() {
           you reside.
         </P>
         <P>
-          By using StarCross, you understand that your information may be transferred to and processed in jurisdictions
+          By using Kindred Stars, you understand that your information may be transferred to and processed in jurisdictions
           that may have different data protection laws than those in your home jurisdiction.
         </P>
         <P>
@@ -322,7 +322,7 @@ export default function PrivacyPage() {
         {/* 13 */}
         <H2>13. Children&apos;s Privacy</H2>
         <P>
-          StarCross is intended only for individuals who are at least 18 years old.
+          Kindred Stars is intended only for individuals who are at least 18 years old.
         </P>
         <P>
           We do not knowingly collect personal information from individuals under 18.
@@ -341,7 +341,7 @@ export default function PrivacyPage() {
           Some web browsers transmit &ldquo;Do Not Track&rdquo; signals.
         </P>
         <P>
-          Because there is not currently a universally accepted standard for responding to such signals, StarCross does
+          Because there is not currently a universally accepted standard for responding to such signals, Kindred Stars does
           not currently respond to Do Not Track signals.
         </P>
 
@@ -352,7 +352,7 @@ export default function PrivacyPage() {
           concern, please contact:
         </P>
         <p className="text-sm font-medium text-stone-700 mb-3">
-          <a href="mailto:blueballoons17@gmail.com" className="underline">blueballoons17@gmail.com</a>
+          <a href="mailto:hello.kindredstars@gmail.com" className="underline">hello.kindredstars@gmail.com</a>
         </p>
         <P>
           We will respond within the time period required by applicable law.

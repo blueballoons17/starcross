@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, ChevronRight, ChevronLeft, Check, Sun, Moon, ArrowUp, Camera, Plus, X, ImageIcon } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -189,6 +190,7 @@ function ChartCarousel({
 }) {
   const [slide, setSlide] = useState(0);
   const [direction, setDirection] = useState(1);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   const goTo = useCallback((idx: number) => {
     setDirection(idx > slide ? 1 : -1);
@@ -438,10 +440,43 @@ function ChartCarousel({
         </div>
       )}
 
+      {/* Terms agreement */}
+      <label className="flex items-start gap-3 cursor-pointer group">
+        <div className="relative mt-0.5 shrink-0">
+          <input
+            type="checkbox"
+            className="sr-only"
+            checked={agreedToTerms}
+            onChange={(e) => setAgreedToTerms(e.target.checked)}
+          />
+          <div
+            className={cn(
+              "w-5 h-5 rounded border-2 flex items-center justify-center transition-all",
+              agreedToTerms
+                ? "bg-stone-900 border-stone-900"
+                : "bg-white border-stone-300 group-hover:border-stone-500"
+            )}
+          >
+            {agreedToTerms && <Check className="h-3 w-3 text-white" />}
+          </div>
+        </div>
+        <p className="text-xs text-stone-500 leading-relaxed">
+          I agree to the{" "}
+          <Link href="/terms" target="_blank" className="underline underline-offset-2 text-stone-700 hover:text-stone-900 transition-colors">
+            Terms of Service
+          </Link>{" "}
+          and{" "}
+          <Link href="/privacy" target="_blank" className="underline underline-offset-2 text-stone-700 hover:text-stone-900 transition-colors">
+            Privacy Policy
+          </Link>
+          .
+        </p>
+      </label>
+
       <Button
         onClick={onSubmit}
-        disabled={submitting}
-        className="w-full h-11 bg-stone-900 text-white hover:bg-stone-800 rounded-xl gap-2"
+        disabled={submitting || !agreedToTerms}
+        className="w-full h-11 bg-stone-900 text-white hover:bg-stone-800 disabled:opacity-40 disabled:cursor-not-allowed rounded-xl gap-2"
       >
         {submitting ? "Saving…" : "Complete Setup"}
         <Check className="h-4 w-4" />
@@ -865,7 +900,7 @@ export default function OnboardingPage() {
 
   if (loadingProfile) {
     return (
-      <div className="min-h-screen bg-[#FAF8F4] flex items-center justify-center">
+      <div className="relative z-10 min-h-screen bg-[#FAF8F4] flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 rounded-full border-2 border-stone-400 border-t-stone-900 animate-spin" />
           <p className="text-stone-400 text-sm">Loading your profile…</p>
@@ -875,13 +910,13 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF8F4] flex flex-col items-center justify-center px-4 py-12">
+    <div className="relative z-10 min-h-screen bg-[#FAF8F4] flex flex-col items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 mb-1">
             <Star className="h-5 w-5 text-stone-700 fill-stone-700/30" />
-            <span className="font-serif text-xl font-semibold text-stone-900">StarCross</span>
+            <span className="font-serif text-xl font-semibold text-stone-900">Kindred Stars</span>
           </div>
           <p className="text-stone-400 text-sm">
             {step === 4 ? "Your cosmic profile" : "Tell us about yourself"}
@@ -922,9 +957,12 @@ export default function OnboardingPage() {
                 <div className="space-y-1.5">
                   <Label htmlFor="birthTime">
                     Time of Birth{" "}
-                    <span className="text-stone-400 font-normal">(optional, improves rising sign accuracy)</span>
+                    <span className="text-stone-400 font-normal">(optional)</span>
                   </Label>
                   <Input id="birthTime" type="time" value={form.birthTime} onChange={(e) => update("birthTime", e.target.value)} className="h-11" />
+                  <p className="text-xs text-stone-500 leading-relaxed">
+                    Don&apos;t know your exact time? Leave it blank — we&apos;ll use noon and your chart will still be highly accurate. You can find your birth time on your birth certificate or by asking a parent.
+                  </p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
@@ -940,6 +978,12 @@ export default function OnboardingPage() {
                   </div>
                 </div>
               </div>
+
+              {/* Privacy note */}
+              <p className="text-xs text-stone-500 mt-4 leading-relaxed flex gap-1.5 items-start">
+                <span className="mt-0.5 shrink-0">🔒</span>
+                Your birth data is encrypted and used only to calculate your astrological chart. It is never sold or shared with third parties.
+              </p>
 
               <div className="flex justify-end mt-6">
                 <Button onClick={handleNext} className="gap-2 bg-stone-900 text-white hover:bg-stone-800">

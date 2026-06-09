@@ -13,6 +13,7 @@ function SignupForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams?.get("callbackUrl") ?? "/onboarding";
+  const refCode = searchParams?.get("ref") ?? "";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -46,7 +47,11 @@ function SignupForm() {
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.trim().toLowerCase(), password }),
+        body: JSON.stringify({
+          email: email.trim().toLowerCase(),
+          password,
+          ...(refCode ? { referralCode: refCode } : {}),
+        }),
       });
       const data = await res.json();
 
@@ -84,7 +89,7 @@ function SignupForm() {
             className="text-base font-medium text-stone-900 uppercase tracking-[0.18em]"
             style={{ fontFamily: "var(--font-inter)" }}
           >
-            StarCross
+            Kindred Stars
           </span>
         </Link>
 

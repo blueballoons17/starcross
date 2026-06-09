@@ -956,7 +956,7 @@ export default function MatchSynastryPage() {
           {isPremium === false && hasAstro && (
             <div className="absolute inset-0 flex items-center justify-center bg-[#f7f4ef]/80 backdrop-blur-sm rounded-xl">
               <div className="text-center px-8">
-                <p className="text-[10px] tracking-[0.22em] uppercase text-stone-500 mb-2">StarCross+</p>
+                <p className="text-[10px] tracking-[0.22em] uppercase text-stone-500 mb-2">Kindred Stars+</p>
                 <p className="font-serif text-stone-800 text-xl font-semibold mb-2">Full synastry charts</p>
                 <p className="text-stone-500 text-sm mb-5 max-w-xs mx-auto">Explore the complete planetary web of your connection. Upgrade to unlock.</p>
                 <button

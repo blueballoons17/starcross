@@ -5,6 +5,13 @@ import Stripe from "stripe";
 
 export const runtime = "nodejs";
 
+const REFERRALS_FOR_FREE_MONTH = 5;
+// $14.99 in cents — adjust if you change the subscription price
+const SUBSCRIPTION_AMOUNT_CENTS = parseInt(
+  process.env.STRIPE_SUBSCRIPTION_AMOUNT_CENTS ?? "1499",
+  10
+);
+
 /** Get the period end from a subscription (works with both old and new Stripe API shapes). */
 function getPeriodEnd(sub: Stripe.Subscription): Date | null {
   // Newer Stripe API (2025+): period_end lives on each subscription item
@@ -14,6 +21,34 @@ function getPeriodEnd(sub: Stripe.Subscription): Date | null {
   const legacyEnd = (sub as unknown as Record<string, unknown>)["current_period_end"];
   if (typeof legacyEnd === "number") return new Date(legacyEnd * 1000);
   return null;
+}
+
+/**
+ * When a referrer earns a free month:
+ * - If they have a Stripe customer, apply a balance credit (auto-deducted on next invoice).
+ * - If they don't have a Stripe customer yet, store it as a pending credit to apply at checkout.
+ */
+async function applyFreeMonthReward(referrerId: string) {
+  const referrer = await prisma.user.findUnique({
+    where: { id: referrerId },
+    select: { stripeCustomerId: true },
+  });
+  if (!referrer) return;
+
+  if (referrer.stripeCustomerId) {
+    // Add a negative balance transaction — applied automatically on next invoice
+    await stripe.customers.createBalanceTransaction(referrer.stripeCustomerId, {
+      amount: -SUBSCRIPTION_AMOUNT_CENTS, // negative = credit
+      currency: "usd",
+      description: "Referral reward — 1 free month (5 paid referrals)",
+    });
+  } else {
+    // No Stripe customer yet — store as a pending credit applied at checkout
+    await prisma.user.update({
+      where: { id: referrerId },
+      data: { pendingFreeMonths: { increment: 1 } },
+    });
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -53,6 +88,31 @@ export async function POST(request: NextRequest) {
                 subscriptionCurrentPeriodEnd: getPeriodEnd(sub),
               },
             });
+
+            // ── Referral tracking ────────────────────────────────────────
+            // Check if this user was referred by someone and hasn't yet paid
+            const referral = await prisma.referral.findUnique({
+              where: { referredUserId: userId },
+              select: { id: true, referrerId: true, paidAt: true },
+            });
+
+            if (referral && !referral.paidAt) {
+              // Mark the referral as paid
+              await prisma.referral.update({
+                where: { id: referral.id },
+                data: { paidAt: new Date() },
+              });
+
+              // Count total paid referrals for the referrer
+              const paidCount = await prisma.referral.count({
+                where: { referrerId: referral.referrerId, paidAt: { not: null } },
+              });
+
+              // Award a free month every 5 paid referrals
+              if (paidCount > 0 && paidCount % REFERRALS_FOR_FREE_MONTH === 0) {
+                await applyFreeMonthReward(referral.referrerId);
+              }
+            }
           }
         }
         break;
@@ -92,7 +152,6 @@ export async function POST(request: NextRequest) {
 
       case "invoice.payment_failed": {
         const invoice = event.data.object as Stripe.Invoice;
-        // In the newer Stripe API, subscription is in invoice.parent.subscription_details.subscription
         const parentSub = invoice.parent?.type === "subscription_details"
           ? invoice.parent.subscription_details?.subscription
           : undefined;

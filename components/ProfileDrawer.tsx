@@ -480,7 +480,7 @@ export function ProfileDrawer({ open, onClose, match, isPremium }: ProfileDrawer
                 </div>
               </div>
 
-              {/* Synastry graph: StarCross+ only */}
+              {/* Synastry graph: Kindred Stars+ only */}
               {isPremium !== false && match.currentAstro && (
                 <div className="mx-6 mb-2 rounded-2xl bg-[#f7f4ef] px-4 py-4">
                   <AstroGraph
@@ -536,7 +536,7 @@ export function ProfileDrawer({ open, onClose, match, isPremium }: ProfileDrawer
                       <div className="flex items-center gap-2 mb-2">
                         <Lock className="h-3 w-3 text-indigo-400 shrink-0" />
                         <span className="text-indigo-300 text-xs font-medium tracking-wide">
-                          StarCross+
+                          Kindred Stars+
                         </span>
                       </div>
                       <p className="text-stone-500 text-xs leading-relaxed">
@@ -587,7 +587,7 @@ export function ProfileDrawer({ open, onClose, match, isPremium }: ProfileDrawer
                     {reviews.comments.map((c, i) => (
                       <div key={i} className="bg-white/4 rounded-xl px-3 py-2.5 border border-white/6">
                         <p className="text-stone-300 text-xs leading-relaxed">&ldquo;{c}&rdquo;</p>
-                        <p className="text-stone-600 text-[10px] mt-1.5">— StarCross user</p>
+                        <p className="text-stone-600 text-[10px] mt-1.5">— Kindred Stars user</p>
                       </div>
                     ))}
                   </div>
@@ -674,7 +674,7 @@ export function ProfileDrawer({ open, onClose, match, isPremium }: ProfileDrawer
                 ) : null}
               </div>
 
-              {/* Strengths: StarCross+ only */}
+              {/* Strengths: Kindred Stars+ only */}
               {isPremium !== false && match.strengths.length > 0 && (
                 <div className="px-6 pb-4">
                   <h4 className="text-[10px] font-semibold text-stone-500 uppercase tracking-wider flex items-center gap-1.5 mb-3">
@@ -695,7 +695,7 @@ export function ProfileDrawer({ open, onClose, match, isPremium }: ProfileDrawer
                 </div>
               )}
 
-              {/* Friction: StarCross+ only */}
+              {/* Friction: Kindred Stars+ only */}
               {isPremium !== false && match.frictionPoints.length > 0 && (
                 <div className="px-6 pb-5">
                   <h4 className="text-[10px] font-semibold text-stone-500 uppercase tracking-wider flex items-center gap-1.5 mb-3">
@@ -834,7 +834,7 @@ export function ProfileDrawer({ open, onClose, match, isPremium }: ProfileDrawer
                   className="flex items-center justify-center gap-2 w-full bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-semibold rounded-full py-3.5 transition-colors text-sm shadow-lg shadow-indigo-500/20"
                 >
                   <Lock className="h-4 w-4" />
-                  Unlock messaging: StarCross+
+                  Unlock messaging: Kindred Stars+
                 </button>
               )}
             </div>

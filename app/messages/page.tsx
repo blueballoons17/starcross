@@ -8,7 +8,6 @@ import { NavBar } from "@/components/NavBar";
 import { ConversationSidebar } from "@/components/ConversationSidebar";
 import { StarField } from "@/components/ui/star-field";
 import { UpgradeModal } from "@/components/UpgradeModal";
-import { AppFooter } from "@/components/ui/legal-page-layout";
 
 export default function MessagesPage() {
   const { status } = useSession();
@@ -47,9 +46,9 @@ export default function MessagesPage() {
               </div>
             </div>
             <div>
-              <p className="text-[10px] tracking-[0.22em] uppercase text-stone-500 mb-2">StarCross+</p>
+              <p className="text-[10px] tracking-[0.22em] uppercase text-stone-500 mb-2">Kindred Stars+</p>
               <h2 className="font-serif text-white text-2xl font-semibold mb-3">
-                Messaging is StarCross+
+                Messaging is Kindred Stars+
               </h2>
               <p className="text-stone-400 text-sm leading-relaxed max-w-xs mx-auto">
                 Upgrade to start conversations with all your cosmic matches, unlimited messages, full synastry charts, and more.
@@ -60,7 +59,7 @@ export default function MessagesPage() {
                 onClick={() => setUpgradeOpen(true)}
                 className="w-full py-3 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium transition-colors"
               >
-                Upgrade to StarCross+
+                Upgrade to Kindred Stars+
               </button>
               <Link
                 href="/matches"
@@ -112,7 +111,6 @@ export default function MessagesPage() {
           </div>
         </div>
       </div>
-      <AppFooter />
     </div>
   );
 }

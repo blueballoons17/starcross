@@ -1,6 +1,6 @@
 import { Resend } from "resend";
 
-const FROM = process.env.EMAIL_FROM ?? "StarCross <hello@starcross.app>";
+const FROM = process.env.EMAIL_FROM ?? "Kindred Stars <hello.kindredstars@gmail.com>";
 
 function getResend() {
   if (!process.env.RESEND_API_KEY) return null;
@@ -16,7 +16,7 @@ export async function sendWelcomeEmail(to: string, name?: string) {
   await resend.emails.send({
     from: FROM,
     to,
-    subject: "Welcome to StarCross ✦",
+    subject: "Welcome to Kindred Stars ✦",
     html: `
 <!DOCTYPE html>
 <html>
@@ -24,7 +24,7 @@ export async function sendWelcomeEmail(to: string, name?: string) {
   <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:40px auto;padding:0 20px;">
     <tr><td style="text-align:center;padding-bottom:32px;">
       <span style="font-size:28px;letter-spacing:0.18em;text-transform:uppercase;color:#fff;">
-        ✦ StarCross
+        ✦ Kindred Stars
       </span>
     </td></tr>
     <tr><td style="background:#0f1220;border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:40px 36px;">
@@ -32,19 +32,19 @@ export async function sendWelcomeEmail(to: string, name?: string) {
         Welcome, ${firstName}.
       </h1>
       <p style="margin:0 0 20px;font-size:15px;line-height:1.7;color:#a8a29e;">
-        Your birth chart is your compass. StarCross uses your Sun, Moon, and Rising signs together to find people who are genuinely compatible with the way you think, feel, and connect.
+        Your birth chart is your compass. Kindred Stars uses your Sun, Moon, and Rising signs together to find people who are genuinely compatible with the way you think, feel, and connect.
       </p>
       <p style="margin:0 0 32px;font-size:15px;line-height:1.7;color:#a8a29e;">
         Start by completing your profile — the more detail you give us, the more precisely the stars align you with someone real.
       </p>
-      <a href="${process.env.NEXT_PUBLIC_APP_URL ?? "https://starcross.app"}/profile"
+      <a href="${process.env.NEXT_PUBLIC_APP_URL ?? "https://kindredstars.org"}/profile"
          style="display:inline-block;background:#4f46e5;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:14px 32px;border-radius:999px;">
         Complete your profile →
       </a>
     </td></tr>
     <tr><td style="text-align:center;padding:28px 0 0;color:#44403c;font-size:12px;line-height:1.6;">
-      You're receiving this because you created a StarCross account.<br/>
-      <a href="${process.env.NEXT_PUBLIC_APP_URL ?? "https://starcross.app"}/privacy" style="color:#57534e;text-decoration:underline;">Privacy policy</a>
+      You're receiving this because you created a Kindred Stars account.<br/>
+      <a href="${process.env.NEXT_PUBLIC_APP_URL ?? "https://kindredstars.org"}/privacy" style="color:#57534e;text-decoration:underline;">Privacy policy</a>
     </td></tr>
   </table>
 </body>
@@ -65,8 +65,8 @@ export async function sendReportEmail(opts: {
   const resend = getResend();
   if (!resend) return;
 
-  const adminEmail = process.env.ADMIN_EMAIL ?? process.env.EMAIL_FROM?.replace(/^.*<(.+)>$/, "$1") ?? "blueballoons17@gmail.com";
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://starcross.app";
+  const adminEmail = process.env.ADMIN_EMAIL ?? "hello.kindredstars@gmail.com";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://kindredstars.org";
 
   const reasonLabel: Record<string, string> = {
     spam: "Spam or scam",
@@ -80,7 +80,7 @@ export async function sendReportEmail(opts: {
   await resend.emails.send({
     from: FROM,
     to: adminEmail,
-    subject: `[StarCross] User report — ${opts.reportedName} (${opts.reason})`,
+    subject: `[Kindred Stars] User report — ${opts.reportedName} (${opts.reason})`,
     html: `
 <!DOCTYPE html>
 <html>
@@ -126,7 +126,7 @@ export async function sendReportEmail(opts: {
       </p>
     </td></tr>
     <tr><td style="text-align:center;padding:20px 0 0;font-size:11px;color:#a8a29e;">
-      StarCross admin alert · <a href="${appUrl}" style="color:#a8a29e;">${appUrl}</a>
+      Kindred Stars admin alert · <a href="${appUrl}" style="color:#a8a29e;">${appUrl}</a>
     </td></tr>
   </table>
 </body>
@@ -159,7 +159,7 @@ export async function sendMatchEmail(opts: {
   <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:40px auto;padding:0 20px;">
     <tr><td style="text-align:center;padding-bottom:32px;">
       <span style="font-size:28px;letter-spacing:0.18em;text-transform:uppercase;color:#fff;">
-        ✦ StarCross
+        ✦ Kindred Stars
       </span>
     </td></tr>
     <tr><td style="background:#0f1220;border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:40px 36px;">
@@ -173,13 +173,13 @@ export async function sendMatchEmail(opts: {
       <p style="margin:0 0 32px;font-size:15px;color:#a8a29e;line-height:1.7;">
         Say hello before someone else does.
       </p>
-      <a href="${process.env.NEXT_PUBLIC_APP_URL ?? "https://starcross.app"}/messages/${matchId}"
+      <a href="${process.env.NEXT_PUBLIC_APP_URL ?? "https://kindredstars.org"}/messages/${matchId}"
          style="display:inline-block;background:#4f46e5;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:14px 32px;border-radius:999px;">
         Send a message →
       </a>
     </td></tr>
     <tr><td style="text-align:center;padding:28px 0 0;color:#44403c;font-size:12px;line-height:1.6;">
-      <a href="${process.env.NEXT_PUBLIC_APP_URL ?? "https://starcross.app"}/privacy" style="color:#57534e;text-decoration:underline;">Privacy policy</a>
+      <a href="${process.env.NEXT_PUBLIC_APP_URL ?? "https://kindredstars.org"}/privacy" style="color:#57534e;text-decoration:underline;">Privacy policy</a>
     </td></tr>
   </table>
 </body>

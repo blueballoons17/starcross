@@ -1,0 +1,9 @@
+dev.db
+dev.db-journal
+*.db-shm
+*.db-wal
+
+# Vercel CLI pull files — these have empty values and override .env in production
+.env.production.local
+.env.development.local
+.env.local

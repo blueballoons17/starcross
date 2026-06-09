@@ -59,6 +59,14 @@ export async function POST(_req: NextRequest) {
       });
     }
 
+    // Apply pending free months as trial days (earned via referrals before subscribing)
+    const userFull = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { pendingFreeMonths: true },
+    });
+    const pendingMonths = userFull?.pendingFreeMonths ?? 0;
+    const trialDays = pendingMonths > 0 ? pendingMonths * 30 : undefined;
+
     const checkoutSession = await stripe.checkout.sessions.create({
       customer: customerId,
       mode: "subscription",
@@ -67,8 +75,17 @@ export async function POST(_req: NextRequest) {
       cancel_url: `${appUrl}/pricing`,
       subscription_data: {
         metadata: { userId },
+        ...(trialDays ? { trial_period_days: trialDays } : {}),
       },
     });
+
+    // Clear pending free months now that they've been applied to checkout
+    if (pendingMonths > 0) {
+      await prisma.user.update({
+        where: { id: userId },
+        data: { pendingFreeMonths: 0 },
+      });
+    }
 
     return NextResponse.json({ url: checkoutSession.url });
   } catch (err: unknown) {

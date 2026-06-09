@@ -22,6 +22,12 @@ model User {
   dailySwipeCount   Int      @default(0)
   dailySwipeResetAt DateTime?
 
+  // Referrals
+  referralCode       String?   @unique
+  pendingFreeMonths  Int       @default(0)
+  referralsMade      Referral[] @relation("ReferralsMade")
+  referredByRow      Referral?  @relation("ReferredBy")
+
   profile          Profile?
   astrologyProfile AstrologyProfile?
   swipesGiven      Swipe[]         @relation("SwipeFrom")
@@ -137,6 +143,17 @@ model Report {
 
   reporter User @relation("ReportsFiled",    fields: [reporterId], references: [id], onDelete: Cascade)
   reported User @relation("ReportsReceived", fields: [reportedId], references: [id], onDelete: Cascade)
+}
+
+model Referral {
+  id             String    @id @default(cuid())
+  referrerId     String
+  referredUserId String    @unique
+  paidAt         DateTime?
+  createdAt      DateTime  @default(now())
+
+  referrer     User @relation("ReferralsMade", fields: [referrerId], references: [id], onDelete: Cascade)
+  referredUser User @relation("ReferredBy",    fields: [referredUserId], references: [id], onDelete: Cascade)
 }
 
 model Notification {

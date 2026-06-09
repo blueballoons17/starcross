@@ -58,7 +58,7 @@ export function NavBar() {
               className="text-xl font-semibold text-white tracking-[0.28em]"
               style={{ fontFamily: "var(--font-inter)" }}
             >
-              starcross
+              kindred stars
             </span>
           </Link>
 
