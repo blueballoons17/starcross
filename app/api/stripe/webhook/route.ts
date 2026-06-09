@@ -88,11 +88,11 @@ export async function POST(request: NextRequest) {
                 subscriptionStatus: sub.status,
                 subscriptionCurrentPeriodEnd: getPeriodEnd(sub),
               },
-              select: { email: true, name: true },
+              select: { email: true },
             });
 
             // Send subscription confirmation email
-            sendSubscriptionConfirmationEmail(user.email, user.name ?? undefined).catch(() => {});
+            sendSubscriptionConfirmationEmail(user.email).catch(() => {});
 
             // ── Referral tracking ────────────────────────────────────────
             // Check if this user was referred by someone and hasn't yet paid
