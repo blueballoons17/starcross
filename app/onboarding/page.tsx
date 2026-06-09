@@ -980,9 +980,8 @@ export default function OnboardingPage() {
               </div>
 
               {/* Privacy note */}
-              <p className="text-xs text-stone-500 mt-4 leading-relaxed flex gap-1.5 items-start">
-                <span className="mt-0.5 shrink-0">🔒</span>
-                Your birth data is encrypted and used only to calculate your astrological chart. It is never sold or shared with third parties.
+              <p className="text-xs text-stone-500 mt-4 leading-relaxed">
+                Your birth data is encrypted, never sold, and only used for compatibility scoring.
               </p>
 
               <div className="flex justify-end mt-6">

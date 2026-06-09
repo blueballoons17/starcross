@@ -313,7 +313,7 @@ export default function HomePage() {
   }, [isLoggedIn]);
 
   return (
-    <div className="min-h-screen bg-[#FAF8F4] overflow-x-hidden">
+    <div className="min-h-screen bg-[#FAF8F4]">
 
       {/* ── Fixed header ─────────────────────────────────────────────────── */}
       <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.07] bg-[#07091f]/80 backdrop-blur-md">
@@ -427,9 +427,9 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.38 }}
-            className="text-sm text-stone-500 max-w-md mx-auto mb-12"
+            className="text-sm text-stone-300 max-w-md mx-auto mb-12"
           >
-            Not sun-sign guesswork. A structured methodology — the same framework astrologers have used for centuries, scored into something you can actually act on.
+            Not sun-sign guesswork. A structured methodology, the same framework astrologers have used for centuries, scored into something you can actually act on.
           </motion.p>
 
 
@@ -463,7 +463,7 @@ export default function HomePage() {
       <div className="h-screen" aria-hidden="true" />
 
       {/* ── All content below slides over the fixed hero ─────────────────── */}
-      <div className="relative z-10">
+      <div className="relative z-10 overflow-x-hidden">
 
       {/* ── App preview + How it works — side by side ────────────────────── */}
       <section id="app-preview" className="bg-[#FAF8F4] overflow-hidden shadow-[0_-24px_60px_rgba(0,0,0,0.5)] py-24 px-6">
@@ -908,8 +908,7 @@ export default function HomePage() {
                 </Link>
               </Button>
               <p className="text-center text-stone-400 text-xs mt-3">Secure payment via Stripe · Cancel anytime</p>
-              <p className="text-center text-stone-600 text-xs mt-2">🔒 Your birth data is encrypted and never sold</p>
-              <p className="text-center text-stone-400 text-xs mt-2">🔒 Your birth data is encrypted, never sold, and only used for compatibility scoring.</p>
+              <p className="text-center text-stone-500 text-xs mt-2">Your birth data is encrypted, never sold, and only used for compatibility scoring.</p>
             </div>
           </div>
 

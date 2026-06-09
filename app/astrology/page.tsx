@@ -625,6 +625,36 @@ export default function AstrologyPage() {
       <PageStars count={260} />
       <NavBar />
 
+      {/* Public header — shown only when not logged in */}
+      {status !== "authenticated" && (
+        <header className="fixed top-0 left-0 right-0 z-40 border-b border-white/[0.07] bg-[#07091f]/80 backdrop-blur-md">
+          <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-6">
+            <Link href="/" className="text-white font-semibold tracking-[0.25em] text-sm" style={{ fontFamily: "var(--font-inter)" }}>
+              kindred stars
+            </Link>
+            <nav className="hidden md:flex items-center gap-1">
+              {[
+                { href: "/#app-preview", label: "The Experience" },
+                { href: "/astrology",    label: "Astrology" },
+                { href: "/pricing",      label: "Pricing" },
+              ].map(({ href, label }) => (
+                <Link key={href} href={href} className="px-4 py-1.5 text-sm text-white/60 hover:text-white transition-colors">
+                  {label}
+                </Link>
+              ))}
+            </nav>
+            <div className="flex items-center gap-2">
+              <Link href="/login" className="text-sm text-white/60 hover:text-white transition-colors px-4 py-1.5">
+                Sign in
+              </Link>
+              <Link href="/pricing" className="text-sm bg-white text-stone-900 hover:bg-stone-100 transition-colors rounded-full px-5 py-1.5 font-medium">
+                Get started
+              </Link>
+            </div>
+          </div>
+        </header>
+      )}
+
       <main className="relative z-[1] pt-24 pb-32 px-6">
         <div className="max-w-5xl mx-auto">
 
