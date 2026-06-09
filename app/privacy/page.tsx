@@ -24,8 +24,9 @@ export default function PrivacyPage() {
         {/* 1 */}
         <H2>1. Who We Are</H2>
         <P>
-          Kindred Stars (&ldquo;Kindred Stars,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) is an
-          astrology-based dating and connection platform operated by its owner. This Privacy Policy explains
+          Kindred Stars is an astrology-based dating and connection platform and a product of{" "}
+          <strong className="text-stone-700">Alder Bridge Partners</strong> (&ldquo;Alder Bridge Partners,&rdquo;
+          &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;). This Privacy Policy explains
           what personal information we collect, how we use it, and the choices available to you regarding your
           information.
         </P>

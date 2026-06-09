@@ -32,8 +32,8 @@ export default function TermsPage() {
           websites, applications, and services (collectively, the &ldquo;Service&rdquo;).
         </P>
         <P>
-          The Service is operated by <strong className="text-stone-700">Kindred Stars</strong> (&ldquo;Kindred Stars,&rdquo;
-          &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;).
+          The Service is operated by <strong className="text-stone-700">Alder Bridge Partners</strong> (&ldquo;Alder Bridge Partners,&rdquo;
+          &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;). Kindred Stars is a product of Alder Bridge Partners.
         </P>
         <P>
           By creating an account, accessing, or using the Service, you agree to be bound by these Terms. If you do not
