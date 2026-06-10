@@ -997,9 +997,16 @@ export default function HomePage() {
 
       </div>{/* end sticky-cover wrapper */}
 
-      {/* ── Sticky floating CTA ──────────────────────────────────────────── */}
-      {!isLoggedIn && (
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 pointer-events-none">
+      {/* ── Sticky floating CTA — appears after scrolling past hero ────── */}
+      <AnimatePresence>
+        {!isLoggedIn && !heroCTAInView && (
+          <motion.div
+            initial={{ y: 80, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 80, opacity: 0 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 pointer-events-none"
+          >
             <Button
               size="lg"
               asChild
@@ -1009,8 +1016,9 @@ export default function HomePage() {
                 Begin your journey <ArrowRight className="h-4 w-4 ml-2" />
               </Link>
             </Button>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <style>{`
         @keyframes ring-spin {

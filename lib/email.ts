@@ -24,31 +24,66 @@ export async function sendWelcomeEmail(to: string, name?: string) {
     html: `
 <!DOCTYPE html>
 <html>
-<body style="margin:0;padding:0;background:#080B18;font-family:'Georgia',serif;color:#e7e5e4;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:40px auto;padding:0 20px;">
-    <tr><td style="text-align:center;padding-bottom:32px;">
-      <span style="font-size:28px;letter-spacing:0.18em;text-transform:uppercase;color:#fff;">
-        ✦ Kindred Stars
-      </span>
-    </td></tr>
-    <tr><td style="background:#0f1220;border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:40px 36px;">
-      <h1 style="margin:0 0 16px;font-size:26px;font-weight:600;color:#fff;line-height:1.2;">
-        Welcome, ${firstName}.
-      </h1>
-      <p style="margin:0 0 20px;font-size:15px;line-height:1.7;color:#a8a29e;">
-        Your birth chart is your compass. Kindred Stars uses your Sun, Moon, and Rising signs together to find people who are genuinely compatible with the way you think, feel, and connect.
-      </p>
-      <p style="margin:0 0 32px;font-size:15px;line-height:1.7;color:#a8a29e;">
-        Start by completing your profile. The more detail you give us, the more precisely the stars align you with someone real.
-      </p>
-      <a href="${appUrl}/profile"
-         style="display:inline-block;background:#4f46e5;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:14px 32px;border-radius:999px;">
-        Complete your profile →
-      </a>
-    </td></tr>
-    <tr><td style="text-align:center;padding:28px 0 0;color:#44403c;font-size:12px;line-height:1.6;">
-      You're receiving this because you created a Kindred Stars account.<br/>
-      <a href="${appUrl}/privacy" style="color:#57534e;text-decoration:underline;">Privacy policy</a>
+<head><meta name="viewport" content="width=device-width,initial-scale=1"/></head>
+<body style="margin:0;padding:0;background:#05071a;font-family:'Georgia',Georgia,serif;color:#e7e5e4;">
+  <table width="100%" cellpadding="0" cellspacing="0">
+    <tr><td align="center" style="padding:40px 20px 0;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
+
+        <!-- Star header -->
+        <tr><td style="background:linear-gradient(160deg,#12163a 0%,#0a0d25 60%,#05071a 100%);border-radius:20px 20px 0 0;padding:48px 40px 40px;text-align:center;border:1px solid rgba(255,255,255,0.06);border-bottom:none;">
+          <div style="font-size:22px;letter-spacing:0.3em;text-transform:uppercase;color:#fff;font-weight:600;margin-bottom:6px;">✦ Kindred Stars</div>
+          <div style="width:40px;height:1px;background:linear-gradient(90deg,transparent,rgba(99,102,241,0.6),transparent);margin:20px auto 0;"></div>
+        </td></tr>
+
+        <!-- Body -->
+        <tr><td style="background:linear-gradient(180deg,#0a0d25 0%,#080b1e 100%);padding:40px 40px 48px;border-left:1px solid rgba(255,255,255,0.06);border-right:1px solid rgba(255,255,255,0.06);">
+          <h1 style="margin:0 0 20px;font-size:30px;font-weight:600;color:#ffffff;line-height:1.2;letter-spacing:-0.01em;">
+            Welcome, ${firstName}.
+          </h1>
+          <p style="margin:0 0 16px;font-size:16px;line-height:1.8;color:#c4bfba;">
+            Your birth chart is your compass. Kindred Stars uses your full chart — Sun, Moon, Rising, and beyond — to surface people who are genuinely compatible with how you think, feel, and connect.
+          </p>
+          <p style="margin:0 0 36px;font-size:16px;line-height:1.8;color:#c4bfba;">
+            Complete your profile to get your first matches. The more you share, the more precisely we can align you with someone real.
+          </p>
+          <table cellpadding="0" cellspacing="0"><tr><td>
+            <a href="${appUrl}/profile"
+               style="display:inline-block;background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff;text-decoration:none;font-size:15px;font-weight:600;padding:15px 36px;border-radius:999px;letter-spacing:0.01em;font-family:system-ui,sans-serif;">
+              Complete your profile →
+            </a>
+          </td></tr></table>
+        </td></tr>
+
+        <!-- Divider stat row -->
+        <tr><td style="background:#080b1e;padding:24px 40px;border-left:1px solid rgba(255,255,255,0.06);border-right:1px solid rgba(255,255,255,0.06);">
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td align="center" style="border-right:1px solid rgba(255,255,255,0.06);padding:0 20px 0 0;">
+                <div style="font-size:22px;font-weight:700;color:#fff;">10</div>
+                <div style="font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:0.1em;margin-top:4px;font-family:system-ui,sans-serif;">Planets</div>
+              </td>
+              <td align="center" style="border-right:1px solid rgba(255,255,255,0.06);padding:0 20px;">
+                <div style="font-size:22px;font-weight:700;color:#fff;">12</div>
+                <div style="font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:0.1em;margin-top:4px;font-family:system-ui,sans-serif;">Houses</div>
+              </td>
+              <td align="center" style="padding:0 0 0 20px;">
+                <div style="font-size:22px;font-weight:700;color:#fff;">0–100</div>
+                <div style="font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:0.1em;margin-top:4px;font-family:system-ui,sans-serif;">Score</div>
+              </td>
+            </tr>
+          </table>
+        </td></tr>
+
+        <!-- Footer -->
+        <tr><td style="background:#05071a;border-radius:0 0 20px 20px;padding:28px 40px;text-align:center;border:1px solid rgba(255,255,255,0.06);border-top:1px solid rgba(255,255,255,0.04);">
+          <p style="margin:0;font-size:12px;color:#44403c;line-height:1.7;font-family:system-ui,sans-serif;">
+            You're receiving this because you created a Kindred Stars account.<br/>
+            <a href="${appUrl}/privacy" style="color:#57534e;text-decoration:underline;">Privacy policy</a>
+          </p>
+        </td></tr>
+
+      </table>
     </td></tr>
   </table>
 </body>
