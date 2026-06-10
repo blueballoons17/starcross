@@ -308,7 +308,7 @@ export default function HomePage() {
   const isLoggedIn = !!session;
   const [isPremium, setIsPremium] = useState(false);
   const heroCTARef = useRef<HTMLDivElement>(null);
-  const heroCTAInView = useInView(heroCTARef, { margin: "0px 0px -40px 0px" });
+  const heroCTAInView = useInView(heroCTARef, { margin: "0px 0px 0px 0px" });
 
   useEffect(() => {
     if (!isLoggedIn) return;
@@ -440,7 +440,6 @@ export default function HomePage() {
 
 
           <motion.div
-            ref={heroCTARef}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
@@ -466,7 +465,7 @@ export default function HomePage() {
       </section>
 
       {/* Spacer — pushes content below the fixed hero */}
-      <div className="h-screen" aria-hidden="true" />
+      <div ref={heroCTARef} className="h-screen" aria-hidden="true" />
 
       {/* ── All content below slides over the fixed hero ─────────────────── */}
       <div className="relative z-10 overflow-x-hidden">
