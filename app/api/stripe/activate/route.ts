@@ -28,13 +28,20 @@ export async function POST(req: NextRequest) {
     const sub = checkoutSession.subscription as import("stripe").Stripe.Subscription | null;
     if (!sub) return NextResponse.json({ error: "No subscription found" }, { status: 400 });
 
+    // Resolve period end — newer Stripe API puts it on the item, older at the top level
+    const itemPeriodEnd = sub.items?.data?.[0]?.current_period_end;
+    const legacyEnd = (sub as unknown as Record<string, unknown>)["current_period_end"];
+    const periodEndTs = itemPeriodEnd ?? (typeof legacyEnd === "number" ? legacyEnd : null);
+    const periodEndDate = periodEndTs ? new Date(periodEndTs * 1000) : null;
+
     // Apply subscription to user immediately
     await prisma.user.update({
       where: { id: userId },
       data: {
+        stripeCustomerId: checkoutSession.customer as string,
         stripeSubscriptionId: sub.id,
         subscriptionStatus: sub.status,
-        subscriptionCurrentPeriodEnd: new Date((sub as unknown as { current_period_end: number }).current_period_end * 1000),
+        ...(periodEndDate ? { subscriptionCurrentPeriodEnd: periodEndDate } : {}),
       },
     });
 
