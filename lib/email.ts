@@ -19,7 +19,7 @@ export async function sendWelcomeEmail(to: string, name?: string) {
   await resend.emails.send({
     from: FROM,
     to,
-    reply_to: REPLY_TO,
+    replyTo: REPLY_TO,
     subject: "Welcome to Kindred Stars ✦",
     html: `
 <!DOCTYPE html>
@@ -67,7 +67,7 @@ export async function sendSubscriptionConfirmationEmail(to: string, name?: strin
   await resend.emails.send({
     from: FROM,
     to,
-    reply_to: REPLY_TO,
+    replyTo: REPLY_TO,
     subject: "You're now a Kindred Stars+ member ✦",
     html: `
 <!DOCTYPE html>
@@ -133,7 +133,7 @@ export async function sendReportEmail(opts: {
   await resend.emails.send({
     from: FROM,
     to: adminEmail,
-    reply_to: REPLY_TO,
+    replyTo: REPLY_TO,
     subject: `[Kindred Stars] User report: ${opts.reportedName} (${opts.reason})`,
     html: `
 <!DOCTYPE html>
@@ -206,7 +206,7 @@ export async function sendMatchEmail(opts: {
   await resend.emails.send({
     from: FROM,
     to: toEmail,
-    reply_to: REPLY_TO,
+    replyTo: REPLY_TO,
     subject: `You matched with ${matchName} ✨`,
     html: `
 <!DOCTYPE html>
