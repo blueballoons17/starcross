@@ -452,7 +452,7 @@ export default function HomePage() {
             ) : (
               <>
                 <Button size="lg" asChild className="bg-white text-stone-900 hover:bg-stone-100 px-10 rounded-full h-12 font-medium">
-                  <Link href="/pricing">Begin your journey <ArrowRight className="h-4 w-4 ml-2" /></Link>
+                  <Link href="/pricing?autostart=true">Begin your journey <ArrowRight className="h-4 w-4 ml-2" /></Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild className="border-stone-700 text-stone-300 hover:bg-stone-800/50 rounded-full h-12 px-8">
                   <Link href="/login">Already a member</Link>
@@ -1011,7 +1011,7 @@ export default function HomePage() {
               asChild
               className="pointer-events-auto bg-stone-900 text-white hover:bg-stone-800 rounded-full px-10 h-12 font-medium shadow-2xl shadow-black/40 border border-stone-700/50 backdrop-blur-sm"
             >
-              <Link href="/pricing">
+              <Link href="/pricing?autostart=true">
                 Begin your journey <ArrowRight className="h-4 w-4 ml-2" />
               </Link>
             </Button>

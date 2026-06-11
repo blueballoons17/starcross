@@ -67,7 +67,19 @@ function PricingContent() {
 
   const upgraded = searchParams?.get("upgraded") === "true";
   const sessionId = searchParams?.get("session_id") ?? null;
+  const autostart = searchParams?.get("autostart") === "true";
   const [activating, setActivating] = useState(false);
+
+  // Auto-trigger Stripe checkout when landing from "Begin your journey"
+  useEffect(() => {
+    if (!autostart || status === "loading" || upgraded) return;
+    if (status === "unauthenticated") {
+      router.push("/signup?callbackUrl=/pricing?autostart=true");
+      return;
+    }
+    handleSubscribe();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autostart, status]);
 
   useEffect(() => {
     if (!upgraded || !sessionId) return;
