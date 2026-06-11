@@ -273,13 +273,13 @@ function PhoneMockup() {
   // Smooth spring so the tilt feels fluid, not snappy
   const rawRotate = useTransform(scrollYProgress, [0, 1], [24, 0]);
   const rawScale  = useTransform(scrollYProgress, [0, 1], [0.86, 1]);
-  const rotateX   = useSpring(rawRotate, { stiffness: 80, damping: 22 });
-  const scale     = useSpring(rawScale,  { stiffness: 80, damping: 22 });
+  const rotateX   = useSpring(rawRotate, { stiffness: 60, damping: 30 });
+  const scale     = useSpring(rawScale,  { stiffness: 60, damping: 30 });
 
   return (
     <div ref={containerRef} className="flex justify-center" style={{ perspective: "1400px" }}>
       <motion.div
-        style={{ rotateX, scale }}
+        style={{ rotateX, scale, willChange: "transform" }}
         className="relative rounded-[2.4rem] border-[3px] border-stone-800 bg-stone-950 overflow-hidden w-[260px] h-[520px]"
         // layered shadow: subtle ambient + strong drop
         initial={{ boxShadow: "0 48px 100px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04)" }}
@@ -322,7 +322,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-[#FAF8F4]">
 
       {/* ── Fixed header ─────────────────────────────────────────────────── */}
-      <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.07] bg-[#07091f]/80 backdrop-blur-md">
+      <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.07] bg-[#07091f]/80 backdrop-blur-md" style={{ transform: "translateZ(0)", willChange: "transform" }}>
         <div className="max-w-7xl mx-auto flex h-20 items-center gap-10 px-8">
 
           {/* Logo — large bold */}
@@ -374,7 +374,7 @@ export default function HomePage() {
         className="fixed inset-0 flex flex-col items-center justify-center px-6 overflow-hidden z-0"
         style={{ background: "#07091f" }}
       >
-        <StarField count={260} />
+        <StarField count={200} />
 
         <div
           className="absolute inset-0 pointer-events-none"
