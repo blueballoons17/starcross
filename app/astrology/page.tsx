@@ -402,7 +402,7 @@ function PersonalChart({ chart }: { chart: UserChart }) {
           if (!sign) return null;
           const elColor = EL[sign.element as Element].hex;
           return (
-            <div key={label}>
+            <div key={label} className="bg-[#0d1124]/90 border border-white/10 rounded-xl p-5">
               <div className="flex items-center gap-2 mb-4">
                 <Icon className="h-3.5 w-3.5 text-stone-500" />
                 <span className="text-xs tracking-[0.15em] uppercase text-stone-500">{label} in {sign.sign}</span>
@@ -434,7 +434,7 @@ function PersonalChart({ chart }: { chart: UserChart }) {
             if (!sign) return null;
             const elColor = EL[sign.element as Element].hex;
             return (
-              <div key={signName + i}>
+              <div key={signName + i} className="bg-[#0d1124]/90 border border-white/10 rounded-xl p-5">
                 <div className="flex items-center gap-2 mb-2">
                   <MessageSquare className="h-3 w-3 text-stone-600" />
                   <span className="text-xs tracking-[0.13em] uppercase text-stone-500">
@@ -452,14 +452,14 @@ function PersonalChart({ chart }: { chart: UserChart }) {
       {chart.traits && (
         <div className="mt-10 pt-10 border-t border-white/8">
           <p className="text-xs tracking-[0.22em] uppercase text-stone-500 mb-8">How your chart reads in relationships</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               { label: "Emotionally", text: chart.traits.emotionalStyle },
               { label: "In conversation", text: chart.traits.communicationStyle },
               { label: "What you need", text: chart.traits.relationshipNeeds },
             ].map(({ label, text }) => (
-              <div key={label}>
-                <p className="text-stone-500 text-xs tracking-wide uppercase mb-2">{label}</p>
+              <div key={label} className="bg-[#0d1124]/90 border border-white/10 rounded-xl p-5">
+                <p className="text-stone-500 text-xs tracking-wide uppercase mb-3">{label}</p>
                 <p className="text-stone-300 text-sm leading-relaxed">{text}</p>
               </div>
             ))}
