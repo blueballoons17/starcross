@@ -983,7 +983,7 @@ export default function AstrologyPage() {
                   <Link href="/discover" className="text-white font-semibold hover:text-stone-300 transition-colors">
                     See your matches →
                   </Link>
-                  <Link href="/profile" className="text-stone-400 hover:text-stone-300 transition-colors">
+                  <Link href="/profile#chart" className="text-stone-400 hover:text-stone-300 transition-colors">
                     View your chart
                   </Link>
                 </div>

@@ -1061,6 +1061,7 @@ export default function ProfilePage() {
           )}
 
           {/* ── Chart carousel ── */}
+          <div id="chart" />
           {astro ? (
             <ChartCarousel profile={profile} astro={astro} />
           ) : (
