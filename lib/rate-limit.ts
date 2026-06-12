@@ -85,5 +85,8 @@ export const loginLimiter    = createLimiter("login",    10, 60);
 /** Message send: max 30 messages / minute per user */
 export const messageLimiter  = createLimiter("message",  30, 60);
 
+/** Password reset: max 3 requests / hour per IP (prevents email bombing) */
+export const passwordResetLimiter = createLimiter("pw-reset", 3, 3600);
+
 /** Generic API: max 120 requests / minute per IP */
 export const apiLimiter      = createLimiter("api",      120, 60);

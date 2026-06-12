@@ -22,6 +22,10 @@ model User {
   dailySwipeCount   Int      @default(0)
   dailySwipeResetAt DateTime?
 
+  // Password reset
+  passwordResetToken  String?
+  passwordResetExpiry DateTime?
+
   // Referrals
   referralCode       String?   @unique
   pendingFreeMonths  Int       @default(0)

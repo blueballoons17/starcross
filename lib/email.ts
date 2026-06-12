@@ -223,6 +223,70 @@ export async function sendReportEmail(opts: {
   }).catch((err) => console.error("[email] report send failed:", err));
 }
 
+// ── Password reset ────────────────────────────────────────────────────────────
+export async function sendPasswordResetEmail(to: string, resetUrl: string) {
+  const resend = getResend();
+  if (!resend) return;
+
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://kindredstars.org";
+
+  await resend.emails.send({
+    from: FROM,
+    to,
+    replyTo: REPLY_TO,
+    subject: "Reset your Kindred Stars password",
+    html: `
+<!DOCTYPE html>
+<html>
+<head><meta name="viewport" content="width=device-width,initial-scale=1"/></head>
+<body style="margin:0;padding:0;background:#05071a;font-family:'Georgia',Georgia,serif;color:#e7e5e4;">
+  <table width="100%" cellpadding="0" cellspacing="0">
+    <tr><td align="center" style="padding:40px 20px 0;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
+
+        <!-- Header -->
+        <tr><td style="background:linear-gradient(160deg,#12163a 0%,#0a0d25 60%,#05071a 100%);border-radius:20px 20px 0 0;padding:48px 40px 40px;text-align:center;border:1px solid rgba(255,255,255,0.06);border-bottom:none;">
+          <div style="font-size:22px;letter-spacing:0.3em;text-transform:uppercase;color:#fff;font-weight:600;margin-bottom:6px;">✦ Kindred Stars</div>
+          <div style="width:40px;height:1px;background:linear-gradient(90deg,transparent,rgba(99,102,241,0.6),transparent);margin:20px auto 0;"></div>
+        </td></tr>
+
+        <!-- Body -->
+        <tr><td style="background:linear-gradient(180deg,#0a0d25 0%,#080b1e 100%);padding:40px 40px 48px;border-left:1px solid rgba(255,255,255,0.06);border-right:1px solid rgba(255,255,255,0.06);">
+          <h1 style="margin:0 0 16px;font-size:26px;font-weight:600;color:#ffffff;line-height:1.2;">
+            Reset your password
+          </h1>
+          <p style="margin:0 0 16px;font-size:15px;line-height:1.8;color:#c4bfba;">
+            We received a request to reset the password for your Kindred Stars account.
+          </p>
+          <p style="margin:0 0 32px;font-size:15px;line-height:1.8;color:#c4bfba;">
+            Click the button below to choose a new password. This link expires in <strong style="color:#fff;">1 hour</strong>.
+          </p>
+          <table cellpadding="0" cellspacing="0"><tr><td>
+            <a href="${resetUrl}"
+               style="display:inline-block;background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff;text-decoration:none;font-size:15px;font-weight:600;padding:15px 36px;border-radius:999px;letter-spacing:0.01em;font-family:system-ui,sans-serif;">
+              Reset password →
+            </a>
+          </td></tr></table>
+          <p style="margin:32px 0 0;font-size:13px;line-height:1.7;color:#57534e;">
+            If you didn't request this, you can safely ignore this email. Your password won't change.
+          </p>
+        </td></tr>
+
+        <!-- Footer -->
+        <tr><td style="background:#05071a;border-radius:0 0 20px 20px;padding:28px 40px;text-align:center;border:1px solid rgba(255,255,255,0.06);border-top:1px solid rgba(255,255,255,0.04);">
+          <p style="margin:0;font-size:12px;color:#44403c;line-height:1.7;font-family:system-ui,sans-serif;">
+            Kindred Stars · <a href="${appUrl}" style="color:#57534e;text-decoration:underline;">kindredstars.org</a>
+          </p>
+        </td></tr>
+
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`,
+  }).catch((err) => console.error("[email] password reset send failed:", err));
+}
+
 // ── Match notification ────────────────────────────────────────────────────────
 export async function sendMatchEmail(opts: {
   toEmail: string;

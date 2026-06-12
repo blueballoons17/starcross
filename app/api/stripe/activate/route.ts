@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ ok: true, hasProfile: !!profile });
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : String(err);
-    return NextResponse.json({ error: msg }, { status: 500 });
+    console.error("[stripe/activate]", err instanceof Error ? err.message : err);
+    return NextResponse.json({ error: "Activation failed. Please contact support." }, { status: 500 });
   }
 }
