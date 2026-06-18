@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
 import { calculateAstrologyProfile } from "@/lib/astrology";
+import { sendWelcomeEmail } from "@/lib/email";
 
 interface SessionUser {
   id?: string;
@@ -132,6 +133,13 @@ export async function POST(request: NextRequest) {
     birthCity
   );
 
+  // Check if this is the first time the profile is being created
+  const existingProfile = await prisma.profile.findUnique({
+    where: { userId },
+    select: { userId: true },
+  });
+  const isNewProfile = !existingProfile;
+
   // Upsert profile
   const profile = await prisma.profile.upsert({
     where: { userId },
@@ -198,6 +206,17 @@ export async function POST(request: NextRequest) {
     modalScores: astroResult.modals,
     traits: astroResult.traits,
   };
+
+  // Send welcome email with real name on first profile creation
+  if (isNewProfile) {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { email: true, referralCode: true },
+    });
+    if (user) {
+      sendWelcomeEmail(user.email, name?.trim(), user.referralCode ?? undefined).catch(() => {});
+    }
+  }
 
   return NextResponse.json({ profile, astrologyProfile });
 }

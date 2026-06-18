@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth";
-import { sendWelcomeEmail } from "@/lib/email";
 import { registerLimiter } from "@/lib/rate-limit";
 
 // ── Unique referral code generator ───────────────────────────────────────────
@@ -104,9 +103,6 @@ export async function POST(request: NextRequest) {
       });
     }
   }
-
-  // Send welcome email — fire-and-forget, never block registration
-  sendWelcomeEmail(user.email, undefined, user.referralCode ?? undefined).catch(() => {});
 
   return NextResponse.json({ success: true, userId: user.id }, { status: 201 });
 }

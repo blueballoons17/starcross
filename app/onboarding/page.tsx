@@ -1053,12 +1053,12 @@ export default function OnboardingPage() {
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1.5">
                       <Label htmlFor="ageMin" className="text-xs text-stone-400">Minimum</Label>
-                      <Input id="ageMin" type="number" min={18} max={79} value={form.prefAgeMin} onChange={(e) => update("prefAgeMin", parseInt(e.target.value) || 18)} className="h-11" />
+                      <Input id="ageMin" type="number" min={18} max={79} value={form.prefAgeMin || ""} onChange={(e) => { const n = parseInt(e.target.value, 10); update("prefAgeMin", isNaN(n) ? 0 : n); }} className="h-11" />
                       {errors.prefAgeMin && <p className="text-red-500 text-xs">{errors.prefAgeMin}</p>}
                     </div>
                     <div className="space-y-1.5">
                       <Label htmlFor="ageMax" className="text-xs text-stone-400">Maximum</Label>
-                      <Input id="ageMax" type="number" min={19} max={80} value={form.prefAgeMax} onChange={(e) => update("prefAgeMax", parseInt(e.target.value) || 45)} className="h-11" />
+                      <Input id="ageMax" type="number" min={19} max={80} value={form.prefAgeMax || ""} onChange={(e) => { const n = parseInt(e.target.value, 10); update("prefAgeMax", isNaN(n) ? 0 : n); }} className="h-11" />
                       {errors.prefAgeMax && <p className="text-red-500 text-xs">{errors.prefAgeMax}</p>}
                     </div>
                   </div>

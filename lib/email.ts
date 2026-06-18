@@ -46,12 +46,12 @@ export async function sendWelcomeEmail(to: string, name?: string, referralCode?:
             Your birth chart is your compass. Kindred Stars uses your full chart — Sun, Moon, Rising, and beyond — to surface people who are genuinely compatible with how you think, feel, and connect.
           </p>
           <p style="margin:0 0 36px;font-size:16px;line-height:1.8;color:#c4bfba;">
-            Complete your profile to get your first matches. The more you share, the more precisely we can align you with someone real.
+            Your chart is set. Your matches are waiting.
           </p>
           <table cellpadding="0" cellspacing="0"><tr><td>
-            <a href="${appUrl}/profile"
+            <a href="${appUrl}/discover"
                style="display:inline-block;background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff;text-decoration:none;font-size:15px;font-weight:600;padding:15px 36px;border-radius:999px;letter-spacing:0.01em;font-family:system-ui,sans-serif;">
-              Complete your profile →
+              Start discovering →
             </a>
           </td></tr></table>
         </td></tr>
