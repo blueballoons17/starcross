@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
   }
 
   // Send welcome email — fire-and-forget, never block registration
-  sendWelcomeEmail(user.email).catch(() => {});
+  sendWelcomeEmail(user.email, undefined, user.referralCode ?? undefined).catch(() => {});
 
   return NextResponse.json({ success: true, userId: user.id }, { status: 201 });
 }

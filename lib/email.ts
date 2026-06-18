@@ -9,12 +9,13 @@ function getResend() {
 }
 
 // ── Welcome email ─────────────────────────────────────────────────────────────
-export async function sendWelcomeEmail(to: string, name?: string) {
+export async function sendWelcomeEmail(to: string, name?: string, referralCode?: string) {
   const resend = getResend();
   if (!resend) return; // no-op if not configured
 
   const firstName = name?.split(" ")[0] ?? "there";
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://kindredstars.org";
+  const referralUrl = referralCode ? `${appUrl}/signup?ref=${referralCode}` : null;
 
   await resend.emails.send({
     from: FROM,
@@ -74,6 +75,30 @@ export async function sendWelcomeEmail(to: string, name?: string) {
             </tr>
           </table>
         </td></tr>
+
+        ${referralUrl ? `
+        <!-- Referral section -->
+        <tr><td style="background:#080b1e;padding:0 40px 32px;border-left:1px solid rgba(255,255,255,0.06);border-right:1px solid rgba(255,255,255,0.06);">
+          <div style="border-top:1px solid rgba(255,255,255,0.06);padding-top:28px;">
+            <p style="margin:0 0 6px;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#6366f1;font-family:system-ui,sans-serif;">Refer a friend</p>
+            <p style="margin:0 0 14px;font-size:17px;font-weight:600;color:#fff;">Get a free month for every 5 friends who subscribe.</p>
+            <p style="margin:0 0 20px;font-size:14px;line-height:1.7;color:#a8a29e;">
+              Share your link. When 5 of them become Kindred Stars+ members, your next month is on us — automatically applied to your account.
+            </p>
+            <!-- Link display box -->
+            <div style="background:#0d1124;border:1px solid rgba(99,102,241,0.25);border-radius:10px;padding:14px 18px;margin-bottom:20px;">
+              <p style="margin:0 0 4px;font-size:10px;color:#6b7280;text-transform:uppercase;letter-spacing:0.1em;font-family:system-ui,sans-serif;">Your referral link</p>
+              <p style="margin:0;font-size:13px;color:#a5b4fc;font-family:monospace;word-break:break-all;">${referralUrl}</p>
+            </div>
+            <table cellpadding="0" cellspacing="0"><tr><td>
+              <a href="${referralUrl}"
+                 style="display:inline-block;background:transparent;border:1px solid rgba(99,102,241,0.4);color:#a5b4fc;text-decoration:none;font-size:14px;font-weight:500;padding:11px 28px;border-radius:999px;font-family:system-ui,sans-serif;">
+                Share your link →
+              </a>
+            </td></tr></table>
+          </div>
+        </td></tr>
+        ` : ""}
 
         <!-- Footer -->
         <tr><td style="background:#05071a;border-radius:0 0 20px 20px;padding:28px 40px;text-align:center;border:1px solid rgba(255,255,255,0.06);border-top:1px solid rgba(255,255,255,0.04);">
