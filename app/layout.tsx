@@ -21,6 +21,27 @@ const cinzel = Cinzel({
 export const metadata: Metadata = {
   title: "Kindred Stars | Find Your Cosmic Counterpart",
   description: "An astrology-based compatibility platform. Discover meaningful connections through celestial alignment.",
+  openGraph: {
+    title: "Kindred Stars | Find Your Cosmic Counterpart",
+    description: "Discover meaningful connections through celestial alignment.",
+    url: "https://www.kindredstars.org",
+    siteName: "Kindred Stars",
+    images: [
+      {
+        url: "https://www.kindredstars.org/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Kindred Stars — Find Your Cosmic Counterpart",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Kindred Stars | Find Your Cosmic Counterpart",
+    description: "Discover meaningful connections through celestial alignment.",
+    images: ["https://www.kindredstars.org/opengraph-image"],
+  },
 };
 
 export const viewport: Viewport = {
