@@ -4,6 +4,7 @@ import "./globals.css";
 import { SessionProvider } from "@/components/SessionProvider";
 import { PostHogProvider } from "@/components/PostHogProvider";
 import { Toaster } from "@/components/ui/toaster";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const playfair = Playfair_Display({
@@ -63,6 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Toaster />
           </PostHogProvider>
         </SessionProvider>
+        <Analytics />
       </body>
     </html>
   );
